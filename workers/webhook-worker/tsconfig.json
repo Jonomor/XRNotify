@@ -2,8 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "lib": ["ES2022"],
     "outDir": "dist",
     "rootDir": "src",
@@ -12,15 +12,12 @@
     "sourceMap": true,
     "strict": false,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,
-    "paths": {
-      "@xrnotify/shared": ["../../packages/shared/src"],
-      "@xrnotify/shared/*": ["../../packages/shared/src/*"]
-    }
+    "noEmit": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/__tests__/**"]
