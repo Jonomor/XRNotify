@@ -9,6 +9,9 @@ const nextConfig = {
   // Disable x-powered-by header
   poweredByHeader: false,
 
+  // Transpile the shared package
+  transpilePackages: ['@xrnotify/shared'],
+
   // Enable experimental features
   experimental: {
     // Enable server actions
