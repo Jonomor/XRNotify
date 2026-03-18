@@ -207,12 +207,12 @@ export function middleware(request: NextRequest) {
     
     // Allow requests from same origin or configured domains
     const allowedOrigins = [
-      process.env.NEXT_PUBLIC_APP_URL,
+      process.env['NEXT_PUBLIC_APP_URL'],
       'https://xrnotify.io',
       'https://xrnotify.dev',
     ].filter(Boolean);
 
-    if (origin && (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development')) {
+    if (origin && (allowedOrigins.includes(origin) || process.env['NODE_ENV'] === 'development')) {
       response.headers.set('Access-Control-Allow-Origin', origin);
       response.headers.set('Access-Control-Allow-Credentials', 'true');
       response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
