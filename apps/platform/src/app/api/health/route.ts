@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { HealthStatus, ComponentHealth } from '@xrnotify/shared';
+import type { ComponentHealth } from '@xrnotify/shared';
 import { checkHealth as checkDbHealth, getPoolStats } from '@/lib/db';
 import { checkHealth as checkRedisHealth } from '@/lib/redis';
 import { createModuleLogger } from '@/lib/logger';
@@ -14,8 +14,10 @@ import { createModuleLogger } from '@/lib/logger';
 // Types
 // -----------------------------------------------------------------------------
 
+type HealthStatusValue = 'healthy' | 'degraded' | 'unhealthy';
+
 interface HealthResponse {
-  status: HealthStatus;
+  status: HealthStatusValue;
   timestamp: string;
   version: string;
   uptime: number;
@@ -53,7 +55,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
 
   // Basic liveness response
   if (!includeComponents && !checkReady) {
-    return NextResponse.json(
+    return NextResponse.json<HealthResponse>(
       {
         status: 'healthy',
         timestamp: new Date().toISOString(),
@@ -121,7 +123,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
     overallHealthy = false;
   }
 
-  const status: HealthStatus = overallHealthy ? 'healthy' : 'degraded';
+  const status: HealthStatusValue = overallHealthy ? 'healthy' : 'degraded';
   const httpStatus = checkReady && !overallHealthy ? 503 : 200;
 
   const response: HealthResponse = {

@@ -39,6 +39,12 @@ export function generateSignature(payload: string, secret: string): string {
 }
 
 /**
+ * Alias for generateSignature - signs a payload with HMAC-SHA256
+ * @see generateSignature
+ */
+export const signPayload = generateSignature;
+
+/**
  * Generate signature with timestamp for replay protection
  * 
  * @param payload - The payload to sign

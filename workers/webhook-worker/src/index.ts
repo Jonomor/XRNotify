@@ -53,7 +53,10 @@ const config = {
 
 const logger = pino({
   level: process.env.LOG_LEVEL ?? 'info',
-  transport: config.nodeEnv === 'development' ? { target: 'pino-pretty' } : undefined,
+  // Don't use pino-pretty in production - it's a dev dependency
+  ...(config.nodeEnv === 'development' && process.env.PINO_PRETTY === 'true'
+    ? { transport: { target: 'pino-pretty' } }
+    : {}),
 });
 
 // -----------------------------------------------------------------------------
