@@ -5,13 +5,13 @@
 // =============================================================================
 
 // Types
-export * from './types/index.js';
+export * from './types/index';
 
 // Crypto utilities
-export * from './crypto/index.js';
+export * from './crypto/index';
 
 // Validation schemas
-export * from './validation/index.js';
+export * from './validation/index';
 
 // Utility functions
-export * from './utils/index.js';
+export * from './utils/index';

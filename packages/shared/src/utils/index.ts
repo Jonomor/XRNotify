@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { randomBytes, randomUUID } from 'crypto';
-import type { EventType, RetryPolicy } from '../types/index.js';
+import type { EventType, RetryPolicy } from '../types/index';
 
 // -----------------------------------------------------------------------------
 // UUID Generation

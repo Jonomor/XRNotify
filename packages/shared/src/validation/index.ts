@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { z } from 'zod';
-import { EVENT_TYPES, ALL_API_KEY_SCOPES } from '../types/index.js';
+import { EVENT_TYPES, ALL_API_KEY_SCOPES } from '../types/index';
 
 // -----------------------------------------------------------------------------
 // Common Validators

@@ -7,7 +7,7 @@
 import { randomUUID } from 'node:crypto';
 import type { Logger } from 'pino';
 import type { XrplEvent } from '@xrnotify/shared';
-import { signPayload } from './sign.js';
+import { signPayload } from './sign';
 
 // -----------------------------------------------------------------------------
 // Types

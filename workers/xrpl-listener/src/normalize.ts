@@ -9,10 +9,10 @@ import type { XrplEvent, EventType } from '@xrnotify/shared';
 import type { Logger } from 'pino';
 
 // Re-export parsers
-export { parsePayment } from './parsers/payment.js';
-export { parseNft } from './parsers/nft.js';
-export { parseDex } from './parsers/dex.js';
-export { parseTrustline } from './parsers/trustline.js';
+export { parsePayment } from './parsers/payment';
+export { parseNft } from './parsers/nft';
+export { parseDex } from './parsers/dex';
+export { parseTrustline } from './parsers/trustline';
 
 // -----------------------------------------------------------------------------
 // Types
