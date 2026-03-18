@@ -27,7 +27,7 @@ interface HealthResponse {
 // -----------------------------------------------------------------------------
 
 const startTime = Date.now();
-const VERSION = process.env.npm_package_version ?? '1.0.0';
+const VERSION = process.env['npm_package_version'] ?? '1.0.0';
 
 // -----------------------------------------------------------------------------
 // Logger

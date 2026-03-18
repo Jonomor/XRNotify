@@ -36,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   // Optional: Check for metrics authentication in production
   if (config.env === 'production') {
     const authHeader = request.headers.get('authorization');
-    const metricsToken = process.env.METRICS_AUTH_TOKEN;
+    const metricsToken = process.env['METRICS_AUTH_TOKEN'];
 
     if (metricsToken && authHeader !== `Bearer ${metricsToken}`) {
       // If a token is configured but not provided/matched, reject

@@ -84,7 +84,7 @@ export const metadata: Metadata = {
   creator: 'Ali Morgan',
   publisher: 'Jonomor',
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? 'https://xrnotify.io'
+    process.env['NEXT_PUBLIC_APP_URL'] ?? 'https://xrnotify.io'
   ),
   alternates: {
     canonical: 'https://xrnotify.io',

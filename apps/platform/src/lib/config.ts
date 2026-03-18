@@ -282,7 +282,7 @@ export function isTest(): boolean {
  * Reset configuration (for testing only)
  */
 export function resetConfig(): void {
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env['NODE_ENV'] === 'test') {
     configInstance = null;
   }
 }
