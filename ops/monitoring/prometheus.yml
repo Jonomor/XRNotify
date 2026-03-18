@@ -1,0 +1,179 @@
+# ============================================
+# XRNotify Prometheus Configuration
+# ============================================
+# Documentation: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+# ============================================
+
+global:
+  # How frequently to scrape targets
+  scrape_interval: 15s
+  
+  # How frequently to evaluate rules
+  evaluation_interval: 15s
+  
+  # Timeout for scrape requests
+  scrape_timeout: 10s
+  
+  # Attach these labels to any time series or alerts
+  external_labels:
+    cluster: "xrnotify"
+    environment: "development"
+
+# ============================================
+# Alerting Configuration
+# ============================================
+# Uncomment when Alertmanager is configured
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+#       timeout: 10s
+#       api_version: v2
+
+# ============================================
+# Rule Files
+# ============================================
+# Load rules once and periodically evaluate them
+rule_files:
+  # - /etc/prometheus/rules/*.yml
+
+# ============================================
+# Scrape Configurations
+# ============================================
+scrape_configs:
+  # ------------------------------------------
+  # Prometheus self-monitoring
+  # ------------------------------------------
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          service: "prometheus"
+          component: "monitoring"
+    metrics_path: /metrics
+    scheme: http
+
+  # ------------------------------------------
+  # XRNotify API Service
+  # ------------------------------------------
+  - job_name: "xrnotify-api"
+    static_configs:
+      - targets: ["api:9090"]
+        labels:
+          service: "xrnotify"
+          component: "api"
+    metrics_path: /metrics
+    scheme: http
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    # Handle service unavailability gracefully
+    honor_labels: true
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: "([^:]+):\\d+"
+        replacement: "${1}"
+
+  # ------------------------------------------
+  # XRNotify Listener Service
+  # ------------------------------------------
+  - job_name: "xrnotify-listener"
+    static_configs:
+      - targets: ["listener:9090"]
+        labels:
+          service: "xrnotify"
+          component: "listener"
+    metrics_path: /metrics
+    scheme: http
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    honor_labels: true
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: "([^:]+):\\d+"
+        replacement: "${1}"
+
+  # ------------------------------------------
+  # XRNotify Worker Service
+  # ------------------------------------------
+  - job_name: "xrnotify-worker"
+    static_configs:
+      - targets: ["worker:9090"]
+        labels:
+          service: "xrnotify"
+          component: "worker"
+    metrics_path: /metrics
+    scheme: http
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    honor_labels: true
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: "([^:]+):\\d+"
+        replacement: "${1}"
+
+  # ------------------------------------------
+  # PostgreSQL (via postgres_exporter)
+  # ------------------------------------------
+  # Uncomment when postgres_exporter is added
+  # - job_name: "postgresql"
+  #   static_configs:
+  #     - targets: ["postgres-exporter:9187"]
+  #       labels:
+  #         service: "postgresql"
+  #         component: "database"
+  #   metrics_path: /metrics
+  #   scheme: http
+
+  # ------------------------------------------
+  # Redis (via redis_exporter)
+  # ------------------------------------------
+  # Uncomment when redis_exporter is added
+  # - job_name: "redis"
+  #   static_configs:
+  #     - targets: ["redis-exporter:9121"]
+  #       labels:
+  #         service: "redis"
+  #         component: "cache"
+  #   metrics_path: /metrics
+  #   scheme: http
+
+  # ------------------------------------------
+  # Node Exporter (system metrics)
+  # ------------------------------------------
+  # Uncomment when node_exporter is added
+  # - job_name: "node"
+  #   static_configs:
+  #     - targets: ["node-exporter:9100"]
+  #       labels:
+  #         service: "node"
+  #         component: "system"
+  #   metrics_path: /metrics
+  #   scheme: http
+
+# ============================================
+# Remote Write Configuration
+# ============================================
+# For sending metrics to external systems (Grafana Cloud, etc.)
+# remote_write:
+#   - url: "https://prometheus-us-central1.grafana.net/api/prom/push"
+#     basic_auth:
+#       username: "<instance_id>"
+#       password: "<api_key>"
+#     write_relabel_configs:
+#       - source_labels: [__name__]
+#         regex: "xrnotify_.*"
+#         action: keep
+
+# ============================================
+# Remote Read Configuration
+# ============================================
+# For reading metrics from external systems
+# remote_read:
+#   - url: "https://prometheus-us-central1.grafana.net/api/prom/read"
+#     basic_auth:
+#       username: "<instance_id>"
+#       password: "<api_key>"

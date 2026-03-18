@@ -1,0 +1,384 @@
+# ============================================
+# XRNotify Docker Compose - Local Development
+# ============================================
+# Usage:
+#   docker compose -f ops/docker-compose.yml up --build
+#   docker compose -f ops/docker-compose.yml down -v
+# ============================================
+
+name: xrnotify
+
+services:
+  # ==========================================
+  # PostgreSQL Database
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: xrnotify-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: xrnotify
+      POSTGRES_PASSWORD: xrnotify_dev_password
+      POSTGRES_DB: xrnotify
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xrnotify -d xrnotify"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - xrnotify-network
+
+  # ==========================================
+  # Redis
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: xrnotify-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --tcp-keepalive 60
+      --timeout 0
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - xrnotify-network
+
+  # ==========================================
+  # Backend API Service
+  # ==========================================
+  api:
+    build:
+      context: ..
+      dockerfile: ops/docker/Dockerfile.backend
+      target: production
+      args:
+        SERVICE_NAME: api
+    container_name: xrnotify-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9090:9090"
+    environment:
+      NODE_ENV: development
+      SERVICE_NAME: api
+      LOG_LEVEL: debug
+      LOG_FORMAT: pretty
+      API_HOST: 0.0.0.0
+      API_PORT: 3000
+      API_BASE_URL: http://localhost:3000
+      API_CORS_ORIGINS: http://localhost:3001,http://localhost:3002
+      DATABASE_URL: postgresql://xrnotify:xrnotify_dev_password@postgres:5432/xrnotify
+      DATABASE_POOL_MIN: 2
+      DATABASE_POOL_MAX: 10
+      DATABASE_SSL: "false"
+      REDIS_URL: redis://redis:6379
+      REDIS_KEY_PREFIX: "xrnotify:"
+      JWT_SECRET: dev_jwt_secret_change_in_production_minimum_32_characters_long
+      JWT_ISSUER: xrnotify
+      JWT_AUDIENCE: xrnotify-dashboard
+      JWT_ACCESS_TOKEN_EXPIRY: 15m
+      JWT_REFRESH_TOKEN_EXPIRY: 7d
+      RATE_LIMIT_ENABLED: "true"
+      RATE_LIMIT_GLOBAL_MAX: 1000
+      RATE_LIMIT_GLOBAL_WINDOW_MS: 60000
+      RATE_LIMIT_API_KEY_MAX: 100
+      RATE_LIMIT_API_KEY_WINDOW_MS: 60000
+      METRICS_ENABLED: "true"
+      METRICS_PORT: 9090
+      METRICS_PATH: /metrics
+      DEBUG_ERRORS: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - xrnotify-network
+
+  # ==========================================
+  # Backend Listener Service
+  # ==========================================
+  listener:
+    build:
+      context: ..
+      dockerfile: ops/docker/Dockerfile.backend
+      target: production
+      args:
+        SERVICE_NAME: listener
+    container_name: xrnotify-listener
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      SERVICE_NAME: listener
+      LOG_LEVEL: debug
+      LOG_FORMAT: pretty
+      DATABASE_URL: postgresql://xrnotify:xrnotify_dev_password@postgres:5432/xrnotify
+      DATABASE_SSL: "false"
+      REDIS_URL: redis://redis:6379
+      REDIS_KEY_PREFIX: "xrnotify:"
+      XRPL_WS_URL: wss://s1.ripple.com
+      XRPL_WS_URL_FALLBACK: wss://s2.ripple.com
+      XRPL_NETWORK: mainnet
+      XRPL_RECONNECT_DELAY_MS: 5000
+      XRPL_RECONNECT_MAX_ATTEMPTS: 10
+      XRPL_CONNECTION_TIMEOUT_MS: 15000
+      XRPL_START_LEDGER_INDEX: latest
+      STREAM_EVENTS_NAME: "xrnotify:events"
+      STREAM_EVENTS_MAXLEN: 100000
+      LISTENER_HEALTH_CHECK_INTERVAL_MS: 30000
+      LISTENER_PERSIST_CURSOR_INTERVAL_MS: 5000
+      METRICS_ENABLED: "true"
+      METRICS_PORT: 9090
+    ports:
+      - "9091:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - xrnotify-network
+
+  # ==========================================
+  # Backend Worker Service
+  # ==========================================
+  worker:
+    build:
+      context: ..
+      dockerfile: ops/docker/Dockerfile.backend
+      target: production
+      args:
+        SERVICE_NAME: worker
+    container_name: xrnotify-worker
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      SERVICE_NAME: worker
+      LOG_LEVEL: debug
+      LOG_FORMAT: pretty
+      DATABASE_URL: postgresql://xrnotify:xrnotify_dev_password@postgres:5432/xrnotify
+      DATABASE_SSL: "false"
+      REDIS_URL: redis://redis:6379
+      REDIS_KEY_PREFIX: "xrnotify:"
+      STREAM_EVENTS_NAME: "xrnotify:events"
+      STREAM_DELIVERIES_NAME: "xrnotify:deliveries"
+      STREAM_DLQ_NAME: "xrnotify:dlq"
+      CONSUMER_GROUP_NAME: xrnotify-workers
+      CONSUMER_BLOCK_MS: 5000
+      CONSUMER_BATCH_SIZE: 10
+      CONSUMER_CLAIM_IDLE_MS: 60000
+      WORKER_CONCURRENCY: 5
+      WORKER_GRACEFUL_SHUTDOWN_MS: 30000
+      WEBHOOK_DELIVERY_TIMEOUT_MS: 10000
+      WEBHOOK_DELIVERY_MAX_REDIRECTS: 3
+      WEBHOOK_RETRY_MAX_ATTEMPTS: 5
+      WEBHOOK_RETRY_INITIAL_DELAY_MS: 1000
+      WEBHOOK_RETRY_MAX_DELAY_MS: 300000
+      WEBHOOK_RETRY_BACKOFF_MULTIPLIER: 2
+      WEBHOOK_DLQ_ENABLED: "true"
+      WEBHOOK_BLOCK_PRIVATE_IPS: "true"
+      WEBHOOK_REQUIRE_HTTPS: "false"
+      WEBHOOK_DNS_RESOLUTION_TIMEOUT_MS: 5000
+      METRICS_ENABLED: "true"
+      METRICS_PORT: 9090
+    ports:
+      - "9092:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - xrnotify-network
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+  # ==========================================
+  # Prometheus
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:v2.47.2
+    container_name: xrnotify-prometheus
+    restart: unless-stopped
+    ports:
+      - "9091:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - xrnotify-network
+
+  # ==========================================
+  # Grafana
+  # ==========================================
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: xrnotify-grafana
+    restart: unless-stopped
+    ports:
+      - "3030:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_ROOT_URL: http://localhost:3030
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+      GF_LOG_LEVEL: warn
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/xrnotify-overview.json
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health | grep -q 'ok'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - xrnotify-network
+
+  # ==========================================
+  # Webhook Test Receiver (Development Only)
+  # ==========================================
+  webhook-receiver:
+    image: tarampampam/webhook-tester:1.1.0
+    container_name: xrnotify-webhook-receiver
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      LISTEN_PORT: 8080
+      CREATE_SESSION: "true"
+      SESSION_TTL: 3600
+    networks:
+      - xrnotify-network
+    profiles:
+      - dev
+
+  # ==========================================
+  # Redis Commander (Development Only)
+  # ==========================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: xrnotify-redis-commander
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+      HTTP_USER: admin
+      HTTP_PASSWORD: admin
+    depends_on:
+      - redis
+    networks:
+      - xrnotify-network
+    profiles:
+      - dev
+
+  # ==========================================
+  # pgAdmin (Development Only)
+  # ==========================================
+  pgadmin:
+    image: dpage/pgadmin4:8.0
+    container_name: xrnotify-pgadmin
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@xrnotify.io
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - xrnotify-network
+    profiles:
+      - dev
+
+# ==========================================
+# Networks
+# ==========================================
+networks:
+  xrnotify-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# ==========================================
+# Volumes
+# ==========================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  pgadmin_data:
+    driver: local

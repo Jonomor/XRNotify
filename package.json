@@ -1,0 +1,71 @@
+{
+  "name": "xrnotify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XRNotify - Production-grade XRPL Event & Webhook Notification Platform",
+  "author": "XRNotify <engineering@xrnotify.io>",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xrnotify/xrnotify.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "build:backend": "pnpm --filter @xrnotify/backend build",
+    "build:dashboard": "pnpm --filter @xrnotify/dashboard build",
+    "build:docs": "pnpm --filter @xrnotify/docs build",
+    "build:shared": "pnpm --filter @xrnotify/shared build",
+    "dev": "pnpm -r --parallel dev",
+    "dev:backend": "pnpm --filter @xrnotify/backend dev",
+    "dev:dashboard": "pnpm --filter @xrnotify/dashboard dev",
+    "dev:docs": "pnpm --filter @xrnotify/docs dev",
+    "start": "pnpm -r --parallel start",
+    "start:api": "pnpm --filter @xrnotify/backend start:api",
+    "start:listener": "pnpm --filter @xrnotify/backend start:listener",
+    "start:worker": "pnpm --filter @xrnotify/backend start:worker",
+    "test": "pnpm -r test",
+    "test:backend": "pnpm --filter @xrnotify/backend test",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "db:migrate": "pnpm --filter @xrnotify/backend db:migrate",
+    "db:migrate:create": "pnpm --filter @xrnotify/backend db:migrate:create",
+    "docker:up": "docker compose -f ops/docker-compose.yml up --build",
+    "docker:down": "docker compose -f ops/docker-compose.yml down",
+    "docker:logs": "docker compose -f ops/docker-compose.yml logs -f",
+    "prepare": "husky || true"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "^5.6.2"
+    }
+  }
+}

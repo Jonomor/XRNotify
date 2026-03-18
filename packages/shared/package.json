@@ -1,0 +1,86 @@
+{
+  "name": "@xrnotify/shared",
+  "version": "1.0.0",
+  "description": "XRNotify shared types, utilities, and validation schemas",
+  "author": "XRNotify <engineering@xrnotify.io>",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js"
+    },
+    "./types/event": {
+      "types": "./dist/types/event.d.ts",
+      "import": "./dist/types/event.js"
+    },
+    "./types/api": {
+      "types": "./dist/types/api.d.ts",
+      "import": "./dist/types/api.js"
+    },
+    "./crypto": {
+      "types": "./dist/crypto/index.d.ts",
+      "import": "./dist/crypto/index.js"
+    },
+    "./crypto/hmac": {
+      "types": "./dist/crypto/hmac.d.ts",
+      "import": "./dist/crypto/hmac.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.js"
+    },
+    "./validation/schemas": {
+      "types": "./dist/validation/schemas.d.ts",
+      "import": "./dist/validation/schemas.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
+    },
+    "./utils/time": {
+      "types": "./dist/utils/time.d.ts",
+      "import": "./dist/utils/time.js"
+    },
+    "./utils/id": {
+      "types": "./dist/utils/id.d.ts",
+      "import": "./dist/utils/id.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "build:watch": "tsc --build --watch",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "dev": "tsc --build --watch",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

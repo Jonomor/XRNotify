@@ -1,0 +1,60 @@
+# ============================================
+# XRNotify Grafana Dashboard Provisioning
+# ============================================
+# Documentation: https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards
+# ============================================
+
+apiVersion: 1
+
+# ============================================
+# Dashboard Providers
+# ============================================
+providers:
+  # ------------------------------------------
+  # XRNotify Dashboards
+  # ------------------------------------------
+  - name: "XRNotify"
+    # Unique identifier for this provider
+    orgId: 1
+    # Provider type (file is the only supported type)
+    type: file
+    # Disable dashboard deletion from UI
+    disableDeletion: true
+    # Allow updating provisioned dashboards from UI
+    # Changes will be lost on restart
+    updateIntervalSeconds: 30
+    # Allow editing in UI (changes won't persist)
+    allowUiUpdates: true
+    options:
+      # Path to dashboard JSON files
+      path: /var/lib/grafana/dashboards
+      # Recursively search for dashboards in subfolders
+      foldersFromFilesStructure: false
+
+  # ------------------------------------------
+  # Infrastructure Dashboards (Optional)
+  # ------------------------------------------
+  # Uncomment to add infrastructure monitoring dashboards
+  # - name: "Infrastructure"
+  #   orgId: 1
+  #   type: file
+  #   disableDeletion: true
+  #   updateIntervalSeconds: 60
+  #   allowUiUpdates: false
+  #   options:
+  #     path: /var/lib/grafana/dashboards/infrastructure
+  #     foldersFromFilesStructure: true
+
+  # ------------------------------------------
+  # Alert Dashboards (Optional)
+  # ------------------------------------------
+  # Uncomment when alerting is configured
+  # - name: "Alerts"
+  #   orgId: 1
+  #   type: file
+  #   disableDeletion: true
+  #   updateIntervalSeconds: 60
+  #   allowUiUpdates: false
+  #   options:
+  #     path: /var/lib/grafana/dashboards/alerts
+  #     foldersFromFilesStructure: false

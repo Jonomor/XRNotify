@@ -1,0 +1,141 @@
+# ============================================
+# XRNotify Grafana Datasources Provisioning
+# ============================================
+# Documentation: https://grafana.com/docs/grafana/latest/administration/provisioning/#datasources
+# ============================================
+
+apiVersion: 1
+
+# ============================================
+# Datasource Definitions
+# ============================================
+datasources:
+  # ------------------------------------------
+  # Prometheus - Primary Metrics Store
+  # ------------------------------------------
+  - name: Prometheus
+    type: prometheus
+    uid: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
+    jsonData:
+      # Time interval for $__interval and $__interval_ms
+      timeInterval: "15s"
+      # Query timeout
+      queryTimeout: "60s"
+      # HTTP method for queries
+      httpMethod: POST
+      # Manage alerts via this datasource
+      manageAlerts: true
+      # Prometheus type
+      prometheusType: Prometheus
+      # Prometheus version (auto-detect)
+      prometheusVersion: "2.47.0"
+      # Enable exemplars
+      exemplarTraceIdDestinations:
+        - name: traceId
+          datasourceUid: tempo
+      # Incremental querying for better performance
+      incrementalQuerying: true
+      incrementalQueryOverlapWindow: "10m"
+      # Disable metrics browser caching for dev
+      disableMetricsLookup: false
+      # Custom query parameters
+      customQueryParameters: ""
+
+  # ------------------------------------------
+  # PostgreSQL - Application Database
+  # ------------------------------------------
+  - name: PostgreSQL
+    type: postgres
+    uid: postgresql
+    access: proxy
+    url: postgres:5432
+    user: xrnotify
+    database: xrnotify
+    editable: false
+    secureJsonData:
+      password: "${POSTGRES_PASSWORD}"
+    jsonData:
+      sslmode: disable
+      maxOpenConns: 5
+      maxIdleConns: 2
+      connMaxLifetime: 14400
+      postgresVersion: 1600
+      timescaledb: false
+
+  # ------------------------------------------
+  # Redis - For Redis metrics (optional)
+  # ------------------------------------------
+  # Uncomment when using redis datasource plugin
+  # - name: Redis
+  #   type: redis-datasource
+  #   uid: redis
+  #   access: proxy
+  #   url: redis://redis:6379
+  #   editable: false
+  #   jsonData:
+  #     client: standalone
+  #     poolSize: 5
+
+  # ------------------------------------------
+  # Loki - Log Aggregation (optional)
+  # ------------------------------------------
+  # Uncomment when Loki is deployed
+  # - name: Loki
+  #   type: loki
+  #   uid: loki
+  #   access: proxy
+  #   url: http://loki:3100
+  #   editable: false
+  #   jsonData:
+  #     maxLines: 1000
+  #     derivedFields:
+  #       - name: TraceID
+  #         matcherRegex: "traceId=(\\w+)"
+  #         url: "${__value.raw}"
+  #         datasourceUid: tempo
+
+  # ------------------------------------------
+  # Tempo - Distributed Tracing (optional)
+  # ------------------------------------------
+  # Uncomment when Tempo is deployed
+  # - name: Tempo
+  #   type: tempo
+  #   uid: tempo
+  #   access: proxy
+  #   url: http://tempo:3200
+  #   editable: false
+  #   jsonData:
+  #     httpMethod: GET
+  #     tracesToLogs:
+  #       datasourceUid: loki
+  #       tags: ['service.name', 'service.namespace']
+  #       mappedTags: [{ key: 'service.name', value: 'service' }]
+  #       mapTagNamesEnabled: true
+  #       spanStartTimeShift: '-1h'
+  #       spanEndTimeShift: '1h'
+  #       filterByTraceID: true
+  #       filterBySpanID: false
+  #     tracesToMetrics:
+  #       datasourceUid: prometheus
+  #       tags: [{ key: 'service.name', value: 'service' }]
+  #       queries:
+  #         - name: 'Request rate'
+  #           query: 'sum(rate(xrnotify_http_requests_total{$$__tags}[5m]))'
+  #     serviceMap:
+  #       datasourceUid: prometheus
+  #     nodeGraph:
+  #       enabled: true
+  #     lokiSearch:
+  #       datasourceUid: loki
+
+# ============================================
+# Delete Datasources
+# ============================================
+# List datasources to delete when provisioning
+deleteDatasources: []
+  # - name: OldDatasource
+  #   orgId: 1
