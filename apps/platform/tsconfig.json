@@ -28,7 +28,9 @@
       "@/components/*": ["./src/components/*"],
       "@/lib/*": ["./src/lib/*"],
       "@/styles/*": ["./src/styles/*"],
-      "@/types/*": ["./src/types/*"]
+      "@/types/*": ["./src/types/*"],
+      "@xrnotify/shared": ["../../packages/shared/src"],
+      "@xrnotify/shared/*": ["../../packages/shared/src/*"]
     }
   },
   "include": [
