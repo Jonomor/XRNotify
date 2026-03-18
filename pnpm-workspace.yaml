@@ -1,0 +1,9 @@
+packages:
+  # Shared libraries
+  - 'packages/*'
+  
+  # Applications (Next.js platform)
+  - 'apps/*'
+  
+  # Worker processes (webhook delivery, XRPL listener)
+  - 'workers/*'

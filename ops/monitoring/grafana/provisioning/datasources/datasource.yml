@@ -1,0 +1,105 @@
+# =============================================================================
+# XRNotify - Grafana Datasource Provisioning
+# =============================================================================
+# Automatically configures Prometheus as the default datasource
+# =============================================================================
+
+apiVersion: 1
+
+# List of datasources to delete before inserting/updating
+deleteDatasources: []
+
+# List of datasources to insert/update
+datasources:
+  # ---------------------------------------------------------------------------
+  # Prometheus - Primary Metrics Store
+  # ---------------------------------------------------------------------------
+  - name: Prometheus
+    type: prometheus
+    uid: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
+    jsonData:
+      httpMethod: POST
+      manageAlerts: true
+      prometheusType: Prometheus
+      prometheusVersion: 2.48.0
+      cacheLevel: 'High'
+      disableRecordingRules: false
+      incrementalQueryOverlapWindow: 10m
+      exemplarTraceIdDestinations:
+        - name: traceID
+          datasourceUid: tempo
+    version: 1
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL - Direct Database Access (Optional)
+  # ---------------------------------------------------------------------------
+  # Uncomment to enable direct database queries in Grafana
+  # - name: PostgreSQL
+  #   type: postgres
+  #   uid: postgres
+  #   access: proxy
+  #   url: postgres:5432
+  #   user: xrnotify
+  #   isDefault: false
+  #   editable: false
+  #   secureJsonData:
+  #     password: ${POSTGRES_PASSWORD}
+  #   jsonData:
+  #     database: xrnotify
+  #     sslmode: disable
+  #     maxOpenConns: 5
+  #     maxIdleConns: 2
+  #     connMaxLifetime: 14400
+  #   version: 1
+
+  # ---------------------------------------------------------------------------
+  # Loki - Log Aggregation (Optional)
+  # ---------------------------------------------------------------------------
+  # Uncomment if you add Loki for log aggregation
+  # - name: Loki
+  #   type: loki
+  #   uid: loki
+  #   access: proxy
+  #   url: http://loki:3100
+  #   isDefault: false
+  #   editable: false
+  #   jsonData:
+  #     maxLines: 1000
+  #   version: 1
+
+  # ---------------------------------------------------------------------------
+  # Tempo - Distributed Tracing (Optional)
+  # ---------------------------------------------------------------------------
+  # Uncomment if you add Tempo for tracing
+  # - name: Tempo
+  #   type: tempo
+  #   uid: tempo
+  #   access: proxy
+  #   url: http://tempo:3200
+  #   isDefault: false
+  #   editable: false
+  #   jsonData:
+  #     httpMethod: GET
+  #     tracesToLogs:
+  #       datasourceUid: loki
+  #       tags: ['service.name']
+  #       mappedTags: [{ key: 'service.name', value: 'service' }]
+  #       mapTagNamesEnabled: true
+  #       spanStartTimeShift: '-1h'
+  #       spanEndTimeShift: '1h'
+  #       filterByTraceID: true
+  #       filterBySpanID: false
+  #     tracesToMetrics:
+  #       datasourceUid: prometheus
+  #       tags: [{ key: 'service.name', value: 'service' }]
+  #     serviceMap:
+  #       datasourceUid: prometheus
+  #     nodeGraph:
+  #       enabled: true
+  #     lokiSearch:
+  #       datasourceUid: loki
+  #   version: 1

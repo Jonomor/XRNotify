@@ -1,0 +1,23 @@
+# =============================================================================
+# XRNotify - Grafana Dashboard Provisioning
+# =============================================================================
+# Configures automatic dashboard loading from file system
+# =============================================================================
+
+apiVersion: 1
+
+providers:
+  # ---------------------------------------------------------------------------
+  # XRNotify Dashboards
+  # ---------------------------------------------------------------------------
+  - name: 'XRNotify'
+    orgId: 1
+    folder: 'XRNotify'
+    folderUid: 'xrnotify'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false

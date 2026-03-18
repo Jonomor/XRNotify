@@ -1,0 +1,180 @@
+# =============================================================================
+# XRNotify - Docker Compose for Local Development
+# =============================================================================
+# Usage:
+#   docker compose -f ops/docker-compose.yml up -d      # Start all services
+#   docker compose -f ops/docker-compose.yml down       # Stop all services
+#   docker compose -f ops/docker-compose.yml logs -f    # View logs
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ===========================================================================
+  # PostgreSQL Database
+  # ===========================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: xrnotify-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: xrnotify
+      POSTGRES_PASSWORD: xrnotify_dev
+      POSTGRES_DB: xrnotify
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U xrnotify -d xrnotify']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - xrnotify-network
+
+  # ===========================================================================
+  # Redis (Queue, Cache, Rate Limiting)
+  # ===========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: xrnotify-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - xrnotify-network
+
+  # ===========================================================================
+  # Prometheus (Metrics Collection)
+  # ===========================================================================
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: xrnotify-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:9090/-/healthy']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - xrnotify-network
+    depends_on:
+      - redis
+
+  # ===========================================================================
+  # Grafana (Dashboards & Visualization)
+  # ===========================================================================
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: xrnotify-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: xrnotify_dev
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SERVER_ROOT_URL: http://localhost:3001
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+    ports:
+      - '3001:3000'
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - xrnotify-network
+    depends_on:
+      - prometheus
+
+  # ===========================================================================
+  # Redis Commander (Optional - Redis GUI)
+  # ===========================================================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: xrnotify-redis-commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - '8081:8081'
+    networks:
+      - xrnotify-network
+    depends_on:
+      - redis
+    profiles:
+      - tools
+
+  # ===========================================================================
+  # pgAdmin (Optional - PostgreSQL GUI)
+  # ===========================================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: xrnotify-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@xrnotify.io
+      PGADMIN_DEFAULT_PASSWORD: xrnotify_dev
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - '8082:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - xrnotify-network
+    depends_on:
+      - postgres
+    profiles:
+      - tools
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  xrnotify-network:
+    driver: bridge
+    name: xrnotify-network
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  postgres_data:
+    name: xrnotify-postgres-data
+  redis_data:
+    name: xrnotify-redis-data
+  prometheus_data:
+    name: xrnotify-prometheus-data
+  grafana_data:
+    name: xrnotify-grafana-data
+  pgadmin_data:
+    name: xrnotify-pgadmin-data

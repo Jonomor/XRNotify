@@ -1,0 +1,118 @@
+# =============================================================================
+# XRNotify - Prometheus Configuration
+# =============================================================================
+# Scrape configuration for all XRNotify services
+# =============================================================================
+
+global:
+  scrape_interval: 15s          # Default scrape interval
+  evaluation_interval: 15s      # Rule evaluation interval
+  scrape_timeout: 10s           # Timeout for scrape requests
+
+  # Attach these labels to any time series or alerts
+  external_labels:
+    monitor: 'xrnotify'
+    environment: 'development'
+
+# =============================================================================
+# Alerting Configuration
+# =============================================================================
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # Add alertmanager targets here for production:
+          # - targets: ['alertmanager:9093']
+
+# =============================================================================
+# Rule Files
+# =============================================================================
+rule_files:
+  # - 'alerts/*.yml'
+  # - 'recording_rules/*.yml'
+
+# =============================================================================
+# Scrape Configurations
+# =============================================================================
+scrape_configs:
+  # ---------------------------------------------------------------------------
+  # Prometheus Self-Monitoring
+  # ---------------------------------------------------------------------------
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # ---------------------------------------------------------------------------
+  # XRNotify Platform (Next.js API)
+  # ---------------------------------------------------------------------------
+  - job_name: 'xrnotify-platform'
+    metrics_path: '/api/metrics'
+    scrape_interval: 10s
+    static_configs:
+      # Local development
+      - targets: ['host.docker.internal:3000']
+        labels:
+          service: 'platform'
+          component: 'api'
+    # For production, use DNS service discovery or static targets:
+    # - targets: ['xrnotify-platform.internal:3000']
+
+  # ---------------------------------------------------------------------------
+  # XRNotify Webhook Worker
+  # ---------------------------------------------------------------------------
+  - job_name: 'xrnotify-worker'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['host.docker.internal:9091']
+        labels:
+          service: 'worker'
+          component: 'webhook-delivery'
+    # For production:
+    # - targets: ['xrnotify-worker.internal:9091']
+
+  # ---------------------------------------------------------------------------
+  # XRNotify XRPL Listener
+  # ---------------------------------------------------------------------------
+  - job_name: 'xrnotify-listener'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['host.docker.internal:9092']
+        labels:
+          service: 'listener'
+          component: 'xrpl-ingestion'
+    # For production:
+    # - targets: ['xrnotify-listener.internal:9092']
+
+  # ---------------------------------------------------------------------------
+  # Redis Exporter (Optional)
+  # ---------------------------------------------------------------------------
+  # Uncomment if you add redis_exporter to docker-compose
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Exporter (Optional)
+  # ---------------------------------------------------------------------------
+  # Uncomment if you add postgres_exporter to docker-compose
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgres'
+
+  # ---------------------------------------------------------------------------
+  # Node Exporter (Optional - Host Metrics)
+  # ---------------------------------------------------------------------------
+  # Uncomment if you add node_exporter to docker-compose
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
+  #       labels:
+  #         service: 'host'

@@ -1,0 +1,35 @@
+{
+  "name": "@xrnotify/xrpl-listener",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XRNotify XRPL listener - connects to XRPL nodes and publishes events",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:prod": "NODE_ENV=production node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@xrnotify/shared": "workspace:*",
+    "xrpl": "^3.0.0",
+    "ioredis": "^5.3.2",
+    "pg": "^8.11.3",
+    "pino": "^8.17.2",
+    "prom-client": "^15.1.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/pg": "^8.10.9",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
