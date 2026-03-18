@@ -61,12 +61,6 @@
    ============================================================================= */
 
 @layer base {
-  *,
-  *::before,
-  *::after {
-    @apply border-border;
-  }
-  
   html {
     @apply scroll-smooth antialiased;
     text-rendering: optimizeLegibility;
