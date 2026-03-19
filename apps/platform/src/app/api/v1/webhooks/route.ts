@@ -194,9 +194,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { webhooks, total } = await listWebhooks({
       tenantId: context.tenantId,
       isActive: query.is_active,
-      eventTypes: query.event_types,
-      limit: query.limit ?? 50,
-      offset: query.offset ?? 0,
+      eventType: query.event_type,
+      limit: query.per_page,
+      offset: (query.page - 1) * query.per_page,
     });
 
     logger.info({ 
@@ -217,8 +217,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         data: webhooks,
         meta: {
           total,
-          limit: query.limit ?? 50,
-          offset: query.offset ?? 0,
+          page: query.page,
+          per_page: query.per_page,
         },
       },
       {
