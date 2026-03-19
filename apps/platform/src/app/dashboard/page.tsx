@@ -172,7 +172,7 @@ export default async function DashboardPage() {
   ] = await Promise.all([
     getDeliveryStats(tenantId),
     listDeliveries({ tenantId, limit: 10, offset: 0 }),
-    listWebhooks(tenantId, { limit: 100 }),
+    listWebhooks({ tenantId, limit: 100 }),
     listApiKeys(tenantId),
     getUsageTracker().getUsage(tenantId),
     queryOne<{ events_per_month: number; webhook_limit: number }>(
