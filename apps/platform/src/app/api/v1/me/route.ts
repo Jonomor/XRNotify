@@ -167,9 +167,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Build response
     const responseData: Record<string, unknown> = {
       user: {
-        id: session.userId,
+        id: session.id,
         email: session.email,
-        name: session.name,
       },
       tenant: {
         id: tenant.id,
