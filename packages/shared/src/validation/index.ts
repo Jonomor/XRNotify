@@ -238,7 +238,12 @@ export const replayEventsSchema = z.object({
   event_ids: z
     .array(z.string())
     .min(1, 'At least one event ID is required')
-    .max(100, 'Maximum 100 events can be replayed at once'),
+    .max(100, 'Maximum 100 events can be replayed at once')
+    .optional(),
+  start_date: isoTimestampSchema.optional(),
+  end_date: isoTimestampSchema.optional(),
+  event_type: z.string().optional(),
+  status: z.enum(['failed', 'dead_letter']).optional(),
 });
 
 export type ReplayEventsInput = z.infer<typeof replayEventsSchema>;
