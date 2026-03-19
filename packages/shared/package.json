@@ -6,11 +6,11 @@
   "license": "UNLICENSED",
   "type": "module",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./src/index.ts"
     }
   },
   "files": [
@@ -18,7 +18,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --clean && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build": "tsup src/index.ts --format esm --clean",
     "clean": "rm -rf dist",
     "dev": "tsup src/index.ts --format esm --watch",
     "typecheck": "tsc --noEmit"
