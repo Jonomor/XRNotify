@@ -263,9 +263,9 @@ export default async function DeliveriesPage({ searchParams }: PageProps) {
 
   const hasFilters = !!(params.status || params.webhook_id || params.event_type);
   const currentParams: Record<string, string> = {};
-  if (params.status) currentParams.status = params.status;
-  if (params.webhook_id) currentParams.webhook_id = params.webhook_id;
-  if (params.event_type) currentParams.event_type = params.event_type;
+  if (params.status) currentParams['status'] = params.status;
+  if (params.webhook_id) currentParams['webhook_id'] = params.webhook_id;
+  if (params.event_type) currentParams['event_type'] = params.event_type;
 
   // Event type options
   const eventTypeOptions = [
