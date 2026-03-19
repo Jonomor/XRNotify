@@ -494,12 +494,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { current_password, new_password } = parseResult.data;
 
     // Change password
-    const result = await changePassword(session.id, current_password, new_password);
+    const passwordChanged = await changePassword(session.id, current_password, new_password);
 
-    if (!result.success) {
+    if (!passwordChanged) {
       logSecurityEvent(logger, 'password_change_failed', {
         userId: session.id,
-        reason: result.error,
+        reason: 'invalid_current_password',
       });
 
       const durationMs = Math.round(performance.now() - startTime);
@@ -512,7 +512,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         {
           error: {
             code: 'INVALID_PASSWORD',
-            message: result.error ?? 'Current password is incorrect',
+            message: 'Current password is incorrect',
           },
         },
         { 
