@@ -202,7 +202,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const currentUsage = await usageTracker.getUsage(session.tenantId, 'events');
       const deliveryStats = await getDeliveryStats(session.tenantId);
 
-      responseData.usage = {
+      responseData['usage'] = {
         events_this_month: currentUsage,
         events_limit: tenant.events_per_month,
         events_remaining: Math.max(0, tenant.events_per_month - currentUsage),
