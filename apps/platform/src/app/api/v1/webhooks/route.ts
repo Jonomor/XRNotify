@@ -292,7 +292,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check webhook limit based on plan
-    const maxWebhooks = context.tenant.settings.max_webhooks;
+    const maxWebhooks = context.tenant.settings['max_webhooks'];
     const { total: currentWebhooks } = await listWebhooks({
       tenantId: context.tenantId,
       limit: 1,

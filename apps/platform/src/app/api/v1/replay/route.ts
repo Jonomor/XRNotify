@@ -149,7 +149,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check if replay is enabled for this plan
-    if (!context.tenant.settings.replay_enabled) {
+    if (!context.tenant.settings['replay_enabled']) {
       return NextResponse.json(
         {
           error: {
@@ -219,7 +219,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       // Check retention window (default 30 days for most plans)
-      const retentionDays = context.tenant.settings.retention_days ?? 30;
+      const retentionDays = context.tenant.settings['retention_days'] ?? 30;
       const oldestAllowed = new Date();
       oldestAllowed.setDate(oldestAllowed.getDate() - retentionDays);
       
@@ -381,7 +381,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return rateLimitResult.error;
     }
 
-    const retentionDays = context.tenant.settings.retention_days ?? 30;
+    const retentionDays = context.tenant.settings['retention_days'] ?? 30;
     const oldestReplayable = new Date();
     oldestReplayable.setDate(oldestReplayable.getDate() - retentionDays);
 
@@ -396,7 +396,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         data: {
-          enabled: context.tenant.settings.replay_enabled ?? false,
+          enabled: context.tenant.settings['replay_enabled'] ?? false,
           retention_days: retentionDays,
           oldest_replayable: oldestReplayable.toISOString(),
           allowed_statuses: ['failed', 'dead_letter'],

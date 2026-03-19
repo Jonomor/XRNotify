@@ -305,7 +305,7 @@ export async function POST(
     }
 
     // Check if replay is allowed based on plan
-    if (!context.tenant.settings.replay_enabled) {
+    if (!context.tenant.settings['replay_enabled']) {
       return NextResponse.json(
         {
           error: {

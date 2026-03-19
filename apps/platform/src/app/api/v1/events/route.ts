@@ -177,7 +177,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Check if events access is enabled for this plan
-    if (!context.tenant.settings.events_api_enabled) {
+    if (!context.tenant.settings['events_api_enabled']) {
       return NextResponse.json(
         {
           error: {
