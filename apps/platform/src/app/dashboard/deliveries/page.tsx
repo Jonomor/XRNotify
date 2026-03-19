@@ -75,7 +75,7 @@ function StatusBadge({ status }: { status: string }) {
     },
   };
 
-  const style = config[status] ?? config.pending;
+  const style = config[status] ?? config['pending'];
 
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
