@@ -5,7 +5,6 @@
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import type { ComponentHealth } from '@xrnotify/shared';
 import { checkHealth as checkDbHealth, getPoolStats } from '@/lib/db';
 import { checkHealth as checkRedisHealth } from '@/lib/redis';
 import { createModuleLogger } from '@/lib/logger';
@@ -16,12 +15,19 @@ import { createModuleLogger } from '@/lib/logger';
 
 type HealthStatusValue = 'healthy' | 'degraded' | 'unhealthy';
 
+interface LocalComponentHealth {
+  status: 'healthy' | 'unhealthy';
+  latency_ms?: number;
+  message?: string;
+  details?: Record<string, unknown>;
+}
+
 interface HealthResponse {
   status: HealthStatusValue;
   timestamp: string;
   version: string;
   uptime: number;
-  components?: Record<string, ComponentHealth>;
+  components?: Record<string, LocalComponentHealth>;
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +78,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
   }
 
   // Full health check with components
-  const components: Record<string, ComponentHealth> = {};
+  const components: Record<string, LocalComponentHealth> = {};
   let overallHealthy = true;
 
   // Check database
