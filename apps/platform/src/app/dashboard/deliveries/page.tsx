@@ -75,7 +75,12 @@ function StatusBadge({ status }: { status: string }) {
     },
   };
 
-  const style = config[status] ?? config['pending'];
+  const defaultStyle = { 
+    bg: 'bg-yellow-100 dark:bg-yellow-900', 
+    text: 'text-yellow-800 dark:text-yellow-200',
+    label: 'Pending'
+  };
+  const style = config[status] ?? defaultStyle;
 
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${style.bg} ${style.text}`}>
