@@ -331,7 +331,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     );
 
     // Clear session cookie
-    clearSessionCookie(response);
+    await clearSessionCookie();
 
     return response;
   } catch (error) {
