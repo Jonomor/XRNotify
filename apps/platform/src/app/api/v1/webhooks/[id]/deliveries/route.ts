@@ -235,10 +235,10 @@ export async function GET(
       webhookId: webhookId, // Filter by this specific webhook
       eventType: query.event_type as EventType | undefined,
       status: query.status as DeliveryStatus | undefined,
-      startDate: query.start_date ? new Date(query.start_date) : undefined,
-      endDate: query.end_date ? new Date(query.end_date) : undefined,
-      limit: query.limit ?? 50,
-      offset: query.offset ?? 0,
+      startDate: query.from ? new Date(query.from) : undefined,
+      endDate: query.to ? new Date(query.to) : undefined,
+      limit: query.per_page,
+      offset: (query.page - 1) * query.per_page,
     });
 
     logger.debug({ 
@@ -260,8 +260,8 @@ export async function GET(
         data: deliveries.map(formatDeliveryResponse),
         meta: {
           total,
-          limit: query.limit ?? 50,
-          offset: query.offset ?? 0,
+          page: query.page,
+          per_page: query.per_page,
           webhook_id: webhookId,
         },
       },
