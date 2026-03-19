@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentSession } from '@/lib/auth/session';
 import { listApiKeys } from '@/lib/auth/apiKey';
-import { API_KEY_SCOPES } from '@xrnotify/shared';
+import { ALL_API_KEY_SCOPES } from '@xrnotify/shared';
 
 // -----------------------------------------------------------------------------
 // Types
