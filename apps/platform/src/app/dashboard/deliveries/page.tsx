@@ -250,7 +250,7 @@ export default async function DeliveriesPage({ searchParams }: PageProps) {
   const [deliveryResult, stats, webhooksResult] = await Promise.all([
     listDeliveries(filters),
     getDeliveryStats(session.tenantId),
-    listWebhooks(session.tenantId, { limit: 100 }),
+    listWebhooks({ tenantId: session.tenantId, limit: 100 }),
   ]);
 
   const { deliveries, total } = deliveryResult;
