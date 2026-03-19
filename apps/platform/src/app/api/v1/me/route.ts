@@ -344,7 +344,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       SET name = COALESCE($1, name), updated_at = NOW()
       WHERE id = $2
       RETURNING id, tenant_id, email, name, created_at, updated_at
-    `, [input.name ?? null, session.userId]);
+    `, [input.name ?? null, session.id]);
 
     if (!user) {
       return NextResponse.json(
@@ -358,7 +358,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    logger.info({ requestId, userId: session.userId }, 'User profile updated');
+    logger.info({ requestId, userId: session.id }, 'User profile updated');
 
     const durationMs = Math.round(performance.now() - startTime);
     recordHttpRequest(
@@ -494,11 +494,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { current_password, new_password } = parseResult.data;
 
     // Change password
-    const result = await changePassword(session.userId, current_password, new_password);
+    const result = await changePassword(session.id, current_password, new_password);
 
     if (!result.success) {
       logSecurityEvent(logger, 'password_change_failed', {
-        userId: session.userId,
+        userId: session.id,
         reason: result.error,
       });
 
@@ -523,11 +523,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     logSecurityEvent(logger, 'password_changed', {
-      userId: session.userId,
+      userId: session.id,
       email: session.email,
     });
 
-    logger.info({ requestId, userId: session.userId }, 'Password changed');
+    logger.info({ requestId, userId: session.id }, 'Password changed');
 
     const durationMs = Math.round(performance.now() - startTime);
     recordHttpRequest(
