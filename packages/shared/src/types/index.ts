@@ -434,6 +434,7 @@ export interface TenantSettings {
   max_events_per_month: number;
   retry_policy: RetryPolicy;
   include_raw_events: boolean;
+  replay_enabled: boolean;
   custom_domains?: string[];
 }
 
@@ -456,6 +457,7 @@ export const DEFAULT_TENANT_SETTINGS: Record<PlanType, TenantSettings> = {
       backoff_multiplier: 2,
     },
     include_raw_events: false,
+    replay_enabled: false,
   },
   starter: {
     webhook_timeout_ms: 15000,
@@ -468,6 +470,7 @@ export const DEFAULT_TENANT_SETTINGS: Record<PlanType, TenantSettings> = {
       backoff_multiplier: 2,
     },
     include_raw_events: false,
+    replay_enabled: true,
   },
   pro: {
     webhook_timeout_ms: 30000,
@@ -480,6 +483,7 @@ export const DEFAULT_TENANT_SETTINGS: Record<PlanType, TenantSettings> = {
       backoff_multiplier: 2,
     },
     include_raw_events: true,
+    replay_enabled: true,
   },
   enterprise: {
     webhook_timeout_ms: 60000,
@@ -492,6 +496,7 @@ export const DEFAULT_TENANT_SETTINGS: Record<PlanType, TenantSettings> = {
       backoff_multiplier: 2,
     },
     include_raw_events: true,
+    replay_enabled: true,
   },
 };
 
