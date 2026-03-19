@@ -236,9 +236,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         message: 'Login successful',
         data: {
           user: {
-            id: result.session.userId,
+            id: result.session.id,
             email: result.session.email,
-            name: result.session.name,
           },
           tenant: {
             id: result.session.tenantId,
@@ -246,7 +245,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             plan: result.session.tenant.plan,
             is_active: result.session.tenant.is_active,
           },
-          expires_at: new Date(result.session.exp * 1000).toISOString(),
+          expires_at: result.session.expiresAt,
         },
       },
       {
