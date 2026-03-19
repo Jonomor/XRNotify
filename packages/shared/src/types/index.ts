@@ -608,5 +608,6 @@ export interface ComponentHealth {
   status: 'healthy' | 'unhealthy';
   latency_ms?: number;
   message?: string;
-  last_check: string;
+  last_check?: string;
+  details?: Record<string, unknown>;
 }
