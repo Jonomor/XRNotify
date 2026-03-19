@@ -232,8 +232,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         data: deliveries.map(formatDeliveryResponse),
         meta: {
           total,
-          limit: query.limit ?? 50,
-          offset: query.offset ?? 0,
+          page: query.page,
+          per_page: query.per_page,
         },
       },
       {
