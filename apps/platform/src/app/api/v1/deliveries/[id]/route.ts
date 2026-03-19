@@ -16,6 +16,7 @@ import {
   getDeliveryWithAttempts,
   queueForReplay,
   getDeliveryById,
+  type DeliveryWithAttempts,
 } from '@/lib/deliveries/service';
 import { checkRateLimit } from '@/lib/rate-limit/tokenBucket';
 import { createModuleLogger, logSecurityEvent } from '@/lib/logger';
@@ -401,33 +402,6 @@ export async function POST(
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
-
-interface DeliveryWithAttempts {
-  id: string;
-  webhook_id: string;
-  tenant_id: string;
-  event_id: string;
-  event_type: string;
-  payload: Record<string, unknown>;
-  url: string;
-  status: string;
-  attempt_count: number;
-  max_attempts: number;
-  error_code?: string;
-  error_message?: string;
-  next_retry_at?: string;
-  delivered_at?: string;
-  created_at: string;
-  updated_at: string;
-  attempts: Array<{
-    attempt_number: number;
-    status_code: number | null;
-    response_body: string | null;
-    error_message: string | null;
-    duration_ms: number;
-    attempted_at: string;
-  }>;
-}
 
 function formatDeliveryDetailResponse(delivery: DeliveryWithAttempts): Record<string, unknown> {
   return {

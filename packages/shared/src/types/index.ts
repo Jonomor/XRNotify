@@ -380,6 +380,8 @@ export interface Delivery {
   tenant_id: string;
   event_id: string;
   event_type: EventType;
+  payload: Record<string, unknown>;
+  url: string;
   status: DeliveryStatus;
   attempt_count: number;
   max_attempts: number;
