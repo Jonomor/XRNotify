@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { listDeliveriesQuerySchema } from '@xrnotify/shared';
-import type { DeliveryStatus, EventType } from '@xrnotify/shared';
+import type { DeliveryStatus, EventType, Delivery } from '@xrnotify/shared';
 import { 
   extractApiKey, 
   validateApiKey, 
@@ -338,7 +338,7 @@ async function handleStatsRequest(
 // Helpers
 // -----------------------------------------------------------------------------
 
-function formatDeliveryResponse(delivery: Record<string, unknown>): Record<string, unknown> {
+function formatDeliveryResponse(delivery: Delivery): Record<string, unknown> {
   // Remove internal fields, format dates
   return {
     id: delivery.id,
@@ -348,9 +348,9 @@ function formatDeliveryResponse(delivery: Record<string, unknown>): Record<strin
     status: delivery.status,
     attempt_count: delivery.attempt_count,
     max_attempts: delivery.max_attempts,
-    error_code: delivery.error_code,
-    error_message: delivery.error_message,
-    next_retry_at: delivery.next_retry_at,
+    last_error_code: delivery.last_error_code,
+    last_error: delivery.last_error,
+    next_attempt_at: delivery.next_attempt_at,
     delivered_at: delivery.delivered_at,
     created_at: delivery.created_at,
     updated_at: delivery.updated_at,
