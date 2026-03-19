@@ -357,7 +357,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
       }
     );
 
-    clearSessionCookie(response);
+    await clearSessionCookie();
 
     return response;
   } finally {
