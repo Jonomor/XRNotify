@@ -199,7 +199,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Include usage if requested
     if (isUsageRequest) {
       const usageTracker = getUsageTracker();
-      const currentUsage = await usageTracker.getUsage(session.tenantId);
+      const currentUsage = await usageTracker.getUsage(session.tenantId, 'events');
       const deliveryStats = await getDeliveryStats(session.tenantId);
 
       responseData.usage = {
@@ -217,7 +217,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       };
     }
 
-    logger.debug({ requestId, userId: session.userId }, 'Retrieved user profile');
+    logger.debug({ requestId, sessionId: session.id }, 'Retrieved user profile');
 
     const durationMs = Math.round(performance.now() - startTime);
     recordHttpRequest(
