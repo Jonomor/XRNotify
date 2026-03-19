@@ -359,7 +359,7 @@ export type DeliveryStatus =
   | 'delivered'
   | 'failed'
   | 'retrying'
-  | 'dlq';
+  | 'dead_letter';
 
 export type DeliveryErrorCode =
   | 'TIMEOUT'

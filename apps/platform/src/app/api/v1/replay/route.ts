@@ -269,7 +269,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
       filter.status = input.status as DeliveryStatus;
     } else {
-      // Default to failed and dead_letter if no status specified
+      // Default to failed if no status specified
       filter.status = 'failed';
     }
 

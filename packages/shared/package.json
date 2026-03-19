@@ -1,6 +1,6 @@
 {
   "name": "@xrnotify/shared",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shared types, utilities, and crypto functions for XRNotify",
   "author": "XRNotify <engineering@xrnotify.io>",
   "license": "UNLICENSED",

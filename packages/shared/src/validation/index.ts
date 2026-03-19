@@ -206,7 +206,7 @@ export const deliveryStatusSchema = z.enum([
   'delivered',
   'failed',
   'retrying',
-  'dlq',
+  'dead_letter',
 ]);
 
 export type DeliveryStatusInput = z.infer<typeof deliveryStatusSchema>;
