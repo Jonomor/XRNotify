@@ -189,10 +189,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         events_per_month: tenant.events_per_month,
       },
       features: {
-        replay_enabled: tenant.settings.replay_enabled ?? false,
-        events_api_enabled: tenant.settings.events_api_enabled ?? false,
-        websocket_enabled: tenant.settings.websocket_enabled ?? false,
-        retention_days: tenant.settings.retention_days ?? 30,
+        replay_enabled: tenant.settings['replay_enabled'] ?? false,
+        events_api_enabled: tenant.settings['events_api_enabled'] ?? false,
+        websocket_enabled: tenant.settings['websocket_enabled'] ?? false,
+        retention_days: tenant.settings['retention_days'] ?? 30,
       },
     };
 
