@@ -86,9 +86,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       {
         data: {
           user: {
-            id: session.userId,
+            id: session.id,
             email: session.email,
-            name: session.name,
           },
           tenant: {
             id: session.tenantId,
@@ -96,7 +95,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             plan: session.tenant.plan,
             is_active: session.tenant.is_active,
           },
-          expires_at: new Date(session.exp * 1000).toISOString(),
+          expires_at: session.expiresAt,
         },
       },
       {
