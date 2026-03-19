@@ -513,6 +513,7 @@ export type ApiKeyScope =
   | 'webhooks:read'
   | 'webhooks:write'
   | 'deliveries:read'
+  | 'deliveries:write'
   | 'events:read'
   | 'api_keys:read'
   | 'api_keys:write'
@@ -523,6 +524,7 @@ export const ALL_API_KEY_SCOPES: ApiKeyScope[] = [
   'webhooks:read',
   'webhooks:write',
   'deliveries:read',
+  'deliveries:write',
   'events:read',
   'api_keys:read',
   'api_keys:write',
