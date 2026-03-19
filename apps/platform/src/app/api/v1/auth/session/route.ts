@@ -255,7 +255,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
 
     // Set session cookie
-    setSessionCookie(response, result.token);
+    if (result.token) {
+      await setSessionCookie(result.token);
+    }
 
     return response;
   } catch (error) {
