@@ -121,7 +121,7 @@ function EventTypeBadges({ types }: { types: string[] }) {
   const remaining = types.length - 2;
 
   const getColor = (type: string) => {
-    const category = type.split('.')[0];
+    const category = type.split('.')[0] ?? '';
     const colors: Record<string, string> = {
       payment: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200',
       nft: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200',

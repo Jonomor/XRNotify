@@ -86,8 +86,8 @@ export const apiKeyScopeSchema = z.enum(ALL_API_KEY_SCOPES as [string, ...string
  */
 export const createWebhookSchema = z.object({
   url: webhookUrlSchema,
-  events: eventTypesArraySchema,
-  accounts: z
+  event_types: eventTypesArraySchema,
+  account_filters: z
     .array(xrplAddressSchema)
     .max(100, 'Maximum 100 account filters allowed')
     .optional()
@@ -108,8 +108,8 @@ export type CreateWebhookInput = z.infer<typeof createWebhookSchema>;
  */
 export const updateWebhookSchema = z.object({
   url: webhookUrlSchema.optional(),
-  events: eventTypesArraySchema.optional(),
-  accounts: z
+  event_types: eventTypesArraySchema.optional(),
+  account_filters: z
     .array(xrplAddressSchema)
     .max(100, 'Maximum 100 account filters allowed')
     .optional(),

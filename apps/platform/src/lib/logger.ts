@@ -46,10 +46,10 @@ function createLoggerOptions(): LoggerOptions {
     formatters: {
       level: (label: string) => ({ level: label }),
       bindings: (bindings) => ({
-        pid: bindings.pid,
-        host: bindings.hostname,
-        service: bindings.service,
-        env: bindings.env,
+        pid: bindings['pid'],
+        host: bindings['hostname'],
+        service: bindings['service'],
+        env: bindings['env'],
       }),
     },
     redact: {

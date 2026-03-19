@@ -88,7 +88,7 @@ function EventTypeBadge({ type }: { type: string }) {
     check: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
   };
 
-  const category = type.split('.')[0];
+  const category = type.split('.')[0] ?? '';
   const colorClass = colors[category] ?? 'bg-gray-100 text-gray-800';
 
   return (
@@ -200,16 +200,17 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
   const offset = (page - 1) * limit;
 
   // Fetch webhooks
-  const { webhooks, total } = await listWebhooks(session.tenantId, {
+  const { webhooks, total } = await listWebhooks({
+    tenantId: session.tenantId,
     limit,
     offset,
-    is_active: filter === 'active' ? true : filter === 'disabled' ? false : undefined,
+    isActive: filter === 'active' ? true : filter === 'disabled' ? false : undefined,
   });
 
   // Apply additional filtering
   let filteredWebhooks = webhooks;
   if (filter === 'unhealthy') {
-    filteredWebhooks = webhooks.filter(w => w.consecutive_failures > 0);
+    filteredWebhooks = webhooks.filter(w => (w.consecutive_failures ?? 0) > 0);
   }
 
   const totalPages = Math.ceil(total / limit);
@@ -313,11 +314,11 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                       <td className="px-6 py-4">
                         <StatusBadge 
                           isActive={webhook.is_active} 
-                          failures={webhook.consecutive_failures} 
+                          failures={webhook.consecutive_failures ?? 0}
                         />
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                        {formatDate(webhook.last_success_at)}
+                        {formatDate(webhook.last_success_at ? new Date(webhook.last_success_at) : null)}
                       </td>
                       <td className="px-6 py-4 text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">

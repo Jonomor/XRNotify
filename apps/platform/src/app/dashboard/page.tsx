@@ -174,7 +174,7 @@ export default async function DashboardPage() {
     listDeliveries({ tenantId, limit: 10, offset: 0 }),
     listWebhooks({ tenantId, limit: 100 }),
     listApiKeys(tenantId),
-    getUsageTracker().getUsage(tenantId),
+    getUsageTracker().getUsage(tenantId, 'events'),
     queryOne<{ events_per_month: number; webhook_limit: number }>(
       'SELECT events_per_month, webhook_limit FROM tenants WHERE id = $1',
       [tenantId]
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
   ]);
 
   const activeWebhooks = webhooks.webhooks.filter(w => w.is_active);
-  const unhealthyWebhooks = webhooks.webhooks.filter(w => w.consecutive_failures > 0);
+  const unhealthyWebhooks = webhooks.webhooks.filter(w => (w.consecutive_failures ?? 0) > 0);
   const eventsLimit = tenant?.events_per_month ?? 1000;
   const usagePercent = Math.round((currentUsage / eventsLimit) * 100);
 
@@ -333,7 +333,7 @@ export default async function DashboardPage() {
                             : 'No deliveries yet'}
                         </p>
                       </div>
-                      <WebhookHealthBadge failures={webhook.consecutive_failures} />
+                      <WebhookHealthBadge failures={webhook.consecutive_failures ?? 0} />
                     </div>
                   </Link>
                 ))

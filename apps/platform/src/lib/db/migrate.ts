@@ -116,14 +116,14 @@ async function loadMigrationFiles(): Promise<MigrationFile[]> {
       continue;
     }
 
-    const [, version, name] = match;
+    const [, version, name] = match as [string, string, string];
     const filepath = join(MIGRATIONS_DIR, filename);
     const content = await readFile(filepath, 'utf-8');
 
     // Split on -- DOWN marker
     const parts = content.split(/^-- DOWN$/m);
-    const upSql = parts[0]?.trim() ?? '';
-    const downSql = parts[1]?.trim() ?? '';
+    const upSql = (parts[0] ?? '').trim();
+    const downSql = (parts[1] ?? '').trim();
 
     migrations.push({
       version,

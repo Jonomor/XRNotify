@@ -33,6 +33,7 @@ export interface Session {
   id: string;
   tenantId: string;
   email: string;
+  name?: string;
   tenant: Tenant;
   createdAt: string;
   expiresAt: string;
@@ -327,7 +328,7 @@ export async function invalidateAllSessions(tenantId: string): Promise<number> {
   
   // Remove from cache
   for (const row of result.rows) {
-    await del(`${SESSION_CACHE_PREFIX}${row.id}`);
+    await del(`${SESSION_CACHE_PREFIX}${row['id']}`);
   }
   
   logger.info({ tenantId, count: result.rowCount }, 'All sessions invalidated');

@@ -141,26 +141,26 @@ export default function SignupPage() {
     const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      errors.name = 'Name is required';
+      errors['name'] = 'Name is required';
     }
 
     if (!formData.email.trim()) {
-      errors.email = 'Email is required';
+      errors['email'] = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+      errors['email'] = 'Please enter a valid email address';
     }
 
     const passwordErrors = validatePassword(formData.password);
     if (passwordErrors.length > 0) {
-      errors.password = 'Password does not meet requirements';
+      errors['password'] = 'Password does not meet requirements';
     }
 
     if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+      errors['confirmPassword'] = 'Passwords do not match';
     }
 
     if (!formData.acceptTerms) {
-      errors.acceptTerms = 'You must accept the terms and conditions';
+      errors['acceptTerms'] = 'You must accept the terms and conditions';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -261,14 +261,14 @@ export default function SignupPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white ${
-                    fieldErrors.name 
+                    fieldErrors['name'] 
                       ? 'border-red-300 dark:border-red-600' 
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
                   placeholder="John Doe"
                 />
-                {fieldErrors.name && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.name}</p>
+                {fieldErrors['name'] && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors['name']}</p>
                 )}
               </div>
             </div>
@@ -291,14 +291,14 @@ export default function SignupPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white ${
-                    fieldErrors.email 
+                    fieldErrors['email'] 
                       ? 'border-red-300 dark:border-red-600' 
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
                   placeholder="you@example.com"
                 />
-                {fieldErrors.email && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.email}</p>
+                {fieldErrors['email'] && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors['email']}</p>
                 )}
               </div>
             </div>
@@ -343,7 +343,7 @@ export default function SignupPage() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className={`appearance-none block w-full px-3 py-2 pr-10 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white ${
-                    fieldErrors.password 
+                    fieldErrors['password'] 
                       ? 'border-red-300 dark:border-red-600' 
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
@@ -387,14 +387,14 @@ export default function SignupPage() {
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   className={`appearance-none block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white ${
-                    fieldErrors.confirmPassword 
+                    fieldErrors['confirmPassword'] 
                       ? 'border-red-300 dark:border-red-600' 
                       : 'border-gray-300 dark:border-gray-600'
                   }`}
                   placeholder="••••••••"
                 />
-                {fieldErrors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.confirmPassword}</p>
+                {fieldErrors['confirmPassword'] && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors['confirmPassword']}</p>
                 )}
                 {formData.confirmPassword && formData.password === formData.confirmPassword && (
                   <p className="mt-1 text-sm text-green-600 dark:text-green-400 flex items-center">
@@ -417,7 +417,7 @@ export default function SignupPage() {
                   checked={formData.acceptTerms}
                   onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
                   className={`h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded ${
-                    fieldErrors.acceptTerms ? 'border-red-300' : ''
+                    fieldErrors['acceptTerms'] ? 'border-red-300' : ''
                   }`}
                 />
               </div>
@@ -432,8 +432,8 @@ export default function SignupPage() {
                     Privacy Policy
                   </Link>
                 </label>
-                {fieldErrors.acceptTerms && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.acceptTerms}</p>
+                {fieldErrors['acceptTerms'] && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors['acceptTerms']}</p>
                 )}
               </div>
             </div>

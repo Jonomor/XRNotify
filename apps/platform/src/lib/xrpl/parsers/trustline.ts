@@ -113,12 +113,12 @@ function extractTrustlineFromFields(
   fields: Record<string, unknown>,
   account: string,
   flags: number
-): TrustlineDetails | null {
-  const balance = fields.Balance as AmountObject | undefined;
-  const highLimit = fields.HighLimit as AmountObject | undefined;
-  const lowLimit = fields.LowLimit as AmountObject | undefined;
-  
-  if (!balance || !highLimit || !lowLimit) return null;
+): TrustlineDetails | undefined {
+  const balance = fields['Balance'] as AmountObject | undefined;
+  const highLimit = fields['HighLimit'] as AmountObject | undefined;
+  const lowLimit = fields['LowLimit'] as AmountObject | undefined;
+
+  if (!balance || !highLimit || !lowLimit) return undefined;
   
   // Determine if account is high or low
   const { isAccount1High } = getHighLowAccounts(account, 
@@ -148,8 +148,8 @@ function extractTrustlineFromFields(
     issuer: peerLimit.issuer,
     limit: myLimit.value,
     balance: myBalance.toString(),
-    quality_in: fields.QualityIn as number | undefined,
-    quality_out: fields.QualityOut as number | undefined,
+    quality_in: fields['QualityIn'] as number | undefined,
+    quality_out: fields['QualityOut'] as number | undefined,
     no_ripple: noRipple,
     freeze: freeze,
     authorized: authorized,
@@ -177,9 +177,9 @@ function analyzeRippleStateChange(
   const fields = finalFields ?? newFields;
   if (!fields) return null;
   
-  const flags = (fields.Flags as number) ?? 0;
-  const highLimit = fields.HighLimit as AmountObject | undefined;
-  const lowLimit = fields.LowLimit as AmountObject | undefined;
+  const flags = (fields['Flags'] as number) ?? 0;
+  const highLimit = fields['HighLimit'] as AmountObject | undefined;
+  const lowLimit = fields['LowLimit'] as AmountObject | undefined;
   
   if (!highLimit || !lowLimit) return null;
   
@@ -210,7 +210,7 @@ function analyzeRippleStateChange(
   } else if (modified) {
     eventType = 'trustline.modified';
     if (prevFields) {
-      const prevFlags = (prevFields.Flags as number) ?? flags;
+      const prevFlags = (prevFields['Flags'] as number) ?? flags;
       previous = extractTrustlineFromFields(
         { ...fields, ...prevFields },
         account,
@@ -324,8 +324,8 @@ export function parseTrustlineTransaction(tx: RawTransaction): ParsedEvent[] {
       authorized: change.current?.authorized ?? false,
       
       // Quality settings
-      quality_in: tx.QualityIn ?? change.current?.quality_in,
-      quality_out: tx.QualityOut ?? change.current?.quality_out,
+      quality_in: tx['QualityIn'] ?? change.current?.quality_in,
+      quality_out: tx['QualityOut'] ?? change.current?.quality_out,
       
       // What was requested in the transaction
       requested_limit: limitAmount?.value,
@@ -339,7 +339,7 @@ export function parseTrustlineTransaction(tx: RawTransaction): ParsedEvent[] {
     
     // Add previous state for modifications
     if (change.previous && change.event_type === 'trustline.modified') {
-      payload.previous = {
+      payload['previous'] = {
         limit: change.previous.limit,
         balance: change.previous.balance,
         no_ripple: change.previous.no_ripple,

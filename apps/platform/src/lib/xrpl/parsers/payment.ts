@@ -100,9 +100,9 @@ function findDeliveredAmountFromNodes(tx: RawTransaction): ParsedAmount | null {
       const finalFields = modified.FinalFields as Record<string, unknown> | undefined;
       const prevFields = modified.PreviousFields as Record<string, unknown> | undefined;
       
-      if (finalFields?.Account === tx.Destination && prevFields?.Balance && finalFields?.Balance) {
-        const prevBalance = BigInt(prevFields.Balance as string);
-        const finalBalance = BigInt(finalFields.Balance as string);
+      if (finalFields?.['Account'] === tx.Destination && prevFields?.['Balance'] && finalFields?.['Balance']) {
+        const prevBalance = BigInt(prevFields['Balance'] as string);
+        const finalBalance = BigInt(finalFields['Balance'] as string);
         const delivered = finalBalance - prevBalance;
         
         if (delivered > 0) {
@@ -119,9 +119,9 @@ function findDeliveredAmountFromNodes(tx: RawTransaction): ParsedAmount | null {
       const finalFields = modified.FinalFields as Record<string, unknown> | undefined;
       const prevFields = modified.PreviousFields as Record<string, unknown> | undefined;
       
-      if (finalFields && prevFields && finalFields.Balance && prevFields.Balance) {
-        const prevBalance = prevFields.Balance as AmountObject;
-        const finalBalance = finalFields.Balance as AmountObject;
+      if (finalFields && prevFields && finalFields['Balance'] && prevFields['Balance']) {
+        const prevBalance = prevFields['Balance'] as AmountObject;
+        const finalBalance = finalFields['Balance'] as AmountObject;
         
         // Calculate difference
         const diff = parseFloat(finalBalance.value) - parseFloat(prevBalance.value);
@@ -147,7 +147,7 @@ function extractPathDetails(tx: RawTransaction): {
   has_paths: boolean;
   path_count: number;
 } {
-  const paths = tx.Paths as unknown[][] | undefined;
+  const paths = tx['Paths'] as unknown[][] | undefined;
   return {
     has_paths: !!(paths && paths.length > 0),
     path_count: paths?.length ?? 0,
@@ -155,14 +155,14 @@ function extractPathDetails(tx: RawTransaction): {
 }
 
 function extractInvoiceId(tx: RawTransaction): string | undefined {
-  return tx.InvoiceID as string | undefined;
+  return tx['InvoiceID'] as string | undefined;
 }
 
 function extractMemos(tx: RawTransaction): Array<{
   type?: string;
   data?: string;
 }> {
-  const memos = tx.Memos as Array<{ Memo: { MemoType?: string; MemoData?: string } }> | undefined;
+  const memos = tx['Memos'] as Array<{ Memo: { MemoType?: string; MemoData?: string } }> | undefined;
   
   if (!memos || !Array.isArray(memos)) {
     return [];
@@ -188,7 +188,7 @@ export function parsePaymentTransaction(tx: RawTransaction): ParsedEvent[] {
   
   const sentAmount = parseAmount(tx.Amount);
   const deliveredAmount = getDeliveredAmount(tx);
-  const sendMax = parseAmount(tx.SendMax as string | AmountObject | undefined);
+  const sendMax = parseAmount(tx['SendMax'] as string | AmountObject | undefined);
   
   if (!sentAmount || !deliveredAmount) {
     return [];
@@ -209,8 +209,8 @@ export function parsePaymentTransaction(tx: RawTransaction): ParsedEvent[] {
     delivered_amount: deliveredAmount,
     
     // Payment details
-    destination_tag: tx.DestinationTag,
-    source_tag: tx.SourceTag,
+    destination_tag: tx['DestinationTag'],
+    source_tag: tx['SourceTag'],
     
     // Flags
     is_partial_payment: isPartialPayment(tx),
@@ -221,33 +221,33 @@ export function parsePaymentTransaction(tx: RawTransaction): ParsedEvent[] {
   
   // Add SendMax for cross-currency payments
   if (sendMax) {
-    payload.send_max = sendMax;
+    payload['send_max'] = sendMax;
   }
-  
+
   // Add invoice ID if present
   const invoiceId = extractInvoiceId(tx);
   if (invoiceId) {
-    payload.invoice_id = invoiceId;
+    payload['invoice_id'] = invoiceId;
   }
-  
+
   // Add memos if present
   const memos = extractMemos(tx);
   if (memos.length > 0) {
-    payload.memos = memos;
+    payload['memos'] = memos;
   }
-  
+
   // Check for currency conversion
   if (!isXrpPayment && sendMax) {
-    payload.is_cross_currency = sendMax.currency !== sentAmount.currency;
+    payload['is_cross_currency'] = sendMax.currency !== sentAmount.currency;
   }
-  
+
   // Add delivered vs sent comparison for partial payments
   if (isPartialPayment(tx)) {
     const sentValue = parseFloat(sentAmount.value);
     const deliveredValue = parseFloat(deliveredAmount.value);
-    
+
     if (sentValue > 0) {
-      payload.delivery_ratio = deliveredValue / sentValue;
+      payload['delivery_ratio'] = deliveredValue / sentValue;
     }
   }
   

@@ -193,9 +193,9 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
     const errors: Record<string, string> = {};
 
     if (!formData.url) {
-      errors.url = 'URL is required';
+      errors['url'] = 'URL is required';
     } else if (!isValidUrl(formData.url)) {
-      errors.url = 'Invalid URL format';
+      errors['url'] = 'Invalid URL format';
     }
 
     if (Object.keys(errors).length > 0) {
@@ -281,13 +281,13 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
               onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               placeholder="https://api.yourapp.com/webhooks/xrnotify"
               className={`block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white ${
-                fieldErrors.url
+                fieldErrors['url']
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
                   : 'border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500'
               }`}
             />
-            {fieldErrors.url && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.url}</p>
+            {fieldErrors['url'] && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors['url']}</p>
             )}
           </div>
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -459,8 +459,8 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
                 Add
               </button>
             </div>
-            {fieldErrors.account_filters && (
-              <p className="mb-3 text-sm text-red-600 dark:text-red-400">{fieldErrors.account_filters}</p>
+            {fieldErrors['account_filters'] && (
+              <p className="mb-3 text-sm text-red-600 dark:text-red-400">{fieldErrors['account_filters']}</p>
             )}
 
             {/* Account list */}

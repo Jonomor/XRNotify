@@ -19,7 +19,7 @@ import { setActiveWebhooks } from '../metrics';
 
 export interface WebhookWithSecret extends Webhook {
   /** Only returned on creation */
-  secret?: string;
+  secret: string;
 }
 
 export interface WebhookFilter {

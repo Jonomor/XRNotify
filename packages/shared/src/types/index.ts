@@ -20,11 +20,13 @@ export const EVENT_TYPES = [
   'nft.offer_created',
   'nft.offer_accepted',
   'nft.offer_cancelled',
-  
+  'nft.transfer',
+
   // DEX
   'dex.offer_created',
   'dex.offer_cancelled',
   'dex.offer_filled',
+  'dex.offer_partial',
   
   // Trust Lines
   'trustline.created',
@@ -322,28 +324,33 @@ export interface Webhook {
   id: string;
   tenant_id: string;
   url: string;
-  secret: string;
-  events: EventType[];
-  accounts: string[];
+  secret?: string;
+  secret_prefix?: string;
+  event_types: EventType[];
+  account_filters: string[];
   is_active: boolean;
   description?: string;
   metadata?: Record<string, unknown>;
+  consecutive_failures?: number;
+  last_delivery_at?: string;
+  last_success_at?: string;
+  last_failure_at?: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface WebhookCreateInput {
   url: string;
-  events: EventType[];
-  accounts?: string[];
+  event_types: EventType[];
+  account_filters?: string[];
   description?: string;
   metadata?: Record<string, unknown>;
 }
 
 export interface WebhookUpdateInput {
   url?: string;
-  events?: EventType[];
-  accounts?: string[];
+  event_types?: EventType[];
+  account_filters?: string[];
   is_active?: boolean;
   description?: string;
   metadata?: Record<string, unknown>;
@@ -372,7 +379,8 @@ export type DeliveryErrorCode =
   | 'INVALID_RESPONSE'
   | 'RATE_LIMITED'
   | 'INTERNAL_ERROR'
-  | 'URL_BLOCKED';
+  | 'URL_BLOCKED'
+  | 'MAX_RETRIES_EXCEEDED';
 
 export interface Delivery {
   id: string;
@@ -392,6 +400,9 @@ export interface Delivery {
   last_status_code?: number;
   last_response_body?: string;
   last_duration_ms?: number;
+  error_code?: DeliveryErrorCode;
+  error_message?: string;
+  next_retry_at?: string;
   delivered_at?: string;
   created_at: string;
   updated_at: string;

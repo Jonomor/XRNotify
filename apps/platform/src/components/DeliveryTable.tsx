@@ -81,18 +81,18 @@ function StatusBadge({ status }: { status: string }) {
     },
   };
 
-  const style = config[status] ?? config.pending;
+  const style = config[status] ?? config['pending'];
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${style.bg}`}>
-      <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${style.dot}`} />
-      {style.label}
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${style!.bg}`}>
+      <span className={`w-1.5 h-1.5 mr-1.5 rounded-full ${style!.dot}`} />
+      {style!.label}
     </span>
   );
 }
 
 function EventTypeBadge({ type }: { type: string }) {
-  const category = type.split('.')[0];
+  const category = type.split('.')[0] ?? '';
   const colors: Record<string, string> = {
     payment: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
     nft: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',

@@ -105,15 +105,15 @@ function extractMintedTokenId(tx: RawTransaction): string | null {
     const fields = change.NewFields ?? change.FinalFields;
     if (!fields) continue;
     
-    const nftokens = fields.NFTokens as Array<{ NFToken: { NFTokenID: string } }> | undefined;
+    const nftokens = fields['NFTokens'] as Array<{ NFToken: { NFTokenID: string } }> | undefined;
     if (!nftokens || !Array.isArray(nftokens)) continue;
-    
+
     // For modified pages, we need to find the new token
     if (node.ModifiedNode) {
       const prevFields = change.PreviousFields as Record<string, unknown> | undefined;
-      const prevTokens = prevFields?.NFTokens as Array<{ NFToken: { NFTokenID: string } }> | undefined;
+      const prevTokens = prevFields?.['NFTokens'] as Array<{ NFToken: { NFTokenID: string } }> | undefined;
       const prevIds = new Set(prevTokens?.map(t => t.NFToken.NFTokenID) ?? []);
-      
+
       for (const token of nftokens) {
         if (!prevIds.has(token.NFToken.NFTokenID)) {
           return token.NFToken.NFTokenID;
@@ -122,7 +122,7 @@ function extractMintedTokenId(tx: RawTransaction): string | null {
     } else {
       // For newly created pages, return the first token (usually only one)
       if (nftokens.length > 0) {
-        return nftokens[0].NFToken.NFTokenID;
+        return nftokens[0]!.NFToken.NFTokenID;
       }
     }
   }
@@ -174,7 +174,7 @@ function extractOfferDetails(tx: RawTransaction): NftOffer | null {
     nftoken_id: nftokenId,
     amount: parseAmount(tx.Amount),
     destination: tx.Destination,
-    expiration: tx.Expiration as number | undefined,
+    expiration: tx['Expiration'] as number | undefined,
     is_sell_offer: isSellOffer(tx.Flags),
   };
 }
@@ -204,11 +204,11 @@ function extractAcceptedOfferDetails(tx: RawTransaction): {
     
     const offer: NftOffer = {
       offer_id: node.DeletedNode.LedgerIndex,
-      owner: fields.Owner as string,
-      nftoken_id: fields.NFTokenID as string,
-      amount: parseAmount(fields.Amount as string | AmountObject),
-      destination: fields.Destination as string | undefined,
-      is_sell_offer: !!((fields.Flags as number) & NFTOKEN_OFFER_FLAGS.tfSellNFToken),
+      owner: fields['Owner'] as string,
+      nftoken_id: fields['NFTokenID'] as string,
+      amount: parseAmount(fields['Amount'] as string | AmountObject),
+      destination: fields['Destination'] as string | undefined,
+      is_sell_offer: !!((fields['Flags'] as number) & NFTOKEN_OFFER_FLAGS.tfSellNFToken),
     };
     
     if (offer.is_sell_offer) {
@@ -259,7 +259,7 @@ function extractCancelledOfferIds(tx: RawTransaction): string[] {
 }
 
 function extractUri(tx: RawTransaction): string | undefined {
-  const uri = tx.URI as string | undefined;
+  const uri = tx['URI'] as string | undefined;
   if (!uri) return undefined;
   
   try {
@@ -290,8 +290,8 @@ export function parseNftTransaction(tx: RawTransaction): ParsedEvent[] {
           nftoken_id: nftokenId,
           issuer: tx.Account,
           uri: extractUri(tx),
-          taxon: tx.NFTokenTaxon,
-          transfer_fee: tx.TransferFee, // In basis points (1/10000)
+          taxon: tx['NFTokenTaxon'],
+          transfer_fee: tx['TransferFee'], // In basis points (1/10000)
           ...flags,
         },
       });
@@ -306,7 +306,7 @@ export function parseNftTransaction(tx: RawTransaction): ParsedEvent[] {
         payload: {
           nftoken_id: nftokenId,
           burner: tx.Account,
-          owner: tx.Owner ?? tx.Account,
+          owner: tx['Owner'] ?? tx.Account,
         },
       });
       break;
@@ -344,7 +344,7 @@ export function parseNftTransaction(tx: RawTransaction): ParsedEvent[] {
           broker: details.broker,
           sell_offer_id: tx.NFTokenSellOffer,
           buy_offer_id: tx.NFTokenBuyOffer,
-          broker_fee: parseAmount(tx.NFTokenBrokerFee as string | AmountObject | undefined),
+          broker_fee: parseAmount(tx['NFTokenBrokerFee'] as string | AmountObject | undefined),
         },
       });
       

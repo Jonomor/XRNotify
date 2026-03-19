@@ -447,7 +447,7 @@ export async function revokeApiKey(apiKeyId: string, tenantId: string): Promise<
     return false;
   }
 
-  const keyHash = result.rows[0]?.key_hash;
+  const keyHash = result.rows[0]?.['key_hash'];
   if (keyHash) {
     await invalidateApiKeyCache(apiKeyId, keyHash);
   }

@@ -439,9 +439,9 @@ export async function streamReadGroup(
     
     if (!result) return [];
     
-    return result.map(([streamName, messages]) => ({
+    return (result as [string, [string, string[]][]][]).map(([streamName, messages]) => ({
       stream: streamName,
-      messages: messages.map(([id, fields]) => ({
+      messages: messages.map(([id, fields]: [string, string[]]) => ({
         id,
         fields: parseStreamFields(fields),
       })),

@@ -174,8 +174,8 @@ function extractFillFromOfferChange(
   ledgerIndex: string,
   isPartial: boolean
 ): OfferFill | null {
-  const owner = finalFields.Account as string;
-  const sequence = finalFields.Sequence as number;
+  const owner = finalFields['Account'] as string;
+  const sequence = finalFields['Sequence'] as number;
   
   // For deleted offers, the "fill" is the full previous amount
   // For modified offers, the "fill" is the difference
@@ -185,10 +185,10 @@ function extractFillFromOfferChange(
   
   if (isPartial) {
     // Calculate difference between previous and final
-    const prevGets = parseAmount(prevFields.TakerGets as string | AmountObject);
-    const finalGets = parseAmount(finalFields.TakerGets as string | AmountObject);
-    const prevPays = parseAmount(prevFields.TakerPays as string | AmountObject);
-    const finalPays = parseAmount(finalFields.TakerPays as string | AmountObject);
+    const prevGets = parseAmount(prevFields['TakerGets'] as string | AmountObject);
+    const finalGets = parseAmount(finalFields['TakerGets'] as string | AmountObject);
+    const prevPays = parseAmount(prevFields['TakerPays'] as string | AmountObject);
+    const finalPays = parseAmount(finalFields['TakerPays'] as string | AmountObject);
     
     if (!prevGets || !finalGets || !prevPays || !finalPays) return null;
     
@@ -205,12 +205,12 @@ function extractFillFromOfferChange(
     };
   } else {
     // For fully consumed, use the previous values (what was available)
-    const prevGets = prevFields.TakerGets as string | AmountObject | undefined;
-    const prevPays = prevFields.TakerPays as string | AmountObject | undefined;
-    
+    const prevGets = prevFields['TakerGets'] as string | AmountObject | undefined;
+    const prevPays = prevFields['TakerPays'] as string | AmountObject | undefined;
+
     // If no previous fields, use final fields (first touch)
-    takerGotValue = parseAmount(prevGets ?? finalFields.TakerGets as string | AmountObject);
-    takerPaidValue = parseAmount(prevPays ?? finalFields.TakerPays as string | AmountObject);
+    takerGotValue = parseAmount(prevGets ?? finalFields['TakerGets'] as string | AmountObject);
+    takerPaidValue = parseAmount(prevPays ?? finalFields['TakerPays'] as string | AmountObject);
   }
   
   if (!takerGotValue || !takerPaidValue) return null;
@@ -252,9 +252,9 @@ function getCreatedOfferDetails(tx: RawTransaction): {
       
       return {
         offer_id: node.CreatedNode.LedgerIndex,
-        sequence: fields.Sequence as number,
-        taker_gets: parseAmount(fields.TakerGets as string | AmountObject),
-        taker_pays: parseAmount(fields.TakerPays as string | AmountObject),
+        sequence: fields['Sequence'] as number,
+        taker_gets: parseAmount(fields['TakerGets'] as string | AmountObject),
+        taker_pays: parseAmount(fields['TakerPays'] as string | AmountObject),
       };
     }
   }
@@ -350,7 +350,7 @@ export function parseDexTransaction(tx: RawTransaction): ParsedEvent[] {
             offer_sequence: tx.Sequence,
             taker_gets: createdOffer.taker_gets,
             taker_pays: createdOffer.taker_pays,
-            expiration: tx.Expiration,
+            expiration: tx['Expiration'],
             exchange_rate: calculateExchangeRate(createdOffer.taker_gets, createdOffer.taker_pays),
             trade_pair: formatTradePair(createdOffer.taker_gets, createdOffer.taker_pays),
             // Original amounts (before any partial fill)
@@ -395,8 +395,8 @@ export function parseDexTransaction(tx: RawTransaction): ParsedEvent[] {
           if (fields) {
             cancelledOffer = {
               offer_id: node.DeletedNode.LedgerIndex,
-              taker_gets: parseAmount(fields.TakerGets as string | AmountObject),
-              taker_pays: parseAmount(fields.TakerPays as string | AmountObject),
+              taker_gets: parseAmount(fields['TakerGets'] as string | AmountObject),
+              taker_pays: parseAmount(fields['TakerPays'] as string | AmountObject),
             };
             break;
           }

@@ -177,15 +177,15 @@ export function extractAccounts(tx: RawTransaction): string[] {
     const fields = change.FinalFields ?? change.NewFields ?? {};
     
     // Common account fields
-    if (typeof fields.Account === 'string') accounts.add(fields.Account);
-    if (typeof fields.Owner === 'string') accounts.add(fields.Owner);
-    if (typeof fields.Destination === 'string') accounts.add(fields.Destination);
-    if (typeof fields.HighLimit === 'object' && fields.HighLimit) {
-      const hl = fields.HighLimit as AmountObject;
+    if (typeof fields['Account'] === 'string') accounts.add(fields['Account']);
+    if (typeof fields['Owner'] === 'string') accounts.add(fields['Owner']);
+    if (typeof fields['Destination'] === 'string') accounts.add(fields['Destination']);
+    if (typeof fields['HighLimit'] === 'object' && fields['HighLimit']) {
+      const hl = fields['HighLimit'] as AmountObject;
       if (hl.issuer) accounts.add(hl.issuer);
     }
-    if (typeof fields.LowLimit === 'object' && fields.LowLimit) {
-      const ll = fields.LowLimit as AmountObject;
+    if (typeof fields['LowLimit'] === 'object' && fields['LowLimit']) {
+      const ll = fields['LowLimit'] as AmountObject;
       if (ll.issuer) accounts.add(ll.issuer);
     }
   }
@@ -313,9 +313,9 @@ export function normalizeTransaction(
             account: tx.Account,
             destination: tx.Destination,
             amount: parseAmount(tx.Amount),
-            condition: tx.Condition,
-            finish_after: tx.FinishAfter,
-            cancel_after: tx.CancelAfter,
+            condition: tx['Condition'],
+            finish_after: tx['FinishAfter'],
+            cancel_after: tx['CancelAfter'],
           },
         }];
         break;
@@ -325,31 +325,31 @@ export function normalizeTransaction(
           event_type: 'escrow.finished',
           payload: {
             account: tx.Account,
-            owner: tx.Owner,
+            owner: tx['Owner'],
             offer_sequence: tx.OfferSequence,
           },
         }];
         break;
-        
+
       case 'EscrowCancel':
         parsedEvents = [{
           event_type: 'escrow.cancelled',
           payload: {
             account: tx.Account,
-            owner: tx.Owner,
+            owner: tx['Owner'],
             offer_sequence: tx.OfferSequence,
           },
         }];
         break;
-        
+
       case 'CheckCreate':
         parsedEvents = [{
           event_type: 'check.created',
           payload: {
             account: tx.Account,
             destination: tx.Destination,
-            send_max: parseAmount(tx.SendMax as string | AmountObject | undefined),
-            expiration: tx.Expiration,
+            send_max: parseAmount(tx['SendMax'] as string | AmountObject | undefined),
+            expiration: tx['Expiration'],
           },
         }];
         break;
@@ -359,18 +359,18 @@ export function normalizeTransaction(
           event_type: 'check.cashed',
           payload: {
             account: tx.Account,
-            check_id: tx.CheckID,
-            amount: parseAmount(tx.Amount) ?? parseAmount(tx.DeliverMin as string | AmountObject | undefined),
+            check_id: tx['CheckID'],
+            amount: parseAmount(tx.Amount) ?? parseAmount(tx['DeliverMin'] as string | AmountObject | undefined),
           },
         }];
         break;
-        
+
       case 'CheckCancel':
         parsedEvents = [{
           event_type: 'check.cancelled',
           payload: {
             account: tx.Account,
-            check_id: tx.CheckID,
+            check_id: tx['CheckID'],
           },
         }];
         break;
