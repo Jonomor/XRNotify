@@ -104,7 +104,7 @@ function EmptyState() {
   );
 }
 
-function formatDate(date: Date | null): string {
+function formatDate(date: string | Date | null): string {
   if (!date) return 'Never';
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
@@ -113,7 +113,7 @@ function formatDate(date: Date | null): string {
   });
 }
 
-function formatTimeAgo(date: Date | null): string {
+function formatTimeAgo(date: string | Date | null): string {
   if (!date) return 'Never';
   
   const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
