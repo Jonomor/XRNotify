@@ -80,7 +80,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
     const dbHealth = await checkDbHealth();
     const poolStats = getPoolStats();
     
-    components.database = {
+    components['database'] = {
       status: dbHealth.healthy ? 'healthy' : 'unhealthy',
       latency_ms: dbHealth.latencyMs,
       message: dbHealth.message,
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
       overallHealthy = false;
     }
   } catch (error) {
-    components.database = {
+    components['database'] = {
       status: 'unhealthy',
       message: error instanceof Error ? error.message : 'Unknown error',
     };
@@ -106,7 +106,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
   try {
     const redisHealth = await checkRedisHealth();
     
-    components.redis = {
+    components['redis'] = {
       status: redisHealth.healthy ? 'healthy' : 'unhealthy',
       latency_ms: redisHealth.latencyMs,
       message: redisHealth.message,
@@ -116,7 +116,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<HealthResp
       overallHealthy = false;
     }
   } catch (error) {
-    components.redis = {
+    components['redis'] = {
       status: 'unhealthy',
       message: error instanceof Error ? error.message : 'Unknown error',
     };
