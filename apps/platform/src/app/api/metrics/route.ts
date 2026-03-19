@@ -10,6 +10,8 @@ import { getPoolStats } from '@/lib/db';
 import { getConfig } from '@/lib/config';
 import { createModuleLogger } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Logger
 // -----------------------------------------------------------------------------

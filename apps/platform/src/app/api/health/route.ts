@@ -9,6 +9,8 @@ import { checkHealth as checkDbHealth, getPoolStats } from '@/lib/db';
 import { checkHealth as checkRedisHealth } from '@/lib/redis';
 import { createModuleLogger } from '@/lib/logger';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------

@@ -13,6 +13,8 @@ import { listApiKeys } from '@/lib/auth/apiKey';
 import { getUsageTracker } from '@/lib/rate-limit/tokenBucket';
 import { queryOne } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------

@@ -10,6 +10,8 @@ import { getCurrentSession } from '@/lib/auth/session';
 import { listApiKeys } from '@/lib/auth/apiKey';
 import { ALL_API_KEY_SCOPES } from '@xrnotify/shared';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------

@@ -10,6 +10,8 @@ import { getCurrentSession } from '@/lib/auth/session';
 import { listWebhooks } from '@/lib/webhooks/service';
 import { EVENT_TYPES } from '@xrnotify/shared';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------

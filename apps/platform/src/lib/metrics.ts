@@ -11,7 +11,6 @@ import {
   Gauge,
   collectDefaultMetrics,
 } from 'prom-client';
-import { getConfig } from './config';
 import { createModuleLogger } from './logger';
 
 // -----------------------------------------------------------------------------
@@ -48,7 +47,7 @@ const registry = new Registry();
 // Set default labels
 registry.setDefaultLabels({
   service: 'xrnotify-platform',
-  env: getConfig().env,
+  env: process.env['NODE_ENV'] ?? 'development',
 });
 
 // Collect default Node.js metrics

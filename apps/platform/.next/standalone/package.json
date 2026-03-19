@@ -1,0 +1,65 @@
+{
+  "name": "xrnotify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XRNotify - Production-grade XRPL Event & Webhook Notification Platform",
+  "author": "XRNotify <engineering@xrnotify.io>",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xrnotify/xrnotify.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "workers/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "build:platform": "pnpm --filter @xrnotify/platform build",
+    "build:shared": "pnpm --filter @xrnotify/shared build",
+    "build:worker": "pnpm --filter @xrnotify/webhook-worker build",
+    "build:listener": "pnpm --filter @xrnotify/xrpl-listener build",
+    "dev": "pnpm --filter @xrnotify/platform dev",
+    "dev:all": "pnpm -r --parallel dev",
+    "start": "pnpm --filter @xrnotify/platform start",
+    "start:worker": "pnpm --filter @xrnotify/webhook-worker start",
+    "start:listener": "pnpm --filter @xrnotify/xrpl-listener start",
+    "test": "pnpm -r test",
+    "test:unit": "pnpm -r test:unit",
+    "test:integration": "pnpm -r test:integration",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "db:migrate": "pnpm --filter @xrnotify/platform db:migrate",
+    "db:migrate:create": "pnpm --filter @xrnotify/platform db:migrate:create",
+    "docker:up": "docker compose -f ops/docker-compose.yml up --build",
+    "docker:down": "docker compose -f ops/docker-compose.yml down",
+    "docker:logs": "docker compose -f ops/docker-compose.yml logs -f",
+    "prepare": "husky || true"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

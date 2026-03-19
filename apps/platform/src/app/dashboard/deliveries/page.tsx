@@ -11,6 +11,8 @@ import { listDeliveries, getDeliveryStats } from '@/lib/deliveries/service';
 import { listWebhooks } from '@/lib/webhooks/service';
 import type { DeliveryStatus, EventType } from '@xrnotify/shared';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------

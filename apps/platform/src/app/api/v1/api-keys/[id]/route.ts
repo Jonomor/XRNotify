@@ -24,6 +24,8 @@ import {
 } from '@/lib/metrics';
 import { generateRequestId } from '@xrnotify/shared';
 
+export const dynamic = 'force-dynamic';
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------

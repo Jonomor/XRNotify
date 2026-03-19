@@ -5,7 +5,7 @@
 // =============================================================================
 
 import pino, { type Logger as PinoLogger, type LoggerOptions } from 'pino';
-import { getConfig, isProduction, isDevelopment } from './config';
+import { getConfig, isProduction } from './config';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -34,13 +34,22 @@ export interface ResponseLogContext {
 // -----------------------------------------------------------------------------
 
 function createLoggerOptions(): LoggerOptions {
-  const config = getConfig();
-  
+  let logLevel = 'info';
+  let env: string = process.env['NODE_ENV'] ?? 'development';
+
+  try {
+    const config = getConfig();
+    logLevel = config.logLevel;
+    env = config.env;
+  } catch {
+    // getConfig() may throw during Next.js build when env vars are absent
+  }
+
   const baseOptions: LoggerOptions = {
-    level: config.logLevel,
+    level: logLevel,
     base: {
       service: 'xrnotify-platform',
-      env: config.env,
+      env,
     },
     timestamp: pino.stdTimeFunctions.isoTime,
     formatters: {
@@ -75,7 +84,7 @@ function createLoggerOptions(): LoggerOptions {
   };
 
   // Pretty print in development
-  if (isDevelopment()) {
+  if (env === 'development') {
     return {
       ...baseOptions,
       transport: {
