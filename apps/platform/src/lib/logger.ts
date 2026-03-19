@@ -361,7 +361,7 @@ export function logError(
  */
 export function logSecurityEvent(
   logger: Logger,
-  event: 'auth_failed' | 'rate_limited' | 'invalid_signature' | 'blocked_request',
+  event: 'auth_failed' | 'rate_limited' | 'invalid_signature' | 'blocked_request' | 'login_failed' | 'login_success' | 'logout',
   context: Record<string, unknown>
 ): void {
   logger.warn(
