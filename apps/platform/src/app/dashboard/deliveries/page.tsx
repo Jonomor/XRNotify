@@ -190,7 +190,8 @@ function EmptyState({ hasFilters }: { hasFilters: boolean }) {
   );
 }
 
-function formatTimeAgo(date: Date): string {
+function formatTimeAgo(date: string | Date | null | undefined): string {
+  if (!date) return 'N/A';
   const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
   
   if (seconds < 60) return 'just now';
@@ -455,7 +456,7 @@ export default async function DeliveriesPage({ searchParams }: PageProps) {
                           {delivery.attempt_count} / {delivery.max_attempts}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                          {formatTimeAgo(delivery.created_at as Date)}
+                          {formatTimeAgo(delivery.created_at)}
                         </td>
                         <td className="px-6 py-4 text-right text-sm font-medium">
                           <Link
