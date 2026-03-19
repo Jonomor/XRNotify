@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
+    "incremental": false,
     "composite": false,
     "declaration": false,
     "declarationMap": false,
@@ -29,7 +29,7 @@
       "@/lib/*": ["./src/lib/*"],
       "@/styles/*": ["./src/styles/*"],
       "@/types/*": ["./src/types/*"],
-      "@xrnotify/shared": ["../../packages/shared/src"],
+      "@xrnotify/shared": ["../../packages/shared/src/index.ts"],
       "@xrnotify/shared/*": ["../../packages/shared/src/*"]
     }
   },
@@ -37,7 +37,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/shared/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
