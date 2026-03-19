@@ -445,9 +445,9 @@ export default async function DeliveriesPage({ searchParams }: PageProps) {
                         </td>
                         <td className="px-6 py-4">
                           <StatusBadge status={delivery.status as string} />
-                          {delivery.error_message && (
-                            <p className="mt-1 text-xs text-red-500 truncate max-w-xs" title={delivery.error_message as string}>
-                              {(delivery.error_message as string).slice(0, 40)}...
+                          {delivery.last_error && (
+                            <p className="mt-1 text-xs text-red-500 truncate max-w-xs" title={delivery.last_error}>
+                              {delivery.last_error.slice(0, 40)}...
                             </p>
                           )}
                         </td>
