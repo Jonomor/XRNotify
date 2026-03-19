@@ -5,6 +5,9 @@
 // =============================================================================
 
 import { randomUUID } from 'node:crypto';
+import { readdir, readFile } from 'node:fs/promises';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Client, LedgerStream, TransactionStream } from 'xrpl';
 import { Redis } from 'ioredis';
 import pg from 'pg';
@@ -677,6 +680,79 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
 // -----------------------------------------------------------------------------
+// Database Migrations
+// -----------------------------------------------------------------------------
+
+async function runMigrations(dbPool: pg.Pool): Promise<void> {
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const migrationsDir = process.env['MIGRATIONS_DIR']
+    ?? join(__dirname, '../../../apps/platform/src/lib/db/migrations');
+
+  // Ensure migrations table exists
+  await dbPool.query(`
+    CREATE TABLE IF NOT EXISTS schema_migrations (
+      id SERIAL PRIMARY KEY,
+      version VARCHAR(255) NOT NULL UNIQUE,
+      name VARCHAR(255) NOT NULL,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  // Get applied versions
+  const { rows } = await dbPool.query<{ version: string }>(
+    'SELECT version FROM schema_migrations ORDER BY version ASC'
+  );
+  const applied = new Set(rows.map(r => r.version));
+
+  // Load and sort migration files
+  let files: string[];
+  try {
+    files = (await readdir(migrationsDir))
+      .filter(f => f.endsWith('.sql'))
+      .sort();
+  } catch {
+    logger.warn({ migrationsDir }, 'Migrations directory not found — skipping');
+    return;
+  }
+
+  let ran = 0;
+  for (const filename of files) {
+    const match = filename.match(/^(\d+)_(.+)\.sql$/);
+    if (!match) continue;
+
+    const [, version, name] = match as [string, string, string];
+    if (applied.has(version)) continue;
+
+    const sql = await readFile(join(migrationsDir, filename), 'utf-8');
+    const upSql = (sql.split(/^-- DOWN$/m)[0] ?? '').trim();
+
+    const client = await dbPool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(upSql);
+      await client.query(
+        'INSERT INTO schema_migrations (version, name) VALUES ($1, $2)',
+        [version, name]
+      );
+      await client.query('COMMIT');
+      logger.info({ migration: filename }, 'Migration applied');
+      ran++;
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw new Error(`Migration ${filename} failed: ${err instanceof Error ? err.message : String(err)}`);
+    } finally {
+      client.release();
+    }
+  }
+
+  if (ran === 0) {
+    logger.info('Database schema up to date');
+  } else {
+    logger.info({ count: ran }, 'Migrations complete');
+  }
+}
+
+// -----------------------------------------------------------------------------
 // Main Entry Point
 // -----------------------------------------------------------------------------
 
@@ -693,6 +769,14 @@ async function main(): Promise<void> {
     logger.info('Database connection established');
   } catch (error) {
     logger.fatal({ error }, 'Failed to connect to database');
+    process.exit(1);
+  }
+
+  // Run migrations
+  try {
+    await runMigrations(pool);
+  } catch (error) {
+    logger.fatal({ error }, 'Database migration failed');
     process.exit(1);
   }
   
@@ -728,5 +812,6 @@ async function main(): Promise<void> {
 
 main().catch((error) => {
   logger.fatal({ error }, 'Fatal error in listener');
+  console.error('Fatal error in listener:', error);
   process.exit(1);
 });

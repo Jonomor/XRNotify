@@ -37,6 +37,29 @@ services:
       - xrnotify-network
 
   # ===========================================================================
+  # Database Migrations (one-shot: runs before app services start)
+  # ===========================================================================
+  migrate:
+    image: node:20-alpine
+    container_name: xrnotify-migrate
+    working_dir: /app
+    command: >
+      sh -c "corepack enable &&
+             corepack prepare pnpm@9.12.0 --activate &&
+             pnpm --filter @xrnotify/platform db:migrate"
+    environment:
+      DATABASE_URL: postgresql://xrnotify:xrnotify_dev@postgres:5432/xrnotify
+      NODE_ENV: production
+    volumes:
+      - ..:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - xrnotify-network
+    restart: 'no'
+
+  # ===========================================================================
   # Redis (Queue, Cache, Rate Limiting)
   # ===========================================================================
   redis:
