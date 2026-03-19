@@ -268,12 +268,12 @@ export async function POST(
     const { context } = authResult;
 
     // Check scope - replay requires write access
-    if (!hasScope(context, 'deliveries:write')) {
+    if (!hasScope(context, 'webhooks:write')) {
       return NextResponse.json(
         {
           error: {
             code: 'FORBIDDEN',
-            message: 'API key does not have deliveries:write scope',
+            message: 'API key does not have webhooks:write scope',
           },
         },
         { status: 403 }
