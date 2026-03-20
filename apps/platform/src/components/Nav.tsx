@@ -134,21 +134,21 @@ export default function Nav({ user, children }: NavProps) {
       href={item.href}
       className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
         isActive(item.href)
-          ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200'
-          : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+          ? 'bg-emerald-500/10 text-emerald-400'
+          : 'text-zinc-300 hover:bg-zinc-800/50'
       }`}
       onClick={() => setSidebarOpen(false)}
     >
       <span className={`mr-3 ${
-        isActive(item.href) 
-          ? 'text-indigo-600 dark:text-indigo-400' 
-          : 'text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400'
+        isActive(item.href)
+          ? 'text-emerald-400'
+          : 'text-zinc-500 group-hover:text-zinc-400'
       }`}>
         {item.icon}
       </span>
       {item.name}
       {item.badge !== undefined && item.badge > 0 && (
-        <span className="ml-auto bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-200 px-2 py-0.5 rounded-full text-xs">
+        <span className="ml-auto bg-red-900 text-red-200 px-2 py-0.5 rounded-full text-xs">
           {item.badge}
         </span>
       )}
@@ -158,10 +158,10 @@ export default function Nav({ user, children }: NavProps) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center h-16 flex-shrink-0 px-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center h-16 flex-shrink-0 px-4 border-b border-zinc-800">
         <Link href="/dashboard" className="flex items-center space-x-2">
           <Image src="/logo.svg" alt="XRNotify" width={32} height={32} />
-          <span className="text-xl font-bold text-gray-900 dark:text-white">
+          <span className="text-xl font-bold text-white">
             XRNotify
           </span>
         </Link>
@@ -173,7 +173,7 @@ export default function Nav({ user, children }: NavProps) {
           <NavLink key={item.name} item={item} />
         ))}
 
-        <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="pt-4 mt-4 border-t border-zinc-800">
           {secondaryNavItems.map((item) => (
             <NavLink key={item.name} item={item} />
           ))}
@@ -181,26 +181,26 @@ export default function Nav({ user, children }: NavProps) {
       </nav>
 
       {/* User section */}
-      <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4">
+      <div className="flex-shrink-0 border-t border-zinc-800 p-4">
         <div className="flex items-center">
           <div className="flex-shrink-0">
-            <div className="w-9 h-9 bg-indigo-600 rounded-full flex items-center justify-center">
+            <div className="w-9 h-9 bg-emerald-600 rounded-full flex items-center justify-center">
               <span className="text-white font-medium text-sm">
                 {user?.name?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? '?'}
               </span>
             </div>
           </div>
           <div className="ml-3 flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">
+            <p className="text-sm font-medium text-zinc-100 truncate">
               {user?.name ?? 'User'}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+            <p className="text-xs text-zinc-500 truncate">
               {user?.email ?? ''}
             </p>
           </div>
           <button
             onClick={handleLogout}
-            className="ml-2 p-1 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+            className="ml-2 p-1 text-zinc-400 hover:text-zinc-300"
             title="Sign out"
           >
             <LogoutIcon />
@@ -211,15 +211,15 @@ export default function Nav({ user, children }: NavProps) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[#0a0a0f]">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div 
+          <div
             className="fixed inset-0 bg-gray-600 bg-opacity-75"
             onClick={() => setSidebarOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 flex flex-col w-64 bg-white dark:bg-gray-800 shadow-xl">
+          <div className="fixed inset-y-0 left-0 flex flex-col w-64 bg-zinc-900">
             <div className="absolute top-0 right-0 -mr-12 pt-2">
               <button
                 type="button"
@@ -237,7 +237,7 @@ export default function Nav({ user, children }: NavProps) {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
-        <div className="flex flex-col flex-1 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col flex-1 bg-zinc-900 border-r border-zinc-800">
           <SidebarContent />
         </div>
       </div>
@@ -245,11 +245,11 @@ export default function Nav({ user, children }: NavProps) {
       {/* Main content */}
       <div className="lg:pl-64 flex flex-col min-h-screen">
         {/* Mobile header */}
-        <div className="sticky top-0 z-10 lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="sticky top-0 z-10 lg:hidden bg-zinc-900 border-b border-zinc-800">
           <div className="flex items-center justify-between h-16 px-4">
             <button
               type="button"
-              className="p-2 -ml-2 text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+              className="p-2 -ml-2 text-zinc-400 hover:text-zinc-300"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
@@ -257,7 +257,7 @@ export default function Nav({ user, children }: NavProps) {
             </button>
             <Link href="/dashboard" className="flex items-center space-x-2">
               <Image src="/logo.svg" alt="XRNotify" width={32} height={32} />
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
+              <span className="text-xl font-bold text-white">
                 XRNotify
               </span>
             </Link>

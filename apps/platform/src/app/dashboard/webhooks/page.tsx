@@ -42,7 +42,7 @@ interface PageProps {
 function StatusBadge({ isActive, failures }: { isActive: boolean; failures: number }) {
   if (!isActive) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-300">
         Disabled
       </span>
     );
@@ -50,7 +50,7 @@ function StatusBadge({ isActive, failures }: { isActive: boolean; failures: numb
   
   if (failures === 0) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-200">
         Healthy
       </span>
     );
@@ -58,7 +58,7 @@ function StatusBadge({ isActive, failures }: { isActive: boolean; failures: numb
   
   if (failures < 3) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900 text-yellow-200">
         Degraded ({failures})
       </span>
     );
@@ -66,14 +66,14 @@ function StatusBadge({ isActive, failures }: { isActive: boolean; failures: numb
   
   if (failures < 10) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-900 text-orange-200">
         Unhealthy ({failures})
       </span>
     );
   }
   
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900 text-red-200">
       Critical ({failures})
     </span>
   );
@@ -81,17 +81,17 @@ function StatusBadge({ isActive, failures }: { isActive: boolean; failures: numb
 
 function EventTypeBadge({ type }: { type: string }) {
   const colors: Record<string, string> = {
-    payment: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    nft: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-    dex: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    trustline: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    account: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-    escrow: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
-    check: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+    payment: 'bg-blue-900 text-blue-200',
+    nft: 'bg-purple-900 text-purple-200',
+    dex: 'bg-green-900 text-green-200',
+    trustline: 'bg-yellow-900 text-yellow-200',
+    account: 'bg-zinc-800 text-zinc-300',
+    escrow: 'bg-emerald-500/10 text-emerald-400',
+    check: 'bg-pink-900 text-pink-200',
   };
 
   const category = type.split('.')[0] ?? '';
-  const colorClass = colors[category] ?? 'bg-gray-100 text-gray-800';
+  const colorClass = colors[category] ?? 'bg-zinc-800 text-zinc-300';
 
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colorClass}`}>
@@ -104,7 +104,7 @@ function EmptyState() {
   return (
     <div className="text-center py-12">
       <svg
-        className="mx-auto h-12 w-12 text-gray-400"
+        className="mx-auto h-12 w-12 text-zinc-400"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -116,14 +116,14 @@ function EmptyState() {
           d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
         />
       </svg>
-      <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No webhooks</h3>
-      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <h3 className="mt-2 text-sm font-medium text-white">No webhooks</h3>
+      <p className="mt-1 text-sm text-zinc-500">
         Get started by creating a new webhook endpoint.
       </p>
       <div className="mt-6">
         <Link
           href="/dashboard/webhooks/new"
-          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
         >
           + New Webhook
         </Link>
@@ -141,7 +141,7 @@ function FilterTabs({ currentFilter }: { currentFilter: string }) {
   ];
 
   return (
-    <div className="border-b border-gray-200 dark:border-gray-700">
+    <div className="border-b border-zinc-800">
       <nav className="-mb-px flex space-x-8">
         {filters.map((filter) => (
           <Link
@@ -149,8 +149,8 @@ function FilterTabs({ currentFilter }: { currentFilter: string }) {
             href={`/dashboard/webhooks${filter.id === 'all' ? '' : `?filter=${filter.id}`}`}
             className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
               currentFilter === filter.id
-                ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                ? 'border-emerald-500 text-emerald-400'
+                : 'border-transparent text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
             }`}
           >
             {filter.label}
@@ -218,26 +218,26 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[#0a0a0f]">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow">
+      <header className="bg-zinc-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <nav className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                <Link href="/dashboard" className="hover:text-gray-700 dark:hover:text-gray-300">
+              <nav className="flex items-center space-x-2 text-sm text-zinc-500">
+                <Link href="/dashboard" className="hover:text-zinc-300">
                   Dashboard
                 </Link>
                 <span>/</span>
-                <span className="text-gray-900 dark:text-white">Webhooks</span>
+                <span className="text-white">Webhooks</span>
               </nav>
-              <h1 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="mt-2 text-2xl font-bold text-white">
                 Webhooks
               </h1>
             </div>
             <Link
               href="/dashboard/webhooks/new"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
             >
               + New Webhook
             </Link>
@@ -250,44 +250,44 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
         <FilterTabs currentFilter={filter} />
 
         {/* Webhooks List */}
-        <div className="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+        <div className="mt-6 bg-zinc-900 rounded-lg overflow-hidden">
           {filteredWebhooks.length === 0 ? (
             <EmptyState />
           ) : (
             <>
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+              <table className="min-w-full divide-y divide-zinc-800">
+                <thead className="bg-zinc-950">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                       Endpoint
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                       Events
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                       Last Success
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="bg-zinc-900 divide-y divide-zinc-800">
                   {filteredWebhooks.map((webhook) => (
-                    <tr key={webhook.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <tr key={webhook.id} className="hover:bg-zinc-800/30">
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
                           <Link
                             href={`/dashboard/webhooks/${webhook.id}`}
-                            className="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400"
+                            className="text-sm font-medium text-white hover:text-emerald-400"
                           >
                             {truncateUrl(webhook.url)}
                           </Link>
                           {webhook.description && (
-                            <span className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                            <span className="text-sm text-zinc-500 truncate max-w-xs">
                               {webhook.description}
                             </span>
                           )}
@@ -296,13 +296,13 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1 max-w-xs">
                           {webhook.event_types.length === 0 ? (
-                            <span className="text-sm text-gray-500 dark:text-gray-400">All events</span>
+                            <span className="text-sm text-zinc-500">All events</span>
                           ) : webhook.event_types.length > 3 ? (
                             <>
                               {webhook.event_types.slice(0, 2).map((type) => (
                                 <EventTypeBadge key={type} type={type} />
                               ))}
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-zinc-800 text-zinc-400">
                                 +{webhook.event_types.length - 2} more
                               </span>
                             </>
@@ -314,25 +314,25 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <StatusBadge 
-                          isActive={webhook.is_active} 
+                        <StatusBadge
+                          isActive={webhook.is_active}
                           failures={webhook.consecutive_failures ?? 0}
                         />
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                      <td className="px-6 py-4 text-sm text-zinc-500">
                         {formatDate(webhook.last_success_at ? new Date(webhook.last_success_at) : null)}
                       </td>
                       <td className="px-6 py-4 text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <Link
                             href={`/dashboard/webhooks/${webhook.id}`}
-                            className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                            className="text-emerald-400 hover:text-emerald-300"
                           >
                             View
                           </Link>
                           <Link
                             href={`/dashboard/webhooks/${webhook.id}/edit`}
-                            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                            className="text-zinc-400 hover:text-zinc-300"
                           >
                             Edit
                           </Link>
@@ -345,12 +345,12 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
+                <div className="bg-zinc-900 px-4 py-3 flex items-center justify-between border-t border-zinc-800 sm:px-6">
                   <div className="flex-1 flex justify-between sm:hidden">
                     {page > 1 && (
                       <Link
                         href={`/dashboard/webhooks?${filter !== 'all' ? `filter=${filter}&` : ''}page=${page - 1}`}
-                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        className="relative inline-flex items-center px-4 py-2 border border-zinc-700 text-sm font-medium rounded-md text-zinc-300 bg-zinc-800 hover:bg-zinc-700/50"
                       >
                         Previous
                       </Link>
@@ -358,7 +358,7 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                     {page < totalPages && (
                       <Link
                         href={`/dashboard/webhooks?${filter !== 'all' ? `filter=${filter}&` : ''}page=${page + 1}`}
-                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-zinc-700 text-sm font-medium rounded-md text-zinc-300 bg-zinc-800 hover:bg-zinc-700/50"
                       >
                         Next
                       </Link>
@@ -366,18 +366,18 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                   </div>
                   <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300">
+                      <p className="text-sm text-zinc-300">
                         Showing <span className="font-medium">{offset + 1}</span> to{' '}
                         <span className="font-medium">{Math.min(offset + limit, total)}</span> of{' '}
                         <span className="font-medium">{total}</span> webhooks
                       </p>
                     </div>
                     <div>
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                      <nav className="relative z-0 inline-flex rounded-md -space-x-px">
                         {page > 1 && (
                           <Link
                             href={`/dashboard/webhooks?${filter !== 'all' ? `filter=${filter}&` : ''}page=${page - 1}`}
-                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-zinc-700 bg-zinc-800 text-sm font-medium text-zinc-500 hover:bg-zinc-700/50"
                           >
                             ← Previous
                           </Link>
@@ -385,7 +385,7 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                         {page < totalPages && (
                           <Link
                             href={`/dashboard/webhooks?${filter !== 'all' ? `filter=${filter}&` : ''}page=${page + 1}`}
-                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700"
+                            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-zinc-700 bg-zinc-800 text-sm font-medium text-zinc-500 hover:bg-zinc-700/50"
                           >
                             Next →
                           </Link>
@@ -400,10 +400,10 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
         </div>
 
         {/* Help Text */}
-        <div className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-6 text-sm text-zinc-500">
           <p>
             Webhooks allow you to receive real-time notifications when events occur on the XRP Ledger.{' '}
-            <Link href="/docs/webhooks" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+            <Link href="/docs/webhooks" className="text-emerald-400 hover:text-emerald-300">
               Learn more →
             </Link>
           </p>

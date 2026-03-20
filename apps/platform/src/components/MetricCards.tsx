@@ -84,16 +84,16 @@ function CardWrapper({
   children: React.ReactNode;
   className?: string;
 }) {
-  const baseClass = `bg-white dark:bg-gray-800 rounded-lg shadow p-6 ${className}`;
-  
+  const baseClass = `bg-zinc-900 rounded-lg p-6 ${className}`;
+
   if (href) {
     return (
-      <Link href={href} className={`${baseClass} hover:shadow-md transition-shadow cursor-pointer`}>
+      <Link href={href} className={`${baseClass} transition-shadow cursor-pointer`}>
         {children}
       </Link>
     );
   }
-  
+
   return <div className={baseClass}>{children}</div>;
 }
 
@@ -103,18 +103,18 @@ function TrendIndicator({ trend }: { trend: MetricCardProps['trend'] }) {
   const config = {
     up: {
       icon: <TrendUpIcon />,
-      color: 'text-green-600 dark:text-green-400',
-      bg: 'bg-green-100 dark:bg-green-900/30',
+      color: 'text-green-400',
+      bg: 'bg-green-900/30',
     },
     down: {
       icon: <TrendDownIcon />,
-      color: 'text-red-600 dark:text-red-400',
-      bg: 'bg-red-100 dark:bg-red-900/30',
+      color: 'text-red-400',
+      bg: 'bg-red-900/30',
     },
     neutral: {
       icon: <TrendNeutralIcon />,
-      color: 'text-gray-500 dark:text-gray-400',
-      bg: 'bg-gray-100 dark:bg-gray-700',
+      color: 'text-zinc-500',
+      bg: 'bg-zinc-800',
     },
   };
 
@@ -157,11 +157,11 @@ export function MetricCard({
     <CardWrapper href={href} className={`border-l-4 ${colorClasses[color]}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+          <p className="text-sm font-medium text-zinc-500 truncate">
             {title}
           </p>
           <div className="mt-1 flex items-baseline">
-            <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <p className="text-2xl font-semibold text-white">
               {typeof value === 'number' ? value.toLocaleString() : value}
             </p>
             {trend && (
@@ -171,14 +171,14 @@ export function MetricCard({
             )}
           </div>
           {subtitle && (
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-zinc-500">
               {subtitle}
             </p>
           )}
         </div>
         {icon && (
           <div className="flex-shrink-0 ml-4">
-            <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-300">
+            <div className="p-3 bg-zinc-800 rounded-lg text-zinc-300">
               {icon}
             </div>
           </div>
@@ -210,15 +210,15 @@ export function ProgressCard({
   };
 
   const getTextColor = () => {
-    if (percentage >= dangerThreshold) return 'text-red-600 dark:text-red-400';
-    if (percentage >= warningThreshold) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-gray-600 dark:text-gray-400';
+    if (percentage >= dangerThreshold) return 'text-red-400';
+    if (percentage >= warningThreshold) return 'text-yellow-400';
+    return 'text-zinc-400';
   };
 
   return (
     <CardWrapper href={href}>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <p className="text-sm font-medium text-zinc-500">
           {title}
         </p>
         {showPercentage && (
@@ -227,17 +227,17 @@ export function ProgressCard({
           </span>
         )}
       </div>
-      
+
       <div className="flex items-baseline mb-2">
-        <span className="text-2xl font-semibold text-gray-900 dark:text-white">
+        <span className="text-2xl font-semibold text-white">
           {current.toLocaleString()}
         </span>
-        <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
+        <span className="ml-1 text-sm text-zinc-500">
           / {max.toLocaleString()} {unit}
         </span>
       </div>
 
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+      <div className="w-full bg-zinc-700 rounded-full h-2">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${getBarColor()}`}
           style={{ width: `${percentage}%` }}
@@ -245,7 +245,7 @@ export function ProgressCard({
       </div>
 
       {percentage >= dangerThreshold && (
-        <p className="mt-2 text-xs text-red-600 dark:text-red-400">
+        <p className="mt-2 text-xs text-red-400">
           ⚠️ Approaching limit
         </p>
       )}
@@ -279,10 +279,10 @@ export function SparklineCard({
 
   return (
     <CardWrapper href={href}>
-      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+      <p className="text-sm font-medium text-zinc-500">
         {title}
       </p>
-      <p className="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
+      <p className="mt-1 text-2xl font-semibold text-white">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
       
@@ -321,7 +321,7 @@ export function StatCard({
   color?: 'default' | 'green' | 'red' | 'yellow' | 'blue';
 }) {
   const colorClasses = {
-    default: 'border-gray-300 dark:border-gray-600',
+    default: 'border-zinc-700',
     green: 'border-green-500',
     red: 'border-red-500',
     yellow: 'border-yellow-500',
@@ -329,9 +329,9 @@ export function StatCard({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg px-4 py-3 border-l-4 ${colorClasses[color]} shadow-sm`}>
-      <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-      <p className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className={`bg-zinc-900 rounded-lg px-4 py-3 border-l-4 ${colorClasses[color]}`}>
+      <p className="text-sm text-zinc-500">{label}</p>
+      <p className="text-xl font-semibold text-white">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
     </div>
@@ -368,8 +368,8 @@ export function StatSummary({
     <div className="flex flex-wrap items-center gap-4 text-sm">
       {stats.map((stat, index) => (
         <div key={index} className="flex items-center">
-          <span className="text-gray-500 dark:text-gray-400">{stat.label}:</span>
-          <span className={`ml-1 font-medium ${stat.color ?? 'text-gray-900 dark:text-white'}`}>
+          <span className="text-zinc-500">{stat.label}:</span>
+          <span className={`ml-1 font-medium ${stat.color ?? 'text-white'}`}>
             {typeof stat.value === 'number' ? stat.value.toLocaleString() : stat.value}
           </span>
         </div>

@@ -1,0 +1,59 @@
+groups:
+  - name: xrnotify-alerts
+    rules:
+      # ---------------------------------------------------------------------------
+      # Webhook Delivery Queue Backlog
+      # ---------------------------------------------------------------------------
+      - alert: WebhookDeliveryQueueBacklog
+        expr: xrnotify_webhook_stream_pending > 1000
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Webhook delivery queue backing up"
+          description: "{{ $value }} messages pending in webhook stream for over 2 minutes. Consider scaling workers."
+
+      - alert: WebhookDeliveryQueueCritical
+        expr: xrnotify_webhook_stream_pending > 5000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Webhook delivery queue critically backed up"
+          description: "{{ $value }} messages pending. Immediate action required."
+
+      # ---------------------------------------------------------------------------
+      # Delivery Success Rate
+      # ---------------------------------------------------------------------------
+      - alert: WebhookDeliverySuccessRateLow
+        expr: |
+          sum(rate(xrnotify_webhook_deliveries_total{status="success"}[5m]))
+          /
+          sum(rate(xrnotify_webhook_deliveries_total[5m])) < 0.95
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Webhook delivery success rate below 95%"
+          description: "Current success rate is {{ $value | humanizePercentage }}."
+
+      # ---------------------------------------------------------------------------
+      # Worker Health
+      # ---------------------------------------------------------------------------
+      - alert: WebhookWorkerDown
+        expr: up{job="xrnotify-worker"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Webhook worker is down"
+          description: "The webhook delivery worker has been unreachable for 1 minute."
+
+      - alert: XRPLListenerDown
+        expr: up{job="xrnotify-listener"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "XRPL listener is down"
+          description: "The XRPL event listener has been unreachable for 1 minute."

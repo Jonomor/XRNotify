@@ -34,7 +34,7 @@ interface ApiKeyRow {
 function StatusBadge({ isActive, expiresAt }: { isActive: boolean; expiresAt: string | Date | null | undefined }) {
   if (!isActive) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900 text-red-200">
         Revoked
       </span>
     );
@@ -42,14 +42,14 @@ function StatusBadge({ isActive, expiresAt }: { isActive: boolean; expiresAt: st
   
   if (expiresAt && new Date(expiresAt) < new Date()) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-300">
         Expired
       </span>
     );
   }
   
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-200">
       Active
     </span>
   );
@@ -57,18 +57,18 @@ function StatusBadge({ isActive, expiresAt }: { isActive: boolean; expiresAt: st
 
 function ScopeBadge({ scope }: { scope: string }) {
   const colors: Record<string, string> = {
-    'webhooks:read': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    'webhooks:write': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    'deliveries:read': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    'deliveries:write': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    'events:read': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-    'api_keys:read': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    'api_keys:write': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    'admin': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    'webhooks:read': 'bg-blue-900 text-blue-200',
+    'webhooks:write': 'bg-blue-900 text-blue-200',
+    'deliveries:read': 'bg-green-900 text-green-200',
+    'deliveries:write': 'bg-green-900 text-green-200',
+    'events:read': 'bg-purple-900 text-purple-200',
+    'api_keys:read': 'bg-yellow-900 text-yellow-200',
+    'api_keys:write': 'bg-yellow-900 text-yellow-200',
+    'admin': 'bg-red-900 text-red-200',
   };
 
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[scope] ?? 'bg-gray-100 text-gray-800'}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[scope] ?? 'bg-zinc-800 text-zinc-300'}`}>
       {scope}
     </span>
   );
@@ -78,7 +78,7 @@ function EmptyState() {
   return (
     <div className="text-center py-12">
       <svg
-        className="mx-auto h-12 w-12 text-gray-400"
+        className="mx-auto h-12 w-12 text-zinc-400"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -90,14 +90,14 @@ function EmptyState() {
           d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
         />
       </svg>
-      <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No API keys</h3>
-      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <h3 className="mt-2 text-sm font-medium text-white">No API keys</h3>
+      <p className="mt-1 text-sm text-zinc-500">
         Create an API key to start using the XRNotify API.
       </p>
       <div className="mt-6">
         <Link
           href="/dashboard/api-keys/new"
-          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
         >
           + Create API Key
         </Link>
@@ -153,26 +153,26 @@ export default async function ApiKeysPage() {
   const revokedKeys = apiKeys.filter(k => !k.is_active);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[#0a0a0f]">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow">
+      <header className="bg-zinc-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <nav className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                <Link href="/dashboard" className="hover:text-gray-700 dark:hover:text-gray-300">
+              <nav className="flex items-center space-x-2 text-sm text-zinc-500">
+                <Link href="/dashboard" className="hover:text-zinc-300">
                   Dashboard
                 </Link>
                 <span>/</span>
-                <span className="text-gray-900 dark:text-white">API Keys</span>
+                <span className="text-white">API Keys</span>
               </nav>
-              <h1 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="mt-2 text-2xl font-bold text-white">
                 API Keys
               </h1>
             </div>
             <Link
               href="/dashboard/api-keys/new"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
             >
               + Create API Key
             </Link>
@@ -182,7 +182,7 @@ export default async function ApiKeysPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Security Notice */}
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+        <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -190,10 +190,10 @@ export default async function ApiKeysPage() {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+              <h3 className="text-sm font-medium text-yellow-200">
                 Keep your API keys secure
               </h3>
-              <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+              <div className="mt-2 text-sm text-yellow-300">
                 <p>
                   API keys grant access to your XRNotify account. Never share them publicly or commit them to version control.
                   Use environment variables to store keys in your applications.
@@ -204,9 +204,9 @@ export default async function ApiKeysPage() {
         </div>
 
         {/* Active Keys */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden mb-8">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+        <div className="bg-zinc-900 rounded-lg overflow-hidden mb-8">
+          <div className="px-6 py-4 border-b border-zinc-800">
+            <h2 className="text-lg font-medium text-white">
               Active Keys ({activeKeys.length})
             </h2>
           </div>
@@ -214,44 +214,44 @@ export default async function ApiKeysPage() {
           {activeKeys.length === 0 ? (
             <EmptyState />
           ) : (
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-900">
+            <table className="min-w-full divide-y divide-zinc-800">
+              <thead className="bg-zinc-950">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Key
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Scopes
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Last Used
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-zinc-900 divide-y divide-zinc-800">
                 {activeKeys.map((apiKey) => (
-                  <tr key={apiKey.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <tr key={apiKey.id} className="hover:bg-zinc-800/30">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        <span className="text-sm font-medium text-white">
                           {apiKey.name}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        <span className="text-xs text-zinc-500">
                           Created {formatDate(apiKey.created_at)}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <code className="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                      <code className="text-sm font-mono bg-zinc-800 px-2 py-1 rounded">
                         {apiKey.key_prefix}••••••••
                       </code>
                     </td>
@@ -262,7 +262,7 @@ export default async function ApiKeysPage() {
                             {apiKey.scopes.slice(0, 2).map((scope) => (
                               <ScopeBadge key={scope} scope={scope} />
                             ))}
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-zinc-800 text-zinc-400">
                               +{apiKey.scopes.length - 2} more
                             </span>
                           </>
@@ -273,13 +273,13 @@ export default async function ApiKeysPage() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm text-zinc-500">
                       {formatTimeAgo(apiKey.last_used_at)}
                     </td>
                     <td className="px-6 py-4">
                       <StatusBadge isActive={apiKey.is_active} expiresAt={apiKey.expires_at} />
                       {apiKey.expires_at && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-xs text-zinc-500 mt-1">
                           Expires {formatDate(apiKey.expires_at)}
                         </p>
                       )}
@@ -288,13 +288,13 @@ export default async function ApiKeysPage() {
                       <div className="flex items-center justify-end space-x-3">
                         <Link
                           href={`/dashboard/api-keys/${apiKey.id}`}
-                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                          className="text-emerald-400 hover:text-emerald-300"
                         >
                           View
                         </Link>
                         <button
                           type="button"
-                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          className="text-red-400 hover:text-red-300"
                           onClick={() => {
                             // This would trigger a confirmation modal in a real app
                             // For server components, we'd use a form action
@@ -313,41 +313,41 @@ export default async function ApiKeysPage() {
 
         {/* Revoked Keys (if any) */}
         {revokedKeys.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-medium text-gray-500 dark:text-gray-400">
+          <div className="bg-zinc-900 rounded-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-zinc-800">
+              <h2 className="text-lg font-medium text-zinc-500">
                 Revoked Keys ({revokedKeys.length})
               </h2>
             </div>
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-900">
+            <table className="min-w-full divide-y divide-zinc-800">
+              <thead className="bg-zinc-950">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Key
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Created
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 opacity-60">
+              <tbody className="bg-zinc-900 divide-y divide-zinc-800 opacity-60">
                 {revokedKeys.map((apiKey) => (
                   <tr key={apiKey.id}>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm text-zinc-500">
                       {apiKey.name}
                     </td>
                     <td className="px-6 py-4">
-                      <code className="text-sm font-mono text-gray-400">
+                      <code className="text-sm font-mono text-zinc-400">
                         {apiKey.key_prefix}••••••••
                       </code>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-6 py-4 text-sm text-zinc-500">
                       {formatDate(apiKey.created_at)}
                     </td>
                     <td className="px-6 py-4">
@@ -361,20 +361,20 @@ export default async function ApiKeysPage() {
         )}
 
         {/* Help Section */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+        <div className="mt-8 bg-zinc-900 rounded-lg p-6">
+          <h3 className="text-lg font-medium text-white mb-4">
             Using API Keys
           </h3>
-          <div className="prose prose-sm dark:prose-invert max-w-none">
-            <p className="text-gray-600 dark:text-gray-400">
+          <div className="prose prose-sm max-w-none">
+            <p className="text-zinc-400">
               Include your API key in requests using the <code>X-XRNotify-Key</code> header:
             </p>
-            <pre className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto mt-4">
+            <pre className="bg-zinc-950 text-zinc-100 rounded-lg p-4 overflow-x-auto mt-4">
               <code>{`curl -X GET https://api.xrnotify.io/v1/webhooks \\
   -H "X-XRNotify-Key: xrn_your_api_key_here"`}</code>
             </pre>
-            <p className="text-gray-600 dark:text-gray-400 mt-4">
-              <Link href="/docs/authentication" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+            <p className="text-zinc-400 mt-4">
+              <Link href="/docs/authentication" className="text-emerald-400 hover:text-emerald-300">
                 Learn more about authentication →
               </Link>
             </p>

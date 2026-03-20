@@ -263,14 +263,14 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
       )}
 
       {/* Basic Info Section */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+      <div className="bg-zinc-900 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-white mb-4">
           Endpoint Configuration
         </h3>
 
         {/* URL */}
         <div className="mb-4">
-          <label htmlFor="url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label htmlFor="url" className="block text-sm font-medium text-zinc-300">
             Webhook URL <span className="text-red-500">*</span>
           </label>
           <div className="mt-1">
@@ -280,25 +280,25 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
               value={formData.url}
               onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               placeholder="https://api.yourapp.com/webhooks/xrnotify"
-              className={`block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white ${
+              className={`block w-full rounded-md sm:text-sm bg-zinc-800 text-white ${
                 fieldErrors['url']
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-indigo-500 focus:ring-indigo-500'
+                  : 'border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500'
               }`}
             />
             {fieldErrors['url'] && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors['url']}</p>
+              <p className="mt-1 text-sm text-red-400">{fieldErrors['url']}</p>
             )}
           </div>
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-zinc-500">
             HTTPS required in production. Must be publicly accessible.
           </p>
         </div>
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Description <span className="text-gray-400">(optional)</span>
+          <label htmlFor="description" className="block text-sm font-medium text-zinc-300">
+            Description <span className="text-zinc-400">(optional)</span>
           </label>
           <div className="mt-1">
             <input
@@ -307,7 +307,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="e.g., Production payment notifications"
-              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+              className="block w-full rounded-md border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm bg-zinc-800 text-white"
             />
           </div>
         </div>
@@ -319,22 +319,22 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
             id="is_active"
             checked={formData.is_active}
             onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-zinc-700 rounded"
           />
-          <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+          <label htmlFor="is_active" className="ml-2 block text-sm text-zinc-300">
             Enable webhook (receive events immediately)
           </label>
         </div>
       </div>
 
       {/* Event Types Section */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div className="bg-zinc-900 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h3 className="text-lg font-medium text-white">
               Event Types
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-zinc-500">
               Select which events trigger this webhook. Leave empty for all events.
             </p>
           </div>
@@ -342,7 +342,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
             <button
               type="button"
               onClick={selectAllEvents}
-              className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+              className="text-sm text-emerald-400 hover:text-emerald-300"
             >
               Select all
             </button>
@@ -350,7 +350,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
             <button
               type="button"
               onClick={clearAllEvents}
-              className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              className="text-sm text-zinc-500 hover:text-zinc-300"
             >
               Clear
             </button>
@@ -363,7 +363,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
             const allSelected = categorySelected === category.events.length;
 
             return (
-              <div key={category.name} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <div key={category.name} className="border border-zinc-800 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
                     <input
@@ -371,16 +371,16 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
                       id={`category-${category.name}`}
                       checked={allSelected}
                       onChange={() => toggleCategory(category.events)}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-zinc-700 rounded"
                     />
                     <label htmlFor={`category-${category.name}`} className="ml-2">
-                      <span className="font-medium text-gray-900 dark:text-white">{category.name}</span>
-                      <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-medium text-white">{category.name}</span>
+                      <span className="ml-2 text-sm text-zinc-500">
                         ({categorySelected}/{category.events.length})
                       </span>
                     </label>
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{category.description}</span>
+                  <span className="text-xs text-zinc-500">{category.description}</span>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 ml-6">
                   {category.events.map((event) => (
@@ -389,9 +389,9 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
                         type="checkbox"
                         checked={formData.event_types.includes(event)}
                         onChange={() => toggleEventType(event)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-zinc-700 rounded"
                       />
-                      <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{event}</span>
+                      <span className="ml-2 text-sm text-zinc-300">{event}</span>
                     </label>
                   ))}
                 </div>
@@ -401,29 +401,29 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
         </div>
 
         {formData.event_types.length === 0 && (
-          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded p-3">
+          <p className="mt-4 text-sm text-zinc-500 bg-zinc-800 rounded p-3">
             ℹ️ No events selected — this webhook will receive <strong>all</strong> event types.
           </p>
         )}
       </div>
 
       {/* Advanced Options */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div className="bg-zinc-900 rounded-lg overflow-hidden">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700"
+          className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-zinc-800/30"
         >
           <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+            <h3 className="text-lg font-medium text-white">
               Advanced Filters
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-zinc-500">
               Filter events by specific XRPL accounts
             </p>
           </div>
           <svg
-            className={`w-5 h-5 text-gray-400 transform transition-transform ${showAdvanced ? 'rotate-180' : ''}`}
+            className={`w-5 h-5 text-zinc-400 transform transition-transform ${showAdvanced ? 'rotate-180' : ''}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -433,11 +433,11 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
         </button>
 
         {showAdvanced && (
-          <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="px-6 pb-6 border-t border-zinc-800 pt-4">
+            <label className="block text-sm font-medium text-zinc-300 mb-2">
               Account Filters
             </label>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+            <p className="text-sm text-zinc-500 mb-3">
               Only receive events involving these XRPL accounts. Leave empty to receive all.
             </p>
 
@@ -449,18 +449,18 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
                 onChange={(e) => setNewAccount(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addAccountFilter())}
                 placeholder="rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-                className="flex-1 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white font-mono"
+                className="flex-1 rounded-md border-zinc-700 focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm bg-zinc-800 text-white font-mono"
               />
               <button
                 type="button"
                 onClick={addAccountFilter}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 text-sm"
               >
                 Add
               </button>
             </div>
             {fieldErrors['account_filters'] && (
-              <p className="mb-3 text-sm text-red-600 dark:text-red-400">{fieldErrors['account_filters']}</p>
+              <p className="mb-3 text-sm text-red-400">{fieldErrors['account_filters']}</p>
             )}
 
             {/* Account list */}
@@ -469,13 +469,13 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
                 {formData.account_filters.map((address) => (
                   <div
                     key={address}
-                    className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded"
+                    className="flex items-center justify-between bg-zinc-800 px-3 py-2 rounded"
                   >
-                    <code className="text-sm font-mono text-gray-700 dark:text-gray-300">{address}</code>
+                    <code className="text-sm font-mono text-zinc-300">{address}</code>
                     <button
                       type="button"
                       onClick={() => removeAccountFilter(address)}
-                      className="text-red-500 hover:text-red-700 text-sm"
+                      className="text-red-500 hover:text-red-400 text-sm"
                     >
                       Remove
                     </button>
@@ -483,7 +483,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+              <p className="text-sm text-zinc-500 italic">
                 No account filters — events from all accounts will be delivered.
               </p>
             )}
@@ -496,14 +496,14 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          className="px-4 py-2 border border-zinc-700 rounded-md text-sm font-medium text-zinc-300 bg-zinc-800 hover:bg-zinc-700/50"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isPending ? (
             <>

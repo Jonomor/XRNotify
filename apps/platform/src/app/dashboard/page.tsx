@@ -49,26 +49,26 @@ interface WebhookRow {
 
 function MetricCard({ title, value, subtitle, trend, href }: MetricCardProps) {
   const content = (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+    <div className="bg-zinc-900 rounded-lg p-6 transition-shadow">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <h3 className="text-sm font-medium text-zinc-500">
           {title}
         </h3>
         {trend && (
           <span className={`text-sm ${
             trend === 'up' ? 'text-green-500' : 
             trend === 'down' ? 'text-red-500' : 
-            'text-gray-400'
+            'text-zinc-400'
           }`}>
             {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '—'}
           </span>
         )}
       </div>
-      <p className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white">
+      <p className="mt-2 text-3xl font-semibold text-white">
         {value}
       </p>
       {subtitle && (
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-zinc-500">
           {subtitle}
         </p>
       )}
@@ -84,15 +84,15 @@ function MetricCard({ title, value, subtitle, trend, href }: MetricCardProps) {
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    delivered: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    failed: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    retrying: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-    dead_letter: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    delivered: 'bg-green-900 text-green-200',
+    failed: 'bg-red-900 text-red-200',
+    pending: 'bg-yellow-900 text-yellow-200',
+    retrying: 'bg-orange-900 text-orange-200',
+    dead_letter: 'bg-purple-900 text-purple-200',
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status] ?? 'bg-gray-100 text-gray-800'}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[status] ?? 'bg-zinc-800 text-zinc-300'}`}>
       {status.replace('_', ' ')}
     </span>
   );
@@ -101,27 +101,27 @@ function StatusBadge({ status }: { status: string }) {
 function WebhookHealthBadge({ failures }: { failures: number }) {
   if (failures === 0) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-200">
         Healthy
       </span>
     );
   }
   if (failures < 3) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900 text-yellow-200">
         Degraded
       </span>
     );
   }
   if (failures < 10) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-900 text-orange-200">
         Unhealthy
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900 text-red-200">
       Critical
     </span>
   );
@@ -189,23 +189,23 @@ export default async function DashboardPage() {
   const usagePercent = Math.round((currentUsage / eventsLimit) * 100);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-[#0a0a0f]">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow">
+      <header className="bg-zinc-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-white">
                 Dashboard
               </h1>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-sm text-zinc-500">
                 Welcome back, {session.name ?? session.email}
               </p>
             </div>
             <div className="flex items-center space-x-4">
               <Link
                 href="/dashboard/webhooks/new"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
               >
                 + New Webhook
               </Link>
@@ -247,23 +247,23 @@ export default async function DashboardPage() {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Recent Deliveries */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="bg-zinc-900 rounded-lg">
+            <div className="px-6 py-4 border-b border-zinc-800">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h2 className="text-lg font-medium text-white">
                   Recent Deliveries
                 </h2>
                 <Link
                   href="/dashboard/deliveries"
-                  className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                  className="text-sm text-emerald-400 hover:text-emerald-300"
                 >
                   View all →
                 </Link>
               </div>
             </div>
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="divide-y divide-zinc-800">
               {recentDeliveries.deliveries.length === 0 ? (
-                <div className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                <div className="px-6 py-8 text-center text-zinc-500">
                   <p>No deliveries yet</p>
                   <p className="mt-1 text-sm">Create a webhook to start receiving events</p>
                 </div>
@@ -272,14 +272,14 @@ export default async function DashboardPage() {
                   <Link
                     key={delivery.id}
                     href={`/dashboard/deliveries/${delivery.id}`}
-                    className="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    className="block px-6 py-4 hover:bg-zinc-800/30"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        <p className="text-sm font-medium text-white truncate">
                           {delivery.event_type}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-zinc-500">
                           {formatTimeAgo(new Date(delivery.created_at))}
                         </p>
                       </div>
@@ -292,27 +292,27 @@ export default async function DashboardPage() {
           </div>
 
           {/* Webhook Health */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="bg-zinc-900 rounded-lg">
+            <div className="px-6 py-4 border-b border-zinc-800">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h2 className="text-lg font-medium text-white">
                   Webhook Health
                 </h2>
                 <Link
                   href="/dashboard/webhooks"
-                  className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                  className="text-sm text-emerald-400 hover:text-emerald-300"
                 >
                   Manage →
                 </Link>
               </div>
             </div>
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="divide-y divide-zinc-800">
               {webhooks.webhooks.length === 0 ? (
-                <div className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                <div className="px-6 py-8 text-center text-zinc-500">
                   <p>No webhooks configured</p>
                   <Link
                     href="/dashboard/webhooks/new"
-                    className="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-500"
+                    className="mt-2 inline-block text-sm text-emerald-400 hover:text-emerald-300"
                   >
                     Create your first webhook →
                   </Link>
@@ -322,14 +322,14 @@ export default async function DashboardPage() {
                   <Link
                     key={webhook.id}
                     href={`/dashboard/webhooks/${webhook.id}`}
-                    className="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    className="block px-6 py-4 hover:bg-zinc-800/30"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        <p className="text-sm font-medium text-white truncate">
                           {truncateUrl(webhook.url)}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-zinc-500">
                           {webhook.last_success_at
                             ? `Last success: ${formatTimeAgo(new Date(webhook.last_success_at))}`
                             : 'No deliveries yet'}
@@ -347,7 +347,7 @@ export default async function DashboardPage() {
         {/* Alerts Section */}
         {unhealthyWebhooks.length > 0 && (
           <div className="mt-8">
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -355,10 +355,10 @@ export default async function DashboardPage() {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
+                  <h3 className="text-sm font-medium text-red-200">
                     {unhealthyWebhooks.length} webhook{unhealthyWebhooks.length > 1 ? 's' : ''} experiencing failures
                   </h3>
-                  <div className="mt-2 text-sm text-red-700 dark:text-red-300">
+                  <div className="mt-2 text-sm text-red-300">
                     <p>
                       Check your endpoint URLs and ensure they are returning 2xx responses.
                     </p>
@@ -366,7 +366,7 @@ export default async function DashboardPage() {
                   <div className="mt-4">
                     <Link
                       href="/dashboard/webhooks?filter=unhealthy"
-                      className="text-sm font-medium text-red-800 dark:text-red-200 hover:text-red-600"
+                      className="text-sm font-medium text-red-200 hover:text-red-400"
                     >
                       View affected webhooks →
                     </Link>
@@ -381,9 +381,9 @@ export default async function DashboardPage() {
         {usagePercent >= 80 && (
           <div className="mt-8">
             <div className={`border rounded-lg p-4 ${
-              usagePercent >= 100 
-                ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
-                : 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
+              usagePercent >= 100
+                ? 'bg-red-900/20 border-red-800'
+                : 'bg-yellow-900/20 border-yellow-800'
             }`}>
               <div className="flex">
                 <div className="flex-shrink-0">
@@ -393,18 +393,18 @@ export default async function DashboardPage() {
                 </div>
                 <div className="ml-3">
                   <h3 className={`text-sm font-medium ${
-                    usagePercent >= 100 
-                      ? 'text-red-800 dark:text-red-200'
-                      : 'text-yellow-800 dark:text-yellow-200'
+                    usagePercent >= 100
+                      ? 'text-red-200'
+                      : 'text-yellow-200'
                   }`}>
-                    {usagePercent >= 100 
-                      ? 'Event limit exceeded' 
+                    {usagePercent >= 100
+                      ? 'Event limit exceeded'
                       : `Approaching event limit (${usagePercent}%)`}
                   </h3>
                   <div className={`mt-2 text-sm ${
-                    usagePercent >= 100 
-                      ? 'text-red-700 dark:text-red-300'
-                      : 'text-yellow-700 dark:text-yellow-300'
+                    usagePercent >= 100
+                      ? 'text-red-300'
+                      : 'text-yellow-300'
                   }`}>
                     <p>
                       {usagePercent >= 100

@@ -75,8 +75,8 @@ function StatusBadge({ status }: { status: string }) {
       label: 'Dead Letter',
     },
     cancelled: {
-      bg: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-      dot: 'bg-gray-400',
+      bg: 'bg-zinc-800 text-zinc-300',
+      dot: 'bg-zinc-400',
       label: 'Cancelled',
     },
   };
@@ -98,12 +98,12 @@ function EventTypeBadge({ type }: { type: string }) {
     nft: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
     dex: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
     trustline: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-    escrow: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300',
+    escrow: 'bg-emerald-500/10 text-emerald-400',
     check: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300',
   };
 
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[category] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[category] ?? 'bg-zinc-800 text-zinc-300'}`}>
       {type}
     </span>
   );
@@ -111,19 +111,19 @@ function EventTypeBadge({ type }: { type: string }) {
 
 function ResponseBadge({ status, timeMs }: { status: number | null; timeMs: number | null }) {
   if (status === null) {
-    return <span className="text-gray-400 dark:text-gray-500 text-sm">—</span>;
+    return <span className="text-zinc-500 text-sm">—</span>;
   }
 
   const isSuccess = status >= 200 && status < 300;
   const colorClass = isSuccess
-    ? 'text-green-600 dark:text-green-400'
-    : 'text-red-600 dark:text-red-400';
+    ? 'text-green-400'
+    : 'text-red-400';
 
   return (
     <div className="flex flex-col">
       <span className={`text-sm font-medium ${colorClass}`}>{status}</span>
       {timeMs !== null && (
-        <span className="text-xs text-gray-500 dark:text-gray-400">{timeMs}ms</span>
+        <span className="text-xs text-zinc-500">{timeMs}ms</span>
       )}
     </div>
   );
@@ -132,10 +132,10 @@ function ResponseBadge({ status, timeMs }: { status: number | null; timeMs: numb
 function AttemptsBadge({ current, max }: { current: number; max: number }) {
   const percentage = (current / max) * 100;
   const colorClass =
-    percentage >= 100 ? 'text-red-600 dark:text-red-400' :
-    percentage >= 75 ? 'text-orange-600 dark:text-orange-400' :
-    percentage >= 50 ? 'text-yellow-600 dark:text-yellow-400' :
-    'text-gray-600 dark:text-gray-400';
+    percentage >= 100 ? 'text-red-400' :
+    percentage >= 75 ? 'text-orange-400' :
+    percentage >= 50 ? 'text-yellow-400' :
+    'text-zinc-400';
 
   return (
     <span className={`text-sm ${colorClass}`}>
@@ -158,7 +158,7 @@ function ReplayButton({
       type="button"
       onClick={() => onReplay(deliveryId)}
       disabled={disabled}
-      className="inline-flex items-center px-2 py-1 text-xs font-medium rounded text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="inline-flex items-center px-2 py-1 text-xs font-medium rounded text-emerald-400 hover:bg-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
       title="Replay this delivery"
     >
       <svg className="w-3.5 h-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,7 +250,7 @@ export default function DeliveryTable({
     return (
       <div className="text-center py-12">
         <svg
-          className="mx-auto h-12 w-12 text-gray-400"
+          className="mx-auto h-12 w-12 text-zinc-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -262,44 +262,44 @@ export default function DeliveryTable({
             d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
           />
         </svg>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{emptyMessage}</p>
+        <p className="mt-2 text-sm text-zinc-500">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead className="bg-gray-50 dark:bg-gray-900">
+      <table className="min-w-full divide-y divide-zinc-800">
+        <thead className="bg-zinc-950">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Event
             </th>
             {showWebhook && (
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
                 Webhook
               </th>
             )}
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Status
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Response
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Attempts
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
               Time
             </th>
             {showActions && (
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+              <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
                 Actions
               </th>
             )}
           </tr>
         </thead>
-        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <tbody className="bg-zinc-900 divide-y divide-zinc-800">
           {deliveries.map((delivery) => {
             const webhook = webhooks.get(delivery.webhook_id);
             const canReplay = ['failed', 'dead_letter'].includes(delivery.status);
@@ -308,7 +308,7 @@ export default function DeliveryTable({
             return (
               <tr
                 key={delivery.id}
-                className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${isPending && isReplaying ? 'opacity-50' : ''}`}
+                className={`hover:bg-zinc-800/30 ${isPending && isReplaying ? 'opacity-50' : ''}`}
               >
                 {/* Event */}
                 <td className="px-4 py-3">
@@ -316,7 +316,7 @@ export default function DeliveryTable({
                     <EventTypeBadge type={delivery.event_type} />
                     <Link
                       href={`/dashboard/deliveries/${delivery.id}`}
-                      className="text-xs font-mono text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                      className="text-xs font-mono text-zinc-500 hover:text-emerald-400"
                       title={delivery.event_id}
                     >
                       {truncateEventId(delivery.event_id)}
@@ -330,12 +330,12 @@ export default function DeliveryTable({
                     {webhook ? (
                       <Link
                         href={`/dashboard/webhooks/${webhook.id}`}
-                        className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
+                        className="text-sm text-emerald-400 hover:underline"
                       >
                         {truncateUrl(webhook.url)}
                       </Link>
                     ) : (
-                      <span className="text-sm text-gray-400 dark:text-gray-500">Unknown</span>
+                      <span className="text-sm text-zinc-500">Unknown</span>
                     )}
                   </td>
                 )}
@@ -344,7 +344,7 @@ export default function DeliveryTable({
                 <td className="px-4 py-3">
                   <StatusBadge status={delivery.status} />
                   {delivery.status === 'retrying' && delivery.next_retry_at && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-zinc-500 mt-1">
                       Next: {formatNextRetry(delivery.next_retry_at)}
                     </p>
                   )}
@@ -366,7 +366,7 @@ export default function DeliveryTable({
                 </td>
 
                 {/* Time */}
-                <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                <td className="px-4 py-3 text-sm text-zinc-500">
                   {delivery.delivered_at
                     ? formatTimeAgo(delivery.delivered_at)
                     : formatTimeAgo(delivery.created_at)}
@@ -378,7 +378,7 @@ export default function DeliveryTable({
                     <div className="flex items-center justify-end space-x-2">
                       <Link
                         href={`/dashboard/deliveries/${delivery.id}`}
-                        className="text-xs text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+                        className="text-xs text-zinc-400 hover:text-emerald-400"
                       >
                         View
                       </Link>

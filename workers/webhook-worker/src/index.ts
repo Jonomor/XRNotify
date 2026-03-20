@@ -33,7 +33,7 @@ const config = {
   blockTimeMs: parseInt(process.env.BLOCK_TIME_MS ?? '5000', 10),
   
   // Delivery settings
-  deliveryTimeoutMs: parseInt(process.env.DELIVERY_TIMEOUT_MS ?? '30000', 10),
+  deliveryTimeoutMs: parseInt(process.env.DELIVERY_TIMEOUT_MS ?? '5000', 10),
   maxRetries: parseInt(process.env.MAX_RETRIES ?? '10', 10),
   
   // Retry backoff settings (exponential with jitter)
@@ -90,6 +90,12 @@ const queueDepth = new Gauge({
 const activeDeliveries = new Gauge({
   name: 'xrnotify_webhook_active_deliveries',
   help: 'Number of deliveries currently in progress',
+  registers: [register],
+});
+
+const streamPendingGauge = new Gauge({
+  name: 'xrnotify_webhook_stream_pending',
+  help: 'Number of pending (consumed but unacknowledged) messages in webhook delivery stream',
   registers: [register],
 });
 
@@ -430,10 +436,19 @@ async function processMessage(message: StreamMessage): Promise<void> {
       
       // Execute delivery
       const result = await deliverWebhook(webhook, event_id, event_type, payload, timestamp);
-      
+
+      // Warn on slow deliveries
+      if (result.responseTimeMs > 2000) {
+        webhookLog.warn({
+          url: webhook.url,
+          duration_ms: result.responseTimeMs,
+          status: result.statusCode,
+        }, 'Slow webhook delivery');
+      }
+
       // Record attempt
       await recordDeliveryAttempt(deliveryId, result, attemptCount + 1);
-      
+
       if (result.success) {
         webhookLog.info({ statusCode: result.statusCode, responseTimeMs: result.responseTimeMs }, 'Delivery successful');
         
@@ -546,7 +561,17 @@ async function processRetryQueue(): Promise<void> {
       
       // Execute delivery
       const result = await deliverWebhook(webhook, retry.eventId, retry.eventType, retry.payload, retry.timestamp);
-      
+
+      // Warn on slow deliveries
+      if (result.responseTimeMs > 2000) {
+        logger.warn({
+          deliveryId: retry.deliveryId,
+          url: webhook.url,
+          duration_ms: result.responseTimeMs,
+          status: result.statusCode,
+        }, 'Slow webhook delivery (retry)');
+      }
+
       // Record attempt
       await recordDeliveryAttempt(retry.deliveryId, result, attemptCount + 1);
       
@@ -588,6 +613,21 @@ async function processRetryQueue(): Promise<void> {
     } catch (error) {
       logger.error({ error }, 'Error processing retry');
     }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Consumer Lag Metrics
+// -----------------------------------------------------------------------------
+
+async function updatePendingMetrics(): Promise<void> {
+  try {
+    // xpending returns [count, minId, maxId, [[consumer, count], ...]]
+    const pendingInfo = await redis.xpending(config.streamKey, config.consumerGroup) as [number, string | null, string | null, Array<[string, string]> | null];
+    const pendingCount = typeof pendingInfo[0] === 'number' ? pendingInfo[0] : 0;
+    streamPendingGauge.set(pendingCount);
+  } catch (err) {
+    logger.error({ err }, 'Failed to get XPENDING metrics');
   }
 }
 
@@ -754,7 +794,11 @@ async function main(): Promise<void> {
   
   // Setup consumer group
   await ensureConsumerGroup();
-  
+
+  // Start consumer lag polling
+  await updatePendingMetrics();
+  setInterval(updatePendingMetrics, 15000);
+
   // Start metrics server
   await startMetricsServer();
   
