@@ -28,8 +28,8 @@ const sections = [
     ),
     links: [
       { title: 'Quick Start Guide', href: '/docs/quickstart' },
-      { title: 'Create Your First Webhook', href: '/docs/first-webhook' },
-      { title: 'Verify Webhook Signatures', href: '/docs/signatures' },
+      { title: 'Create Your First Webhook', href: '/docs/create-webhook' },
+      { title: 'Verify Webhook Signatures', href: '/docs/verify-signatures' },
     ],
   },
   {
@@ -74,10 +74,10 @@ const sections = [
       </svg>
     ),
     links: [
-      { title: 'Node.js SDK', href: '/docs/sdk/nodejs' },
-      { title: 'Python SDK', href: '/docs/sdk/python' },
-      { title: 'Go SDK', href: '/docs/sdk/go' },
-      { title: 'Webhook Signature Helpers', href: '/docs/sdk/signatures' },
+      { title: 'Node.js SDK', href: '/docs/sdks/nodejs' },
+      { title: 'Python SDK', href: '/docs/sdks/python' },
+      { title: 'Go SDK', href: '/docs/sdks/go' },
+      { title: 'Webhook Signature Helpers', href: '/docs/sdks/signature-helpers' },
     ],
   },
   {
@@ -91,8 +91,8 @@ const sections = [
     links: [
       { title: 'Building a Payment Notification System', href: '/docs/guides/payment-notifications' },
       { title: 'NFT Marketplace Integration', href: '/docs/guides/nft-marketplace' },
-      { title: 'Real-time Balance Updates', href: '/docs/guides/balance-updates' },
-      { title: 'Handling Webhook Failures', href: '/docs/guides/error-handling' },
+      { title: 'Real-time Balance Updates', href: '/docs/guides/realtime-balance' },
+      { title: 'Handling Webhook Failures', href: '/docs/guides/handling-failures' },
     ],
   },
   {
@@ -105,9 +105,9 @@ const sections = [
     ),
     links: [
       { title: 'Event Schema', href: '/docs/reference/event-schema' },
-      { title: 'Error Codes', href: '/docs/reference/errors' },
+      { title: 'Error Codes', href: '/docs/reference/error-codes' },
       { title: 'Rate Limits', href: '/docs/reference/rate-limits' },
-      { title: 'Retry Policy', href: '/docs/reference/retries' },
+      { title: 'Retry Policy', href: '/docs/reference/retry-policy' },
     ],
   },
 ];
