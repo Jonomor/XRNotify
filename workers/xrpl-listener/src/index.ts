@@ -5,6 +5,9 @@
 // =============================================================================
 
 import { randomUUID } from 'node:crypto';
+import { readdir, readFile } from 'node:fs/promises';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Client, LedgerStream, TransactionStream } from 'xrpl';
 import { Redis } from 'ioredis';
 import pg from 'pg';
@@ -677,6 +680,54 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
 // -----------------------------------------------------------------------------
+// Database Migrations
+// -----------------------------------------------------------------------------
+
+async function runMigrations(): Promise<void> {
+  const currentDir = dirname(fileURLToPath(import.meta.url));
+  const migrationsDir = join(currentDir, '../../../apps/platform/src/lib/db/migrations');
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS schema_migrations (
+      id SERIAL PRIMARY KEY,
+      version VARCHAR(255) NOT NULL UNIQUE,
+      name VARCHAR(255) NOT NULL,
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  const files = (await readdir(migrationsDir)).filter(f => f.endsWith('.sql')).sort();
+  const applied = await pool.query<{ version: string }>('SELECT version FROM schema_migrations ORDER BY version ASC');
+  const appliedVersions = new Set(applied.rows.map(r => r.version));
+
+  for (const file of files) {
+    const match = file.match(/^(\d+)_(.+)\.sql$/);
+    if (!match) continue;
+    const [, version, name] = match as [string, string, string];
+    if (appliedVersions.has(version)) continue;
+
+    const sql = await readFile(join(migrationsDir, file), 'utf-8');
+    const upSql = sql.split(/^-- DOWN$/m)[0]?.trim() ?? '';
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(upSql);
+      await client.query('INSERT INTO schema_migrations (version, name) VALUES ($1, $2)', [version, name]);
+      await client.query('COMMIT');
+      logger.info({ migration: file }, 'Applied migration');
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  logger.info('Database migrations up to date');
+}
+
+// -----------------------------------------------------------------------------
 // Main Entry Point
 // -----------------------------------------------------------------------------
 
@@ -695,7 +746,15 @@ async function main(): Promise<void> {
     logger.fatal({ error }, 'Failed to connect to database');
     process.exit(1);
   }
-  
+
+  // Run database migrations
+  try {
+    await runMigrations();
+  } catch (error) {
+    logger.fatal({ error }, 'Failed to run database migrations');
+    process.exit(1);
+  }
+
   // Test Redis connection
   try {
     await redis.ping();
