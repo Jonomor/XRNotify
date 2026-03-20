@@ -1,7 +1,7 @@
 // =============================================================================
 // XRNotify Platform - Landing Page
 // =============================================================================
-// Marketing landing page with hero, features, pricing, and CTAs
+// Premium marketing landing page - Dark theme, sophisticated blockchain aesthetic
 // =============================================================================
 
 import Link from 'next/link';
@@ -12,9 +12,20 @@ import type { Metadata } from 'next';
 // -----------------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: 'XRNotify - Real-Time XRPL Webhook Notifications',
+  title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
   description:
-    'Stop polling the blockchain. Get instant webhook notifications for XRP Ledger events. Payments, NFTs, DEX trades, and more.',
+    'Enterprise-grade webhook infrastructure for the XRP Ledger. Real-time event streaming, guaranteed delivery, and developer-first APIs.',
+  openGraph: {
+    title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
+    description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
+    type: 'website',
+    url: 'https://xrnotify.io',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
+    description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
+  },
 };
 
 // -----------------------------------------------------------------------------
@@ -23,167 +34,199 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <>
+    <div className="min-h-screen bg-[#0a0a0f] text-white antialiased">
+      {/* Animated Background Grid */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px]" />
+        <div className="absolute left-1/4 top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl" />
+        <div className="absolute right-1/4 top-1/3 h-[400px] w-[400px] rounded-full bg-gradient-to-bl from-blue-500/10 via-cyan-500/5 to-transparent blur-3xl" />
+      </div>
+
       {/* Navigation */}
-      <nav className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/80 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-900/80">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2 no-underline">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
-              <span className="text-lg font-bold text-white">X</span>
+      <nav className="relative z-50 border-b border-white/5">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
+          <Link href="/" className="group flex items-center gap-3 no-underline">
+            <div className="relative flex h-10 w-10 items-center justify-center">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 opacity-80 blur-sm transition-all group-hover:opacity-100" />
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500">
+                <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
             </div>
-            <span className="text-xl font-semibold text-slate-900 dark:text-white">
-              XRNotify
-            </span>
+            <span className="text-xl font-semibold tracking-tight text-white">XRNotify</span>
           </Link>
 
-          <div className="hidden items-center gap-8 md:flex">
-            <Link
-              href="#features"
-              className="text-sm font-medium text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-            >
-              Features
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-sm font-medium text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="https://docs.xrnotify.dev"
-              className="text-sm font-medium text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-            >
-              Docs
-            </Link>
+          <div className="hidden items-center gap-10 md:flex">
+            <Link href="#features" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Features</Link>
+            <Link href="#events" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Events</Link>
+            <Link href="#pricing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Pricing</Link>
+            <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Docs</Link>
           </div>
 
           <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-slate-600 no-underline hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-            >
+            <Link href="/login" className="hidden text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white sm:block">
               Sign In
             </Link>
             <Link
               href="/signup"
-              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white no-underline transition-colors hover:bg-brand-700"
+              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all hover:shadow-lg hover:shadow-emerald-500/25"
             >
-              Get Started
+              <span className="relative z-10">Get Started</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 transition-opacity group-hover:opacity-100" />
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white px-4 pb-20 pt-16 dark:from-slate-900 dark:to-slate-800 sm:px-6 sm:pb-32 sm:pt-24 lg:px-8">
+      <section className="relative overflow-hidden px-6 pb-24 pt-20 lg:px-8 lg:pb-32 lg:pt-28">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 dark:border-brand-800 dark:bg-brand-900/30 dark:text-brand-400">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
+          <div className="mx-auto max-w-4xl text-center">
+            {/* Status Badge */}
+            <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-5 py-2 backdrop-blur-sm">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
               </span>
-              Now tracking mainnet in real-time
+              <span className="text-sm font-medium text-emerald-400">Live on XRPL Mainnet</span>
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-6xl">
-              Webhooks for the{' '}
-              <span className="bg-gradient-to-r from-brand-600 to-xrpl-500 bg-clip-text text-transparent">
-                XRP Ledger
+            <h1 className="text-5xl font-bold leading-[1.1] tracking-tight sm:text-7xl">
+              <span className="text-white">Webhook Infrastructure</span>
+              <br />
+              <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                for the XRP Ledger
               </span>
             </h1>
 
-            <p className="mt-6 text-lg leading-8 text-slate-600 dark:text-slate-400">
-              Stop polling the blockchain. Get instant HTTP notifications when
-              payments arrive, NFTs mint, or DEX orders fill. Enterprise-grade
-              reliability with automatic retries.
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-zinc-400 sm:text-xl">
+              Stop polling. Start building. Get instant HTTP notifications when
+              transactions confirm — payments, NFTs, DEX trades, and more.
+              Enterprise reliability with sub-second delivery.
             </p>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            {/* CTA Buttons */}
+            <div className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
               <Link
                 href="/signup"
-                className="w-full rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white no-underline shadow-lg shadow-brand-600/25 transition-all hover:bg-brand-700 hover:shadow-xl hover:shadow-brand-600/30 sm:w-auto"
+                className="group relative w-full overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-4 text-base font-semibold text-white no-underline shadow-xl shadow-emerald-500/20 transition-all hover:shadow-2xl hover:shadow-emerald-500/30 sm:w-auto"
               >
-                Start Free — 1,000 events/mo
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Start Free
+                  <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 transition-opacity group-hover:opacity-100" />
               </Link>
               <Link
-                href="https://docs.xrnotify.dev"
-                className="w-full rounded-lg border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-900 no-underline transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700 sm:w-auto"
+                href="/docs"
+                className="group flex w-full items-center justify-center gap-2 rounded-full border border-zinc-700 bg-zinc-900/50 px-8 py-4 text-base font-semibold text-white no-underline backdrop-blur-sm transition-all hover:border-zinc-600 hover:bg-zinc-800/50 sm:w-auto"
               >
-                Read the Docs
+                <svg className="h-5 w-5 text-zinc-500 transition-colors group-hover:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+                Documentation
               </Link>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-zinc-500">
+              {['1,000 free events/month', 'No credit card required', 'Setup in 30 seconds'].map((text) => (
+                <div key={text} className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>{text}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Code Example */}
-          <div className="mx-auto mt-16 max-w-3xl">
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-900 shadow-2xl dark:border-slate-700">
-              <div className="flex items-center gap-2 border-b border-slate-700 px-4 py-3">
-                <div className="h-3 w-3 rounded-full bg-red-500" />
-                <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                <div className="h-3 w-3 rounded-full bg-green-500" />
-                <span className="ml-2 text-sm text-slate-400">
-                  Create a webhook in one API call
-                </span>
+          {/* Code Terminal */}
+          <div className="mx-auto mt-20 max-w-4xl">
+            <div className="relative">
+              <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 blur-lg" />
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/80 shadow-2xl backdrop-blur-sm">
+                <div className="flex items-center justify-between border-b border-white/5 px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-2">
+                      <div className="h-3 w-3 rounded-full bg-zinc-700" />
+                      <div className="h-3 w-3 rounded-full bg-zinc-700" />
+                      <div className="h-3 w-3 rounded-full bg-zinc-700" />
+                    </div>
+                    <span className="ml-2 text-sm text-zinc-500">Create a webhook in one API call</span>
+                  </div>
+                  <button className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white">
+                    Copy
+                  </button>
+                </div>
+                <div className="overflow-x-auto p-6">
+                  <pre className="text-sm leading-relaxed sm:text-base"><code><span className="text-emerald-400">curl</span><span className="text-zinc-300"> -X POST https://api.xrnotify.io/v1/webhooks \</span>{'\n'}<span className="text-zinc-300">  -H </span><span className="text-amber-300">&quot;X-XRNotify-Key: xrn_live_k3y...&quot;</span><span className="text-zinc-300"> \</span>{'\n'}<span className="text-zinc-300">  -H </span><span className="text-amber-300">&quot;Content-Type: application/json&quot;</span><span className="text-zinc-300"> \</span>{'\n'}<span className="text-zinc-300">  -d </span><span className="text-cyan-300">&apos;{'{'}</span>{'\n'}<span className="text-zinc-500">    </span><span className="text-cyan-200">&quot;url&quot;</span><span className="text-zinc-300">: </span><span className="text-emerald-300">&quot;https://yourapp.com/webhooks/xrpl&quot;</span><span className="text-zinc-300">,</span>{'\n'}<span className="text-zinc-500">    </span><span className="text-cyan-200">&quot;event_types&quot;</span><span className="text-zinc-300">: [</span><span className="text-emerald-300">&quot;payment.*&quot;</span><span className="text-zinc-300">, </span><span className="text-emerald-300">&quot;nft.minted&quot;</span><span className="text-zinc-300">],</span>{'\n'}<span className="text-zinc-500">    </span><span className="text-cyan-200">&quot;account_filters&quot;</span><span className="text-zinc-300">: [</span><span className="text-emerald-300">&quot;rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe&quot;</span><span className="text-zinc-300">]</span>{'\n'}<span className="text-cyan-300">&apos;{'}'}</span></code></pre>
+                </div>
+                <div className="border-t border-white/5 bg-zinc-900/50 px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-6 items-center rounded-full bg-emerald-500/10 px-2 text-xs font-medium text-emerald-400">
+                      201 Created
+                    </span>
+                    <span className="text-sm text-zinc-500">
+                      Webhook active — you&apos;ll receive events instantly
+                    </span>
+                  </div>
+                </div>
               </div>
-              <pre className="overflow-x-auto p-4 text-sm">
-                <code className="text-slate-300">
-                  <span className="text-green-400">curl</span> -X POST
-                  https://api.xrnotify.io/v1/webhooks \{'\n'}
-                  {'  '}-H{' '}
-                  <span className="text-yellow-300">
-                    &quot;X-XRNotify-Key: YOUR_API_KEY&quot;
-                  </span>{' '}
-                  \{'\n'}
-                  {'  '}-H{' '}
-                  <span className="text-yellow-300">
-                    &quot;Content-Type: application/json&quot;
-                  </span>{' '}
-                  \{'\n'}
-                  {'  '}-d{' '}
-                  <span className="text-blue-300">
-                    &apos;{'{'}&quot;url&quot;:
-                    &quot;https://yourapp.com/webhook&quot;,
-                    &quot;event_types&quot;: [&quot;payment.xrp&quot;,
-                    &quot;nft.minted&quot;]{'}'}&apos;
-                  </span>
-                </code>
-              </pre>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Metrics Bar */}
+      <section className="border-y border-white/5 bg-zinc-900/30">
+        <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            {[
+              { value: '<1s', label: 'Avg Delivery Time' },
+              { value: '99.9%', label: 'Uptime SLA' },
+              { value: '10M+', label: 'Events Delivered' },
+              { value: '24/7', label: 'Mainnet Monitoring' },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-3xl font-bold text-white sm:text-4xl">{stat.value}</div>
+                <div className="mt-2 text-sm text-zinc-500">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section
-        id="features"
-        className="border-t border-slate-200 bg-white px-4 py-20 dark:border-slate-800 dark:bg-slate-900 sm:px-6 sm:py-32 lg:px-8"
-      >
+      <section id="features" className="relative px-6 py-24 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Everything you need to build reactive XRPL apps
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Built for production.
+              <br />
+              <span className="text-zinc-500">Designed for developers.</span>
             </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
-              Focus on your product, not blockchain infrastructure.
+            <p className="mt-6 text-lg text-zinc-400">
+              Everything you need to build reactive applications on the XRP Ledger,
+              without managing infrastructure.
             </p>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto mt-20 grid max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="rounded-xl border border-slate-200 bg-slate-50 p-6 transition-all hover:border-brand-300 hover:shadow-lg dark:border-slate-700 dark:bg-slate-800 dark:hover:border-brand-600"
+                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-b from-zinc-900/50 to-zinc-900/0 p-8 transition-all hover:border-white/10 hover:bg-zinc-900/50"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-brand-100 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400">
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 text-emerald-400 ring-1 ring-emerald-500/20">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                  {feature.description}
-                </p>
+                <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-400">{feature.description}</p>
+                <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 rounded-full bg-emerald-500/5 opacity-0 blur-3xl transition-opacity group-hover:opacity-100" />
               </div>
             ))}
           </div>
@@ -191,113 +234,162 @@ export default function LandingPage() {
       </section>
 
       {/* Event Types Section */}
-      <section className="border-t border-slate-200 bg-slate-50 px-4 py-20 dark:border-slate-800 dark:bg-slate-800 sm:px-6 sm:py-32 lg:px-8">
+      <section id="events" className="relative border-y border-white/5 bg-zinc-900/30 px-6 py-24 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Track any event on the XRP Ledger
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Every transaction type.
+              <br />
+              <span className="text-zinc-500">One unified schema.</span>
             </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
-              Subscribe to exactly the events you need. Filter by account.
+            <p className="mt-6 text-lg text-zinc-400">
+              We parse the raw XRPL transaction format and normalize it into clean,
+              typed JSON. No blockchain expertise required.
             </p>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {eventTypes.map((type) => (
-              <div
-                key={type.name}
-                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-lg dark:bg-slate-800">
-                  {type.emoji}
+          <div className="mx-auto mt-16 max-w-5xl">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {eventTypes.map((type) => (
+                <div
+                  key={type.name}
+                  className="group relative overflow-hidden rounded-xl border border-white/5 bg-zinc-900/50 p-5 transition-all hover:border-emerald-500/30 hover:bg-zinc-900"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-zinc-800 text-xl transition-transform group-hover:scale-110">
+                      {type.emoji}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-white">{type.name}</p>
+                      <p className="text-sm text-zinc-500">
+                        {type.count} event {type.count === 1 ? 'type' : 'types'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-slate-900 dark:text-white">
-                    {type.name}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {type.count} event types
-                  </p>
-                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 rounded-2xl border border-white/5 bg-zinc-950/50 p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <span className="text-sm font-medium text-zinc-400">Example: Payment Event</span>
+                <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                  payment.xrp
+                </span>
               </div>
-            ))}
+              <pre className="overflow-x-auto text-sm">
+                <code className="text-zinc-400">{`{
+  "event_id": "xrpl:85432109:ABC123...DEF:payment.xrp",
+  "event_type": "payment.xrp",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "ledger_index": 85432109,
+  "tx_hash": "ABC123...DEF",
+  "payload": {
+    "sender": "rSenderAddress...",
+    "receiver": "rReceiverAddress...",
+    "amount": "1000000",
+    "delivered_amount": "1000000"
+  }
+}`}</code>
+              </pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="relative px-6 py-24 lg:px-8 lg:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Three steps to real-time.
+            </h2>
+            <p className="mt-6 text-lg text-zinc-400">
+              From zero to production-ready webhooks in under a minute.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-20 max-w-5xl">
+            <div className="grid gap-12 md:grid-cols-3">
+              {[
+                {
+                  step: '01',
+                  title: 'Create your webhook',
+                  description: 'Specify your endpoint URL and the events you want to receive. Filter by account or event type.',
+                },
+                {
+                  step: '02',
+                  title: 'Get your secret',
+                  description: 'We generate a unique signing secret. Use it to verify webhook authenticity in your app.',
+                },
+                {
+                  step: '03',
+                  title: 'Receive events',
+                  description: 'When matching transactions confirm on XRPL, we deliver signed JSON to your endpoint instantly.',
+                },
+              ].map((item) => (
+                <div key={item.step}>
+                  <div className="mb-6 text-5xl font-bold text-zinc-800">{item.step}</div>
+                  <h3 className="text-xl font-semibold text-white">{item.title}</h3>
+                  <p className="mt-3 text-zinc-400">{item.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section
-        id="pricing"
-        className="border-t border-slate-200 bg-white px-4 py-20 dark:border-slate-800 dark:bg-slate-900 sm:px-6 sm:py-32 lg:px-8"
-      >
+      <section id="pricing" className="relative border-y border-white/5 bg-zinc-900/30 px-6 py-24 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Simple, transparent pricing
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Simple, predictable pricing.
             </h2>
-            <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
+            <p className="mt-6 text-lg text-zinc-400">
               Start free. Scale as you grow. No surprises.
             </p>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-5xl gap-8 lg:grid-cols-3">
+          <div className="mx-auto mt-16 grid max-w-6xl gap-8 lg:grid-cols-3">
             {pricingPlans.map((plan) => (
               <div
                 key={plan.name}
-                className={`rounded-2xl border p-8 ${
+                className={`relative overflow-hidden rounded-2xl border p-8 ${
                   plan.featured
-                    ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-500 dark:border-brand-400 dark:bg-brand-900/20 dark:ring-brand-400'
-                    : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800'
+                    ? 'border-emerald-500/50 bg-gradient-to-b from-emerald-500/10 to-transparent'
+                    : 'border-white/5 bg-zinc-900/50'
                 }`}
               >
                 {plan.featured && (
-                  <p className="mb-4 text-sm font-semibold text-brand-600 dark:text-brand-400">
-                    Most Popular
-                  </p>
-                )}
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
-                  {plan.name}
-                </h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                  {plan.description}
-                </p>
-                <p className="mt-6">
-                  <span className="text-4xl font-bold text-slate-900 dark:text-white">
-                    {plan.price}
-                  </span>
-                  {plan.period && (
-                    <span className="text-slate-600 dark:text-slate-400">
-                      {plan.period}
+                  <div className="absolute right-6 top-6">
+                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+                      Popular
                     </span>
-                  )}
-                </p>
-                <ul className="mt-8 space-y-3">
+                  </div>
+                )}
+                <h3 className="text-xl font-semibold text-white">{plan.name}</h3>
+                <p className="mt-2 text-sm text-zinc-400">{plan.description}</p>
+                <div className="mt-6 flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-white">{plan.price}</span>
+                  {plan.period && <span className="text-zinc-500">{plan.period}</span>}
+                </div>
+                <ul className="mt-8 space-y-4">
                   {plan.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-400"
-                    >
-                      <svg
-                        className="mt-0.5 h-5 w-5 flex-shrink-0 text-brand-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
+                    <li key={feature} className="flex items-start gap-3 text-sm">
+                      <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
-                      {feature}
+                      <span className="text-zinc-300">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/signup"
-                  className={`mt-8 block w-full rounded-lg py-3 text-center text-sm font-semibold no-underline transition-colors ${
+                  className={`mt-8 block w-full rounded-full py-3 text-center text-sm font-semibold no-underline transition-all ${
                     plan.featured
-                      ? 'bg-brand-600 text-white hover:bg-brand-700'
-                      : 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600'
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:shadow-lg hover:shadow-emerald-500/25'
+                      : 'border border-zinc-700 bg-zinc-800/50 text-white hover:bg-zinc-800'
                   }`}
                 >
                   {plan.cta}
@@ -305,74 +397,84 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
+
+          <p className="mt-12 text-center text-sm text-zinc-500">
+            Need more?{' '}
+            <Link href="/contact" className="text-emerald-400 no-underline hover:underline">Contact us</Link>
+            {' '}for enterprise pricing with custom SLAs, dedicated support, and on-premise options.
+          </p>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="border-t border-slate-200 bg-slate-900 px-4 py-20 dark:border-slate-700 sm:px-6 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+      <section className="relative overflow-hidden px-6 py-24 lg:px-8 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent" />
+        <div className="relative mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
             Ready to stop polling?
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
-            Get started in minutes. No credit card required.
+          <p className="mt-6 text-lg text-zinc-400">
+            Join developers building the next generation of XRPL applications.
+            Get started in minutes.
           </p>
-          <Link
-            href="/signup"
-            className="mt-8 inline-block rounded-lg bg-brand-600 px-8 py-4 text-lg font-semibold text-white no-underline shadow-lg shadow-brand-600/25 transition-all hover:bg-brand-500 hover:shadow-xl hover:shadow-brand-600/30"
-          >
-            Create Free Account
-          </Link>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href="/signup"
+              className="group relative w-full overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-4 text-base font-semibold text-white no-underline shadow-xl shadow-emerald-500/20 transition-all hover:shadow-2xl hover:shadow-emerald-500/30 sm:w-auto"
+            >
+              <span className="relative z-10">Create Free Account</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 transition-opacity group-hover:opacity-100" />
+            </Link>
+            <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">
+              Read the docs →
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white px-4 py-12 dark:border-slate-800 dark:bg-slate-900 sm:px-6 lg:px-8">
+      <footer className="border-t border-white/5 px-6 py-12 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600">
-                <span className="text-lg font-bold text-white">X</span>
+          <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500">
+                <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
-              <span className="text-lg font-semibold text-slate-900 dark:text-white">
-                XRNotify
-              </span>
+              <span className="text-lg font-semibold text-white">XRNotify</span>
             </div>
-            <div className="flex gap-6 text-sm text-slate-600 dark:text-slate-400">
-              <Link
-                href="https://docs.xrnotify.dev"
-                className="no-underline hover:text-slate-900 dark:hover:text-white"
-              >
-                Docs
-              </Link>
-              <Link
-                href="/privacy"
-                className="no-underline hover:text-slate-900 dark:hover:text-white"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="no-underline hover:text-slate-900 dark:hover:text-white"
-              >
-                Terms
-              </Link>
-              <a
-                href="https://twitter.com/xrnotify"
-                className="no-underline hover:text-slate-900 dark:hover:text-white"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Twitter
-              </a>
+
+            <div className="flex flex-wrap justify-center gap-8 text-sm">
+              {[
+                { href: '/docs', label: 'Docs' },
+                { href: '/pricing', label: 'Pricing' },
+                { href: '/privacy', label: 'Privacy' },
+                { href: '/terms', label: 'Terms' },
+              ].map((link) => (
+                <Link key={link.href} href={link.href} className="text-zinc-500 no-underline transition-colors hover:text-white">
+                  {link.label}
+                </Link>
+              ))}
+              <a href="https://twitter.com/xrnotify" className="text-zinc-500 no-underline transition-colors hover:text-white" target="_blank" rel="noopener noreferrer">Twitter</a>
+              <a href="https://github.com/xrnotify" className="text-zinc-500 no-underline transition-colors hover:text-white" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
-            <p className="text-sm text-slate-500 dark:text-slate-500">
-              © {new Date().getFullYear()} XRNotify. All rights reserved.
+
+            <p className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} XRNotify</p>
+          </div>
+
+          <div className="mt-8 border-t border-white/5 pt-8 text-center">
+            <p className="text-xs text-zinc-600">
+              Built by{' '}
+              <a href="https://jonomor.com/ali-morgan" className="text-zinc-500 no-underline hover:text-white">Ali Morgan</a>
+              {' · '}
+              Part of the{' '}
+              <a href="https://jonomor.com" className="text-zinc-500 no-underline hover:text-white">Jonomor Ecosystem</a>
             </p>
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 
@@ -382,76 +484,76 @@ export default function LandingPage() {
 
 const features = [
   {
-    title: 'Real-Time Delivery',
+    title: 'Sub-Second Delivery',
     description:
-      'Events delivered within seconds of ledger close. No more polling or missed transactions.',
+      'Events delivered within 500ms of ledger close. Persistent WebSocket connections to multiple XRPL nodes ensure zero lag.',
     icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
       </svg>
     ),
   },
   {
     title: 'Guaranteed Delivery',
     description:
-      'Automatic retries with exponential backoff. Dead letter queues. Never miss an event.',
+      'Automatic retries with exponential backoff. Dead-letter queues for failed deliveries. Full replay capability for recovery.',
     icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
       </svg>
     ),
   },
   {
     title: 'HMAC Signatures',
     description:
-      'Every webhook is signed with your secret key. Verify authenticity with one line of code.',
+      'Every webhook is cryptographically signed with your secret. Verify authenticity and prevent forgery with one line of code.',
     icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
       </svg>
     ),
   },
   {
     title: 'Event Replay',
     description:
-      'Missed something? Replay any event from the last 30 days with one click.',
+      'Missed something? Replay any event from the last 30 days with one click. Perfect for debugging and backfilling data.',
     icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
       </svg>
     ),
   },
   {
-    title: 'Delivery Logs',
+    title: 'Full Delivery Logs',
     description:
-      'Full visibility into every delivery attempt. Status codes, response bodies, latency.',
+      'Complete visibility into every delivery attempt. Request payloads, response codes, response bodies, and latency metrics.',
     icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
       </svg>
     ),
   },
   {
     title: 'Account Filtering',
     description:
-      'Subscribe to events for specific accounts. Track only what matters to your app.',
+      'Subscribe to events for specific accounts only. Track exactly what matters to your application, nothing more.',
     icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
       </svg>
     ),
   },
 ];
 
 const eventTypes = [
-  { name: 'Payments', emoji: '💰', count: 3 },
-  { name: 'NFTs', emoji: '🎨', count: 6 },
+  { name: 'Payments', emoji: '💸', count: 3 },
+  { name: 'NFTs', emoji: '🖼️', count: 6 },
   { name: 'DEX', emoji: '📈', count: 4 },
   { name: 'Trust Lines', emoji: '🔗', count: 3 },
   { name: 'Escrow', emoji: '🔒', count: 3 },
-  { name: 'Checks', emoji: '📝', count: 3 },
+  { name: 'Checks', emoji: '📋', count: 3 },
   { name: 'Accounts', emoji: '👤', count: 2 },
-  { name: 'More...', emoji: '✨', count: 99 },
+  { name: 'AMM', emoji: '🌊', count: 4 },
 ];
 
 const pricingPlans = [
@@ -465,7 +567,7 @@ const pricingPlans = [
     features: [
       '1,000 events per month',
       '2 webhook endpoints',
-      'Basic event types',
+      'Core event types',
       '7-day delivery logs',
       'Community support',
     ],
@@ -474,7 +576,7 @@ const pricingPlans = [
     name: 'Starter',
     description: 'For indie developers and small teams.',
     price: '$29',
-    period: '/month',
+    period: '/mo',
     cta: 'Start Free Trial',
     featured: true,
     features: [
@@ -489,15 +591,14 @@ const pricingPlans = [
   },
   {
     name: 'Pro',
-    description: 'For growing applications.',
+    description: 'For production applications.',
     price: '$99',
-    period: '/month',
+    period: '/mo',
     cta: 'Start Free Trial',
     featured: false,
     features: [
       '500,000 events per month',
       '50 webhook endpoints',
-      'All event types',
       'Priority delivery queue',
       '90-day delivery logs',
       'Custom retry policies',
