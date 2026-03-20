@@ -6,6 +6,7 @@
 
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { HeroAnimation } from '@/components/HeroAnimation';
 
 // -----------------------------------------------------------------------------
 // Metadata
@@ -177,6 +178,11 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Hero Animation */}
+          <div className="mx-auto mt-16 max-w-4xl">
+            <HeroAnimation />
           </div>
         </div>
       </section>
@@ -463,15 +469,6 @@ export default function LandingPage() {
             <p className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} XRNotify</p>
           </div>
 
-          <div className="mt-8 border-t border-white/5 pt-8 text-center">
-            <p className="text-xs text-zinc-600">
-              Built by{' '}
-              <a href="https://www.jonomor.com/ali-morgan" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Ali Morgan</a>
-              {' · '}
-              Part of the{' '}
-              <a href="https://www.jonomor.com" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Jonomor Ecosystem</a>
-            </p>
-          </div>
         </div>
       </footer>
     </div>
