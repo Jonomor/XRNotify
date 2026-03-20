@@ -7,6 +7,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -159,9 +160,7 @@ export default function Nav({ user, children }: NavProps) {
       {/* Logo */}
       <div className="flex items-center h-16 flex-shrink-0 px-4 border-b border-gray-200 dark:border-gray-700">
         <Link href="/dashboard" className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">X</span>
-          </div>
+          <Image src="/logo.svg" alt="XRNotify" width={32} height={32} />
           <span className="text-xl font-bold text-gray-900 dark:text-white">
             XRNotify
           </span>
@@ -257,9 +256,7 @@ export default function Nav({ user, children }: NavProps) {
               <MenuIcon />
             </button>
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">X</span>
-              </div>
+              <Image src="/logo.svg" alt="XRNotify" width={32} height={32} />
               <span className="text-xl font-bold text-gray-900 dark:text-white">
                 XRNotify
               </span>

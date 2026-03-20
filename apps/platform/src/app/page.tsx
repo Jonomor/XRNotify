@@ -5,6 +5,7 @@
 // =============================================================================
 
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { HeroAnimation } from '@/components/HeroAnimation';
 
@@ -48,12 +49,8 @@ export default function LandingPage() {
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
           <Link href="/" className="group flex items-center gap-3 no-underline">
             <div className="relative flex h-10 w-10 items-center justify-center">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 opacity-80 blur-sm transition-all group-hover:opacity-100" />
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500">
-                <svg className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 opacity-30 blur-sm transition-all group-hover:opacity-60" />
+              <Image src="/logo.svg" alt="XRNotify" width={40} height={40} className="relative" />
             </div>
             <span className="text-xl font-semibold tracking-tight text-white">XRNotify</span>
           </Link>
