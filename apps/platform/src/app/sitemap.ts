@@ -7,7 +7,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://xrnotify.io';
+  const baseUrl = 'https://www.xrnotify.io';
 
   // Static pages
   const staticPages = [

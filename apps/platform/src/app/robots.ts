@@ -20,6 +20,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://xrnotify.io/sitemap.xml',
+    sitemap: 'https://www.xrnotify.io/sitemap.xml',
   };
 }

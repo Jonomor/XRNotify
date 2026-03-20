@@ -34,11 +34,11 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://xrnotify.io/#app',
+      '@id': 'https://www.xrnotify.io/#app',
       name: 'XRNotify',
       description:
         'Real-time webhook notification platform for the XRP Ledger — instant event delivery for developers building on XRPL.',
-      url: 'https://xrnotify.io',
+      url: 'https://www.xrnotify.io',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'Web',
       creator: { '@id': 'https://jonomor.com/ali-morgan#person' },
@@ -47,9 +47,9 @@ const jsonLd = {
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://xrnotify.io/#website',
+      '@id': 'https://www.xrnotify.io/#website',
       name: 'XRNotify',
-      url: 'https://xrnotify.io',
+      url: 'https://www.xrnotify.io',
       publisher: { '@id': 'https://jonomor.com/#organization' },
     },
   ],
@@ -87,15 +87,15 @@ export const metadata: Metadata = {
   creator: 'Ali Morgan',
   publisher: 'Jonomor',
   metadataBase: new URL(
-    process.env['NEXT_PUBLIC_APP_URL'] ?? 'https://xrnotify.io'
+    process.env['NEXT_PUBLIC_APP_URL'] ?? 'https://www.xrnotify.io'
   ),
   alternates: {
-    canonical: 'https://xrnotify.io',
+    canonical: 'https://www.xrnotify.io',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://xrnotify.io',
+    url: 'https://www.xrnotify.io',
     siteName: 'XRNotify',
     title: 'XRNotify — Real-Time Webhook Notifications for the XRP Ledger',
     description:
