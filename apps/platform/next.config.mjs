@@ -113,13 +113,8 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/docs',
-        destination: 'https://xrnotify.dev',
-        permanent: true,
-      },
-      {
         source: '/documentation',
-        destination: 'https://xrnotify.dev',
+        destination: '/docs',
         permanent: true,
       },
     ];

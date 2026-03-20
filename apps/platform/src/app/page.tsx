@@ -466,10 +466,10 @@ export default function LandingPage() {
           <div className="mt-8 border-t border-white/5 pt-8 text-center">
             <p className="text-xs text-zinc-600">
               Built by{' '}
-              <a href="https://jonomor.com/ali-morgan" className="text-zinc-500 no-underline hover:text-white">Ali Morgan</a>
+              <a href="https://www.jonomor.com/ali-morgan" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Ali Morgan</a>
               {' · '}
               Part of the{' '}
-              <a href="https://jonomor.com" className="text-zinc-500 no-underline hover:text-white">Jonomor Ecosystem</a>
+              <a href="https://www.jonomor.com" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Jonomor Ecosystem</a>
             </p>
           </div>
         </div>
