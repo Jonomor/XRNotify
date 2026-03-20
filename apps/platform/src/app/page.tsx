@@ -440,11 +440,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500">
-                <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
+              <Image src="/logo.svg" alt="XRNotify" width={36} height={36} />
               <span className="text-lg font-semibold text-white">XRNotify</span>
             </div>
 
@@ -459,8 +455,7 @@ export default function LandingPage() {
                   {link.label}
                 </Link>
               ))}
-              <a href="https://twitter.com/xrnotify" className="text-zinc-500 no-underline transition-colors hover:text-white" target="_blank" rel="noopener noreferrer">Twitter</a>
-              <a href="https://github.com/xrnotify" className="text-zinc-500 no-underline transition-colors hover:text-white" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="mailto:hello@xrnotify.io" className="text-zinc-500 no-underline transition-colors hover:text-white">Contact</a>
             </div>
 
             <p className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} XRNotify</p>
@@ -559,10 +554,10 @@ const pricingPlans = [
     cta: 'Get Started',
     featured: false,
     features: [
-      '1,000 events per month',
-      '2 webhook endpoints',
+      '500 events per month',
+      '1 webhook endpoint',
       'Core event types',
-      '7-day delivery logs',
+      '3-day delivery logs',
       'Community support',
     ],
   },

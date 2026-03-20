@@ -1,8 +1,6 @@
 // =============================================================================
 // XRNotify Pricing Page
 // =============================================================================
-// Server-side rendered for SEO - 4 pricing tiers
-// =============================================================================
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -23,12 +21,13 @@ const tiers = [
     price: '$0',
     period: 'forever',
     description: 'For hobbyists and testing',
+    trial: false,
     features: [
-      '1,000 events/month',
-      '2 webhook endpoints',
-      'Email support',
-      'Community Discord access',
-      '7-day delivery logs',
+      '500 events/month',
+      '1 webhook endpoint',
+      'Core event types',
+      '3-day delivery logs',
+      'Community support',
     ],
     cta: 'Get Started',
     ctaHref: '/signup',
@@ -39,6 +38,7 @@ const tiers = [
     price: '$29',
     period: '/month',
     description: 'For indie developers',
+    trial: true,
     features: [
       '50,000 events/month',
       '10 webhook endpoints',
@@ -56,6 +56,7 @@ const tiers = [
     price: '$99',
     period: '/month',
     description: 'For growing startups',
+    trial: true,
     features: [
       '500,000 events/month',
       '50 webhook endpoints',
@@ -74,6 +75,7 @@ const tiers = [
     price: 'Custom',
     period: '',
     description: 'For exchanges & institutions',
+    trial: true,
     features: [
       'Unlimited events',
       'Unlimited webhooks',
@@ -91,96 +93,86 @@ const tiers = [
 ];
 
 // -----------------------------------------------------------------------------
-// Pricing Card Component
+// Pricing Card
 // -----------------------------------------------------------------------------
 
-function PricingCard({
-  tier,
-}: {
-  tier: (typeof tiers)[number];
-}) {
+function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
   return (
     <div
-      className={`relative rounded-2xl p-8 ${
+      className={`relative rounded-2xl p-8 flex flex-col ${
         tier.highlighted
-          ? 'bg-indigo-600 text-white ring-2 ring-indigo-500'
-          : 'bg-stone-900 text-stone-100 ring-1 ring-stone-800'
+          ? 'bg-gradient-to-b from-emerald-500/15 to-zinc-900/50 border border-emerald-500/40 ring-1 ring-emerald-500/20'
+          : 'bg-zinc-900/60 border border-zinc-800/60'
       }`}
     >
       {tier.highlighted && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-400 px-3 py-1 text-xs font-semibold text-indigo-900">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">
           Most Popular
         </span>
       )}
 
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold">{tier.name}</h3>
-        <p
-          className={`mt-1 text-sm ${
-            tier.highlighted ? 'text-indigo-200' : 'text-stone-400'
-          }`}
-        >
-          {tier.description}
-        </p>
-      </div>
-
-      <div className="mb-6">
-        <span className="text-4xl font-bold">{tier.price}</span>
-        <span
-          className={`text-sm ${
-            tier.highlighted ? 'text-indigo-200' : 'text-stone-400'
-          }`}
-        >
-          {tier.period}
+      {tier.trial && (
+        <span className="inline-flex self-start mb-4 rounded-full bg-zinc-800 border border-zinc-700 px-2.5 py-0.5 text-[11px] font-medium text-zinc-400">
+          14-day free trial
         </span>
+      )}
+
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-white">{tier.name}</h3>
+        <p className="mt-1 text-sm text-zinc-400">{tier.description}</p>
       </div>
 
-      <ul className="mb-8 space-y-3">
+      <div className="mb-6">
+        <span className="text-4xl font-bold text-white">{tier.price}</span>
+        <span className="text-sm text-zinc-500">{tier.period}</span>
+      </div>
+
+      <ul className="mb-8 space-y-3 flex-1">
         {tier.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2 text-sm">
             <svg
-              className={`mt-0.5 h-4 w-4 flex-shrink-0 ${
-                tier.highlighted ? 'text-indigo-300' : 'text-indigo-500'
-              }`}
+              className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.5 12.75l6 6 9-13.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
-            <span>{feature}</span>
+            <span className="text-zinc-300">{feature}</span>
           </li>
         ))}
       </ul>
 
       <Link
         href={tier.ctaHref}
-        className={`block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors ${
+        className={`block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors no-underline ${
           tier.highlighted
-            ? 'bg-white text-indigo-600 hover:bg-indigo-50'
-            : 'bg-indigo-600 text-white hover:bg-indigo-500'
+            ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400'
+            : 'bg-zinc-800 text-white border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600'
         }`}
       >
         {tier.cta}
       </Link>
+
+      {tier.trial && (
+        <p className="mt-3 text-center text-xs text-zinc-500">
+          14-day free trial · No credit card required
+        </p>
+      )}
     </div>
   );
 }
 
 // -----------------------------------------------------------------------------
-// FAQ Section
+// FAQ
 // -----------------------------------------------------------------------------
 
 const faqs = [
   {
     question: 'What counts as an event?',
     answer:
-      'An event is a single XRPL transaction that matches your webhook subscription. If you subscribe to payments for account rXYZ and that account receives 100 payments, that\'s 100 events.',
+      "An event is a single XRPL transaction that matches your webhook subscription. If you subscribe to payments for account rXYZ and that account receives 100 payments, that's 100 events.",
   },
   {
     question: 'What happens if I exceed my event limit?',
@@ -198,7 +190,7 @@ const faqs = [
       'Yes, annual billing saves 20%. Contact us for annual pricing on Starter and Pro plans.',
   },
   {
-    question: 'What\'s the SLA for Enterprise?',
+    question: "What's the SLA for Enterprise?",
     answer:
       'Enterprise customers get 99.99% uptime SLA with financial credits for any downtime. We also offer custom SLAs based on your requirements.',
   },
@@ -210,14 +202,27 @@ const faqs = [
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-stone-950">
+    <main className="min-h-screen bg-[#0a0a0f] text-white antialiased">
+      {/* Nav */}
+      <nav className="border-b border-white/5 px-6 py-5">
+        <div className="mx-auto max-w-6xl flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white no-underline transition-colors">
+            <span>←</span>
+            <span>Back to Home</span>
+          </Link>
+          <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
+            Dashboard →
+          </Link>
+        </div>
+      </nav>
+
       {/* Header */}
-      <section className="border-b border-stone-800 py-20">
+      <section className="border-b border-white/5 py-20">
         <div className="mx-auto max-w-6xl px-6 text-center">
           <h1 className="text-4xl font-bold text-white sm:text-5xl">
             Simple, transparent pricing
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-stone-400">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
             Start free, scale as you grow. No hidden fees, no surprises.
           </p>
         </div>
@@ -234,12 +239,10 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Feature Comparison */}
-      <section className="border-t border-stone-800 py-20">
+      {/* All Plans Include */}
+      <section className="border-t border-white/5 py-20">
         <div className="mx-auto max-w-4xl px-6">
-          <h2 className="mb-12 text-center text-2xl font-bold text-white">
-            All plans include
-          </h2>
+          <h2 className="mb-12 text-center text-2xl font-bold text-white">All plans include</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               'HMAC webhook signatures',
@@ -254,19 +257,15 @@ export default function PricingPage() {
             ].map((feature) => (
               <div key={feature} className="flex items-center gap-2">
                 <svg
-                  className="h-5 w-5 text-green-500"
+                  className="h-5 w-5 flex-shrink-0 text-emerald-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.5 12.75l6 6 9-13.5"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
-                <span className="text-stone-300">{feature}</span>
+                <span className="text-zinc-300">{feature}</span>
               </div>
             ))}
           </div>
@@ -274,18 +273,16 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="border-t border-stone-800 py-20">
+      <section className="border-t border-white/5 py-20">
         <div className="mx-auto max-w-3xl px-6">
           <h2 className="mb-12 text-center text-2xl font-bold text-white">
             Frequently asked questions
           </h2>
           <div className="space-y-8">
             {faqs.map((faq) => (
-              <div key={faq.question}>
-                <h3 className="text-lg font-semibold text-white">
-                  {faq.question}
-                </h3>
-                <p className="mt-2 text-stone-400">{faq.answer}</p>
+              <div key={faq.question} className="border-b border-white/5 pb-8 last:border-0">
+                <h3 className="text-lg font-semibold text-white">{faq.question}</h3>
+                <p className="mt-2 text-zinc-400">{faq.answer}</p>
               </div>
             ))}
           </div>
@@ -293,24 +290,22 @@ export default function PricingPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-stone-800 py-20">
+      <section className="border-t border-white/5 py-20">
         <div className="mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-2xl font-bold text-white">
-            Ready to get started?
-          </h2>
-          <p className="mt-4 text-stone-400">
+          <h2 className="text-2xl font-bold text-white">Ready to get started?</h2>
+          <p className="mt-4 text-zinc-400">
             Start with the free plan and upgrade when you need more.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500"
+              className="rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-3 font-semibold text-white no-underline transition-all hover:from-emerald-400 hover:to-teal-400"
             >
               Start for free
             </Link>
             <Link
               href="/docs"
-              className="rounded-lg border border-stone-700 px-6 py-3 font-semibold text-stone-300 transition-colors hover:border-stone-600 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-300 no-underline transition-colors hover:border-zinc-600 hover:text-white"
             >
               Read the docs
             </Link>
