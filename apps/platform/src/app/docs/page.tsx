@@ -144,21 +144,33 @@ const isValid = verifySignature(
 
 export default function DocsPage() {
   return (
-    <main className="min-h-screen bg-stone-950">
+    <main className="min-h-screen bg-[#0a0a0f]">
+      {/* Nav */}
+      <nav className="border-b border-white/5 px-6 py-5 lg:px-8">
+        <div className="mx-auto max-w-6xl flex items-center justify-between">
+          <Link href="/" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+            ← Back to XRNotify
+          </Link>
+          <Link href="/dashboard" className="text-sm font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
+            Dashboard →
+          </Link>
+        </div>
+      </nav>
+
       {/* Header */}
-      <section className="border-b border-stone-800 py-20">
+      <section className="border-b border-white/5 py-20">
         <div className="mx-auto max-w-6xl px-6">
           <h1 className="text-4xl font-bold text-white sm:text-5xl">
             Documentation
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-stone-400">
+          <p className="mt-4 max-w-2xl text-lg text-zinc-400">
             Everything you need to integrate XRNotify into your application.
             From quick starts to API reference.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/docs/quickstart"
-              className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500"
+              className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-500"
             >
               Quick Start Guide
               <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -167,7 +179,7 @@ export default function DocsPage() {
             </Link>
             <Link
               href="/docs/api"
-              className="inline-flex items-center justify-center rounded-lg border border-stone-700 px-6 py-3 font-semibold text-stone-300 transition-colors hover:border-stone-600 hover:text-white"
+              className="inline-flex items-center justify-center rounded-lg border border-white/10 px-6 py-3 font-semibold text-zinc-300 transition-colors hover:border-stone-600 hover:text-white"
             >
               API Reference
             </Link>
@@ -176,19 +188,19 @@ export default function DocsPage() {
       </section>
 
       {/* Quick Start */}
-      <section className="border-b border-stone-800 py-16">
+      <section className="border-b border-white/5 py-16">
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="mb-6 text-xl font-semibold text-white">
             Get started in 30 seconds
           </h2>
-          <div className="overflow-hidden rounded-lg bg-stone-900 ring-1 ring-stone-800">
-            <div className="flex items-center gap-2 border-b border-stone-800 px-4 py-2">
+          <div className="overflow-hidden rounded-lg bg-zinc-900 ring-1 ring-white/5">
+            <div className="flex items-center gap-2 border-b border-white/5 px-4 py-2">
               <span className="h-3 w-3 rounded-full bg-red-500" />
               <span className="h-3 w-3 rounded-full bg-yellow-500" />
               <span className="h-3 w-3 rounded-full bg-green-500" />
-              <span className="ml-2 text-xs text-stone-500">terminal</span>
+              <span className="ml-2 text-xs text-zinc-500">terminal</span>
             </div>
-            <pre className="overflow-x-auto p-4 text-sm text-stone-300">
+            <pre className="overflow-x-auto p-4 text-sm text-zinc-300">
               <code>{quickStartCode}</code>
             </pre>
           </div>
@@ -202,15 +214,15 @@ export default function DocsPage() {
             {sections.map((section) => (
               <div
                 key={section.title}
-                className="rounded-xl bg-stone-900 p-6 ring-1 ring-stone-800"
+                className="rounded-xl bg-zinc-900 p-6 ring-1 ring-white/5"
               >
-                <div className="mb-4 inline-flex rounded-lg bg-indigo-600/10 p-2 text-indigo-500">
+                <div className="mb-4 inline-flex rounded-lg bg-emerald-600/10 p-2 text-emerald-500">
                   {section.icon}
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-white">
                   {section.title}
                 </h3>
-                <p className="mb-4 text-sm text-stone-400">
+                <p className="mb-4 text-sm text-zinc-400">
                   {section.description}
                 </p>
                 <ul className="space-y-2">
@@ -218,7 +230,7 @@ export default function DocsPage() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-indigo-400 hover:text-indigo-300"
+                        className="text-sm text-emerald-400 hover:text-emerald-300"
                       >
                         {link.title}
                         <span className="ml-1">→</span>
@@ -233,18 +245,18 @@ export default function DocsPage() {
       </section>
 
       {/* Support CTA */}
-      <section className="border-t border-stone-800 py-20">
+      <section className="border-t border-white/5 py-20">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <h2 className="text-2xl font-bold text-white">
             Need help?
           </h2>
-          <p className="mt-4 text-stone-400">
+          <p className="mt-4 text-zinc-400">
             Can&apos;t find what you&apos;re looking for? Our team is here to help.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="mailto:support@xrnotify.io"
-              className="rounded-lg bg-stone-800 px-6 py-3 font-semibold text-white transition-colors hover:bg-stone-700"
+              className="rounded-lg bg-zinc-800 px-6 py-3 font-semibold text-white transition-colors hover:bg-zinc-700"
             >
               Email Support
             </a>
@@ -252,7 +264,7 @@ export default function DocsPage() {
               href="https://discord.gg/xrnotify"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-lg border border-stone-700 px-6 py-3 font-semibold text-stone-300 transition-colors hover:border-stone-600 hover:text-white"
+              className="rounded-lg border border-white/10 px-6 py-3 font-semibold text-zinc-300 transition-colors hover:border-stone-600 hover:text-white"
             >
               Join Discord
             </a>

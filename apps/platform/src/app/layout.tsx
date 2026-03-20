@@ -178,7 +178,7 @@ export default function RootLayout({
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.xrnotify.io" />
       </head>
-      <body className="min-h-screen bg-white font-sans text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-50">
+      <body className="min-h-screen bg-[#0a0a0f] font-sans text-white antialiased">
         {/* Skip to content link for accessibility */}
         <a
           href="#main-content"
