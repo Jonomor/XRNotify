@@ -60,6 +60,9 @@ const jsonLd = {
 // -----------------------------------------------------------------------------
 
 export const metadata: Metadata = {
+  verification: {
+    google: '_s_OUwLCKNHzjcDJiCzUeNpA1jVH5W9jy3HE5IcoVsc',
+  },
   title: {
     default: 'XRNotify — Real-Time Webhook Notifications for the XRP Ledger',
     template: '%s — XRNotify',
