@@ -26,11 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === '' ? 1.0 : 0.8,
   }));
 
-  // Documentation pages (add more as you create them)
+  // Documentation pages
   const docPages = [
+    '/docs/api',
     '/docs/quickstart',
-    '/docs/first-webhook',
-    '/docs/signatures',
+    '/docs/create-webhook',
+    '/docs/verify-signatures',
     '/docs/api/authentication',
     '/docs/api/webhooks',
     '/docs/api/deliveries',
@@ -41,13 +42,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/docs/events/nft',
     '/docs/events/dex',
     '/docs/events/trustlines',
-    '/docs/sdk/nodejs',
-    '/docs/sdk/python',
-    '/docs/sdk/go',
+    '/docs/sdks/nodejs',
+    '/docs/sdks/python',
+    '/docs/sdks/go',
+    '/docs/sdks/signature-helpers',
+    '/docs/guides/payment-notifications',
+    '/docs/guides/nft-marketplace',
+    '/docs/guides/realtime-balance',
+    '/docs/guides/handling-failures',
     '/docs/reference/event-schema',
-    '/docs/reference/errors',
+    '/docs/reference/error-codes',
     '/docs/reference/rate-limits',
-    '/docs/reference/retries',
+    '/docs/reference/retry-policy',
   ];
 
   const docEntries = docPages.map((path) => ({
