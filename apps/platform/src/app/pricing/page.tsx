@@ -4,11 +4,12 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { CheckoutButton } from '@/components/CheckoutButton';
 
 export const metadata: Metadata = {
   title: 'Pricing',
   description: 'Simple, transparent pricing for XRNotify. Start free, scale as you grow. From hobbyist to enterprise.',
-  alternates: { canonical: 'https://xrnotify.io/pricing' },
+  alternates: { canonical: 'https://www.xrnotify.io/pricing' },
 };
 
 // -----------------------------------------------------------------------------
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 const tiers = [
   {
     name: 'Free',
+    plan: null as null | 'starter' | 'pro' | 'enterprise',
     price: '$0',
     period: 'forever',
     description: 'For hobbyists and testing',
@@ -35,6 +37,7 @@ const tiers = [
   },
   {
     name: 'Starter',
+    plan: 'starter' as const,
     price: '$29',
     period: '/month',
     description: 'For indie developers',
@@ -48,11 +51,12 @@ const tiers = [
       'Priority email support',
     ],
     cta: 'Start Free Trial',
-    ctaHref: '/signup?plan=starter',
+    ctaHref: null,
     highlighted: false,
   },
   {
     name: 'Pro',
+    plan: 'pro' as const,
     price: '$99',
     period: '/month',
     description: 'For growing startups',
@@ -67,15 +71,16 @@ const tiers = [
       'Slack support channel',
     ],
     cta: 'Start Free Trial',
-    ctaHref: '/signup?plan=pro',
+    ctaHref: null,
     highlighted: true,
   },
   {
     name: 'Enterprise',
+    plan: null as null | 'starter' | 'pro' | 'enterprise',
     price: 'Custom',
     period: '',
     description: 'For exchanges & institutions',
-    trial: true,
+    trial: false,
     features: [
       'Unlimited events',
       'Unlimited webhooks',
@@ -144,16 +149,28 @@ function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
         ))}
       </ul>
 
-      <Link
-        href={tier.ctaHref}
-        className={`block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors no-underline ${
-          tier.highlighted
-            ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400'
-            : 'bg-zinc-800 text-white border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600'
-        }`}
-      >
-        {tier.cta}
-      </Link>
+      {tier.plan ? (
+        <CheckoutButton
+          plan={tier.plan}
+          label={tier.cta}
+          className={`block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors ${
+            tier.highlighted
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400'
+              : 'bg-zinc-800 text-white border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600'
+          }`}
+        />
+      ) : (
+        <Link
+          href={tier.ctaHref!}
+          className={`block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors no-underline ${
+            tier.highlighted
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400'
+              : 'bg-zinc-800 text-white border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600'
+          }`}
+        >
+          {tier.cta}
+        </Link>
+      )}
 
       {tier.trial && (
         <p className="mt-3 text-center text-xs text-zinc-500">
