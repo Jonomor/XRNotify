@@ -298,12 +298,5 @@ export function redisKey(key: string): string {
  * Get database connection string with SSL if configured
  */
 export function getDatabaseUrl(): string {
-  const config = getConfig();
-  let url = config.database.url;
-  
-  if (config.database.ssl && !url.includes('sslmode=')) {
-    url += url.includes('?') ? '&sslmode=require' : '?sslmode=require';
-  }
-  
-  return url;
+  return getConfig().database.url;
 }
