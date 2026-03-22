@@ -407,6 +407,19 @@ async function processMessage(message: StreamMessage): Promise<void> {
     return;
   }
   
+  // Persist event to PostgreSQL (idempotent upsert)
+  try {
+    const txHash = (payload['tx_hash'] ?? payload['hash'] ?? '') as string;
+    const ledgerIndex = (payload['ledger_index'] ?? payload['ledger'] ?? 0) as number;
+    await pool.query(`
+      INSERT INTO events (id, event_type, ledger_index, tx_hash, timestamp, accounts, payload)
+      VALUES ($1, $2::event_type, $3, $4, $5, $6, $7)
+      ON CONFLICT (id) DO NOTHING
+    `, [event_id, event_type, ledgerIndex, txHash, timestamp || new Date().toISOString(), JSON.stringify(accounts), JSON.stringify(payload)]);
+  } catch (err) {
+    log.warn({ error: err }, 'Failed to persist event (non-fatal)');
+  }
+
   // Find matching webhooks
   const webhooks = await getMatchingWebhooks(event_type, accounts);
   

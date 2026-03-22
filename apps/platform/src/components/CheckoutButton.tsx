@@ -16,9 +16,11 @@ interface CheckoutButtonProps {
 
 export function CheckoutButton({ plan, label, className }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleClick() {
     setLoading(true);
+    setError('');
 
     try {
       const res = await fetch('/api/v1/billing/checkout', {
@@ -28,29 +30,39 @@ export function CheckoutButton({ plan, label, className }: CheckoutButtonProps) 
       });
 
       if (res.status === 401) {
-        // Not logged in — redirect to signup with plan param
         window.location.href = `/signup?plan=${plan}`;
         return;
       }
 
       if (!res.ok) {
-        throw new Error('Failed to create checkout session');
+        const data = await res.json().catch(() => ({})) as { error?: string };
+        throw new Error(data.error ?? 'Failed to create checkout session');
       }
 
       const data = await res.json() as { url: string };
-      window.location.href = data.url;
-    } catch {
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
       setLoading(false);
     }
   }
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={loading}
-      className={`${className} disabled:opacity-60 disabled:cursor-not-allowed`}
-    >
-      {loading ? 'Redirecting...' : label}
-    </button>
+    <div className="inline-flex flex-col">
+      <button
+        onClick={handleClick}
+        disabled={loading}
+        className={`${className} disabled:opacity-60 disabled:cursor-not-allowed`}
+      >
+        {loading ? 'Redirecting...' : label}
+      </button>
+      {error && (
+        <p className="text-xs text-red-400 mt-1">{error}</p>
+      )}
+    </div>
   );
 }

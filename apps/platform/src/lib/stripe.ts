@@ -10,7 +10,9 @@ import Stripe from 'stripe';
 // Stripe Client
 // -----------------------------------------------------------------------------
 
-export const stripe = new Stripe(process.env['STRIPE_SECRET_KEY']!, {
+const stripeKey = process.env['STRIPE_SECRET_KEY'] ?? '';
+
+export const stripe = new Stripe(stripeKey || 'sk_test_placeholder', {
   apiVersion: '2024-06-20',
   typescript: true,
 });
@@ -26,9 +28,9 @@ export type PlanType = 'free' | 'starter' | 'pro' | 'enterprise';
 // -----------------------------------------------------------------------------
 
 export const STRIPE_PRICES: Record<Exclude<PlanType, 'free'>, string> = {
-  starter: process.env['STRIPE_PRICE_STARTER']!,
-  pro: process.env['STRIPE_PRICE_PRO']!,
-  enterprise: process.env['STRIPE_PRICE_ENTERPRISE']!,
+  starter: process.env['STRIPE_PRICE_STARTER'] ?? '',
+  pro: process.env['STRIPE_PRICE_PRO'] ?? '',
+  enterprise: process.env['STRIPE_PRICE_ENTERPRISE'] ?? '',
 };
 
 // -----------------------------------------------------------------------------

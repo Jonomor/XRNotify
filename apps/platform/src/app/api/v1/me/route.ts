@@ -65,13 +65,15 @@ interface UserRecord {
 // Validation Schemas
 // -----------------------------------------------------------------------------
 
+const optionalUrl = z.union([z.string().url().max(500), z.literal('')]).optional().nullable();
+
 const updateProfileSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
+  name: z.string().max(100).optional(),
   avatar_url: z.string().max(500000).optional().nullable(),
-  twitter_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
-  github_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
-  linkedin_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
-  website_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
+  twitter_url: optionalUrl,
+  github_url: optionalUrl,
+  linkedin_url: optionalUrl,
+  website_url: optionalUrl,
 });
 
 const changePasswordSchema = z.object({
@@ -166,11 +168,20 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Get user profile
-    const user = await queryOne<UserRecord>(`
-      SELECT id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
-      FROM users WHERE id = $1
-    `, [session.id]);
+    // Get user profile (profile columns may not exist if migration 009 hasn't run)
+    let user: UserRecord | null = null;
+    try {
+      user = await queryOne<UserRecord>(`
+        SELECT id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
+        FROM users WHERE id = $1
+      `, [session.id]);
+    } catch {
+      // Fallback if profile columns don't exist yet
+      user = await queryOne<UserRecord>(`
+        SELECT id, tenant_id, email, name, NULL as avatar_url, NULL as twitter_url, NULL as github_url, NULL as linkedin_url, NULL as website_url, created_at, updated_at
+        FROM users WHERE id = $1
+      `, [session.id]);
+    }
 
     // Get webhook count
     const webhookCount = await queryOne<{ count: string }>(`
@@ -394,13 +405,32 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 
     params.push(session.id);
 
-    // Update user
-    const user = await queryOne<UserRecord>(`
-      UPDATE users
-      SET ${setClauses.join(', ')}
-      WHERE id = $${paramIdx}
-      RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
-    `, params);
+    // Update user (profile columns may not exist if migration 009 hasn't run)
+    let user: UserRecord | null = null;
+    try {
+      user = await queryOne<UserRecord>(`
+        UPDATE users
+        SET ${setClauses.join(', ')}
+        WHERE id = $${paramIdx}
+        RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
+      `, params);
+    } catch {
+      // Fallback: only update name (profile columns may not exist)
+      const fallbackParams: unknown[] = [];
+      const fallbackClauses = ['updated_at = NOW()'];
+      let fi = 1;
+      if (input.name !== undefined) {
+        fallbackClauses.push(`name = $${fi++}`);
+        fallbackParams.push(input.name);
+      }
+      fallbackParams.push(session.id);
+      user = await queryOne<UserRecord>(`
+        UPDATE users
+        SET ${fallbackClauses.join(', ')}
+        WHERE id = $${fi}
+        RETURNING id, tenant_id, email, name, NULL as avatar_url, NULL as twitter_url, NULL as github_url, NULL as linkedin_url, NULL as website_url, created_at, updated_at
+      `, fallbackParams);
+    }
 
     if (!user) {
       return NextResponse.json(

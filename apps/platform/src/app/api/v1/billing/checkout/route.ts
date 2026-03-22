@@ -41,11 +41,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { plan } = body;
 
-  if (!plan || !STRIPE_PRICES[plan]) {
-    return NextResponse.json({ error: 'Invalid plan' }, { status: 400 });
+  const priceId = plan ? STRIPE_PRICES[plan] : undefined;
+
+  if (!plan || !priceId) {
+    return NextResponse.json({ error: 'Invalid plan or pricing not configured' }, { status: 400 });
   }
 
-  const priceId = STRIPE_PRICES[plan];
+  if (!process.env['STRIPE_SECRET_KEY']) {
+    return NextResponse.json({ error: 'Billing is not configured. Please contact support.' }, { status: 503 });
+  }
 
   const tenant = await queryOne<TenantRow>(
     `SELECT id, email, stripe_customer_id FROM tenants WHERE id = $1`,
