@@ -235,6 +235,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Create response with session cookie
     const response = NextResponse.json(
       {
+        success: true,
         message: 'Login successful',
         data: {
           user: {
