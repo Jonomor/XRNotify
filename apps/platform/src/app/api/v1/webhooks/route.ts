@@ -6,16 +6,17 @@
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createWebhookSchema, listWebhooksQuerySchema, validate } from '@xrnotify/shared';
-import { 
-  extractApiKey, 
-  validateApiKey, 
+import { createWebhookSchema, listWebhooksQuerySchema } from '@xrnotify/shared';
+import {
+  extractApiKey,
+  validateApiKey,
   hasScope,
   type AuthenticatedContext,
 } from '@/lib/auth/apiKey';
-import { 
-  createWebhook, 
-  listWebhooks, 
+import { getCurrentSession } from '@/lib/auth/session';
+import {
+  createWebhook,
+  listWebhooks,
   WebhookValidationError,
 } from '@/lib/webhooks/service';
 import { checkRateLimit } from '@/lib/rate-limit/tokenBucket';
@@ -51,9 +52,27 @@ const logger = createModuleLogger('webhooks-api');
 // Authentication Helper
 // -----------------------------------------------------------------------------
 
-async function authenticate(
-  request: NextRequest
-): Promise<{ context: AuthenticatedContext } | { error: NextResponse<ApiErrorResponse> }> {
+// tenantId resolved from either session cookie or API key
+type AuthResult =
+  | { tenantId: string; tenantSettings?: Record<string, unknown>; apiContext?: AuthenticatedContext }
+  | { error: NextResponse<ApiErrorResponse> };
+
+async function authenticate(request: NextRequest): Promise<AuthResult> {
+  // Try session first (dashboard users)
+  const session = await getCurrentSession();
+  if (session) {
+    if (!session.tenant.is_active) {
+      return {
+        error: NextResponse.json(
+          { error: { code: 'ACCOUNT_INACTIVE', message: 'Your account is inactive.' } },
+          { status: 403 }
+        ),
+      };
+    }
+    return { tenantId: session.tenantId, tenantSettings: session.tenant.settings as unknown as Record<string, unknown> };
+  }
+
+  // Fall back to API key
   const headers = Object.fromEntries(request.headers.entries());
   const apiKey = extractApiKey(headers);
 
@@ -64,7 +83,7 @@ async function authenticate(
         {
           error: {
             code: 'UNAUTHORIZED',
-            message: 'Missing API key. Provide X-XRNotify-Key header.',
+            message: 'Authentication required. Log in or provide X-XRNotify-Key header.',
           },
         },
         { status: 401 }
@@ -77,31 +96,26 @@ async function authenticate(
   if (!result.valid || !result.context) {
     return {
       error: NextResponse.json(
-        {
-          error: {
-            code: 'UNAUTHORIZED',
-            message: result.error ?? 'Invalid API key',
-          },
-        },
+        { error: { code: 'UNAUTHORIZED', message: result.error ?? 'Invalid API key' } },
         { status: 401 }
       ),
     };
   }
 
-  return { context: result.context };
+  return { tenantId: result.context.tenantId, apiContext: result.context };
 }
 
 // -----------------------------------------------------------------------------
 // Rate Limit Helper
 // -----------------------------------------------------------------------------
 
-async function checkApiRateLimit(
-  context: AuthenticatedContext
+async function applyRateLimit(
+  tenantId: string
 ): Promise<{ allowed: true; headers: Record<string, string> } | { error: NextResponse<ApiErrorResponse> }> {
-  const { allowed, headers, retryAfter } = await checkRateLimit(context.tenantId);
+  const { allowed, headers, retryAfter } = await checkRateLimit(tenantId);
 
   if (!allowed) {
-    logSecurityEvent(logger, 'rate_limited', { tenantId: context.tenantId });
+    logSecurityEvent(logger, 'rate_limited', { tenantId });
     return {
       error: NextResponse.json(
         {
@@ -110,7 +124,7 @@ async function checkApiRateLimit(
             message: 'Too many requests. Please slow down.',
           },
         },
-        { 
+        {
           status: 429,
           headers: {
             ...headers,
@@ -139,10 +153,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if ('error' in authResult) {
       return authResult.error;
     }
-    const { context } = authResult;
+    const { tenantId, apiContext } = authResult;
 
-    // Check scope
-    if (!hasScope(context, 'webhooks:read')) {
+    // Check scope (API key only)
+    if (apiContext && !hasScope(apiContext, 'webhooks:read')) {
       return NextResponse.json(
         {
           error: {
@@ -155,7 +169,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Rate limit
-    const rateLimitResult = await checkApiRateLimit(context);
+    const rateLimitResult = await applyRateLimit(tenantId);
     if ('error' in rateLimitResult) {
       return rateLimitResult.error;
     }
@@ -194,16 +208,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // List webhooks
     const { webhooks, total } = await listWebhooks({
-      tenantId: context.tenantId,
+      tenantId,
       isActive: query.is_active,
       eventTypes: query.event_type ? [query.event_type] : undefined,
       limit: query.per_page,
       offset: (query.page - 1) * query.per_page,
     });
 
-    logger.info({ 
-      requestId, 
-      tenantId: context.tenantId, 
+    logger.info({
+      requestId,
+      tenantId,
       count: webhooks.length,
       total,
     }, 'Listed webhooks');
@@ -272,10 +286,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if ('error' in authResult) {
       return authResult.error;
     }
-    const { context } = authResult;
+    const { tenantId, tenantSettings, apiContext } = authResult;
 
-    // Check scope
-    if (!hasScope(context, 'webhooks:write')) {
+    // Check scope (API key only)
+    if (apiContext && !hasScope(apiContext, 'webhooks:write')) {
       return NextResponse.json(
         {
           error: {
@@ -288,15 +302,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Rate limit
-    const rateLimitResult = await checkApiRateLimit(context);
+    const rateLimitResult = await applyRateLimit(tenantId);
     if ('error' in rateLimitResult) {
       return rateLimitResult.error;
     }
 
     // Check webhook limit based on plan
-    const maxWebhooks = context.tenant.settings['max_webhooks'];
+    const settings = apiContext?.tenant.settings ?? tenantSettings ?? {};
+    const maxWebhooks = (settings['max_webhooks'] as number | undefined) ?? 1;
     const { total: currentWebhooks } = await listWebhooks({
-      tenantId: context.tenantId,
+      tenantId,
       limit: 1,
     });
 
@@ -347,11 +362,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const input = parseResult.data;
 
     // Create webhook
-    const webhook = await createWebhook(context.tenantId, input);
+    const webhook = await createWebhook(tenantId, input);
 
-    logger.info({ 
-      requestId, 
-      tenantId: context.tenantId, 
+    logger.info({
+      requestId,
+      tenantId,
       webhookId: webhook.id,
       url: maskUrl(webhook.url),
     }, 'Webhook created');
