@@ -198,9 +198,25 @@ export default async function EventsPage({ searchParams }: PageProps) {
             <svg className="mx-auto h-12 w-12 text-zinc-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            <p className="text-zinc-400 text-sm">
-              {typeFilter || accountFilter ? 'No events match your filters.' : 'No events have been processed yet.'}
-            </p>
+            {typeFilter || accountFilter ? (
+              <p className="text-zinc-400 text-sm">No events match your filters.</p>
+            ) : (
+              <>
+                <h3 className="text-white font-medium mb-2">No events yet</h3>
+                <p className="text-zinc-400 text-sm max-w-md mx-auto mb-2">
+                  Events will appear here once the XRPL listener processes transactions that match your webhook subscriptions.
+                </p>
+                <p className="text-zinc-500 text-xs max-w-md mx-auto mb-6">
+                  Make sure you have at least one active webhook configured. The listener monitors the XRP Ledger in real-time and routes matching events to your endpoints.
+                </p>
+                <Link
+                  href="/dashboard/webhooks/new"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 no-underline transition-colors"
+                >
+                  + Create a Webhook
+                </Link>
+              </>
+            )}
           </div>
         ) : (
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">

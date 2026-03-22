@@ -43,11 +43,63 @@ export default function AuthenticationPage() {
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`curl https://api.xrnotify.io/v1/webhooks \\
   -H "X-XRNotify-Key: xrn_live_your_key_here"`}</pre>
           </div>
+          <h3 className="text-lg font-semibold text-white mt-6 mb-3">Node.js</h3>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
+            <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`const response = await fetch("https://api.xrnotify.io/v1/webhooks", {
+  headers: {
+    "X-XRNotify-Key": process.env.XRNOTIFY_API_KEY,
+  },
+});
+const data = await response.json();`}</pre>
+          </div>
+
+          <h3 className="text-lg font-semibold text-white mb-3">Python</h3>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
+            <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`import os, requests
+
+response = requests.get(
+    "https://api.xrnotify.io/v1/webhooks",
+    headers={"X-XRNotify-Key": os.environ["XRNOTIFY_API_KEY"]},
+)
+data = response.json()`}</pre>
+          </div>
+
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
             <p className="text-amber-300 text-sm">
               <span className="font-semibold">Keep keys secret:</span> Never expose API keys in client-side code, public repositories, or logs. Treat them like passwords. If a key is compromised, revoke it immediately from the dashboard.
             </p>
           </div>
+        </section>
+
+        {/* Security best practices */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-semibold text-white mb-4">Security best practices</h2>
+          <ul className="space-y-3 text-zinc-300 text-sm leading-relaxed">
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 mt-0.5">&#x2713;</span>
+              Store API keys in environment variables or a secrets manager — never hard-code them.
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 mt-0.5">&#x2713;</span>
+              Use the principle of least privilege — only grant the scopes each key actually needs.
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 mt-0.5">&#x2713;</span>
+              Set expiration dates on keys used in CI/CD pipelines or temporary environments.
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 mt-0.5">&#x2713;</span>
+              Rotate keys periodically and revoke any key that may have been exposed.
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 mt-0.5">&#x2713;</span>
+              Use separate keys for production and development — never share keys across environments.
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-400 mt-0.5">&#x2713;</span>
+              Monitor the &quot;Last Used&quot; timestamp on the API Keys dashboard to detect unauthorized usage.
+            </li>
+          </ul>
         </section>
 
         {/* Key types */}

@@ -13,10 +13,30 @@ import { CheckoutButton } from '@/components/CheckoutButton';
 // -----------------------------------------------------------------------------
 
 interface MeData {
-  user: { id: string; name: string | null; email: string };
+  user: {
+    id: string;
+    name?: string | null;
+    email: string;
+    avatar_url?: string | null;
+    twitter_url?: string | null;
+    github_url?: string | null;
+    linkedin_url?: string | null;
+    website_url?: string | null;
+  };
   tenant: { id: string; name: string; plan: string; is_active: boolean };
-  limits: { events_per_month: number; webhook_limit: number };
-  usage?: { events_this_month: number; webhooks_active: number };
+  limits: {
+    events_per_month: number;
+    webhooks: { used: number; limit: number };
+    api_keys: { used: number; limit: number };
+    webhook_limit?: number;
+  };
+  usage?: {
+    events_this_month: number;
+    events_limit: number;
+    events_remaining: number;
+    usage_percentage: number;
+    webhooks_active?: number;
+  };
 }
 
 // -----------------------------------------------------------------------------
@@ -52,9 +72,19 @@ export default function SettingsPage() {
 
   // Profile form
   const [name, setName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [profileMsg, setProfileMsg] = useState('');
   const [profileError, setProfileError] = useState('');
   const [profilePending, startProfileTransition] = useTransition();
+
+  // Social links
+  const [twitterUrl, setTwitterUrl] = useState('');
+  const [githubUrl, setGithubUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [websiteUrl, setWebsiteUrl] = useState('');
+  const [socialMsg, setSocialMsg] = useState('');
+  const [socialError, setSocialError] = useState('');
+  const [socialPending, startSocialTransition] = useTransition();
 
   // Password form
   const [pwCurrent, setPwCurrent] = useState('');
@@ -75,6 +105,11 @@ export default function SettingsPage() {
         const d = json.data as MeData;
         setData(d);
         setName(d.user.name ?? '');
+        setAvatarUrl(d.user.avatar_url ?? null);
+        setTwitterUrl(d.user.twitter_url ?? '');
+        setGithubUrl(d.user.github_url ?? '');
+        setLinkedinUrl(d.user.linkedin_url ?? '');
+        setWebsiteUrl(d.user.website_url ?? '');
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -115,7 +150,7 @@ export default function SettingsPage() {
       const res = await fetch('/api/v1/me?action=change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPassword: pwCurrent, newPassword: pwNew }),
+        body: JSON.stringify({ current_password: pwCurrent, new_password: pwNew }),
       });
       if (res.ok) {
         setPwMsg('Password updated successfully.');
@@ -139,6 +174,78 @@ export default function SettingsPage() {
     });
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 500_000) {
+      setProfileError('Image must be under 500 KB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setAvatarUrl(dataUrl);
+      // Save immediately
+      startProfileTransition(async () => {
+        setProfileMsg('');
+        setProfileError('');
+        const res = await fetch('/api/v1/me', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ avatar_url: dataUrl }),
+        });
+        if (res.ok) {
+          setProfileMsg('Avatar updated.');
+        } else {
+          setProfileError('Failed to upload avatar.');
+        }
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveAvatar = () => {
+    setAvatarUrl(null);
+    startProfileTransition(async () => {
+      setProfileMsg('');
+      setProfileError('');
+      const res = await fetch('/api/v1/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar_url: null }),
+      });
+      if (res.ok) {
+        setProfileMsg('Avatar removed.');
+      } else {
+        setProfileError('Failed to remove avatar.');
+      }
+    });
+  };
+
+  const handleSocialSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSocialMsg('');
+    setSocialError('');
+    startSocialTransition(async () => {
+      const res = await fetch('/api/v1/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          twitter_url: twitterUrl.trim() || '',
+          github_url: githubUrl.trim() || '',
+          linkedin_url: linkedinUrl.trim() || '',
+          website_url: websiteUrl.trim() || '',
+        }),
+      });
+      if (res.ok) {
+        setSocialMsg('Social links updated.');
+      } else {
+        const json = await res.json() as { error?: { message?: string } };
+        setSocialError(json.error?.message ?? 'Failed to update social links.');
+      }
+    });
+  };
+
   const handleBillingPortal = async () => {
     const res = await fetch('/api/v1/billing/portal', { method: 'POST' });
     if (res.ok) {
@@ -158,8 +265,8 @@ export default function SettingsPage() {
   const plan = data?.tenant.plan ?? 'free';
   const eventsUsed = data?.usage?.events_this_month ?? 0;
   const eventsLimit = data?.limits.events_per_month ?? 500;
-  const webhooksUsed = data?.usage?.webhooks_active ?? 0;
-  const webhooksLimit = data?.limits.webhook_limit ?? 1;
+  const webhooksUsed = data?.limits.webhooks?.used ?? data?.usage?.webhooks_active ?? 0;
+  const webhooksLimit = data?.limits.webhooks?.limit ?? data?.limits.webhook_limit ?? 1;
   const eventsPercent = Math.min(100, Math.round((eventsUsed / eventsLimit) * 100));
 
   return (
@@ -237,6 +344,43 @@ export default function SettingsPage() {
         <section className={cardClass}>
           <h2 className="text-lg font-semibold text-white mb-4">Profile</h2>
           <form onSubmit={handleProfileSave} className="space-y-4">
+            {/* Avatar */}
+            <div>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">Profile image</label>
+              <div className="flex items-center gap-4">
+                <div className="relative w-16 h-16 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <svg className="w-8 h-8 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 hover:bg-zinc-700 transition-colors cursor-pointer inline-block text-center">
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/gif,image/webp"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+                  </label>
+                  {avatarUrl && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveAvatar}
+                      className="px-3 py-1.5 text-xs font-medium rounded-lg text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                <p className="text-xs text-zinc-500">PNG, JPG, GIF, or WebP. Max 500 KB.</p>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-1.5">Full name</label>
               <input
@@ -265,6 +409,64 @@ export default function SettingsPage() {
               className="px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors disabled:opacity-60"
             >
               {profilePending ? 'Saving…' : 'Save Changes'}
+            </button>
+          </form>
+        </section>
+
+        {/* Social Links */}
+        <section className={cardClass}>
+          <h2 className="text-lg font-semibold text-white mb-4">Social Links</h2>
+          <form onSubmit={handleSocialSave} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Twitter / X</label>
+                <input
+                  type="url"
+                  value={twitterUrl}
+                  onChange={(e) => setTwitterUrl(e.target.value)}
+                  className={inputClass}
+                  placeholder="https://x.com/username"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-1.5">GitHub</label>
+                <input
+                  type="url"
+                  value={githubUrl}
+                  onChange={(e) => setGithubUrl(e.target.value)}
+                  className={inputClass}
+                  placeholder="https://github.com/username"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-1.5">LinkedIn</label>
+                <input
+                  type="url"
+                  value={linkedinUrl}
+                  onChange={(e) => setLinkedinUrl(e.target.value)}
+                  className={inputClass}
+                  placeholder="https://linkedin.com/in/username"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Website</label>
+                <input
+                  type="url"
+                  value={websiteUrl}
+                  onChange={(e) => setWebsiteUrl(e.target.value)}
+                  className={inputClass}
+                  placeholder="https://yoursite.com"
+                />
+              </div>
+            </div>
+            {socialMsg && <p className="text-sm text-emerald-400">{socialMsg}</p>}
+            {socialError && <p className="text-sm text-red-400">{socialError}</p>}
+            <button
+              type="submit"
+              disabled={socialPending}
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors disabled:opacity-60"
+            >
+              {socialPending ? 'Saving…' : 'Save Social Links'}
             </button>
           </form>
         </section>

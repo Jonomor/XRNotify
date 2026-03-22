@@ -52,6 +52,11 @@ interface UserRecord {
   tenant_id: string;
   email: string;
   name: string | null;
+  avatar_url: string | null;
+  twitter_url: string | null;
+  github_url: string | null;
+  linkedin_url: string | null;
+  website_url: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -62,6 +67,11 @@ interface UserRecord {
 
 const updateProfileSchema = z.object({
   name: z.string().min(1).max(100).optional(),
+  avatar_url: z.string().max(500000).optional().nullable(),
+  twitter_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
+  github_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
+  linkedin_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
+  website_url: z.string().url().max(500).optional().nullable().or(z.literal('')),
 });
 
 const changePasswordSchema = z.object({
@@ -114,7 +124,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     // Check for usage query param
     const url = new URL(request.url);
-    const isUsageRequest = url.pathname.endsWith('/usage') || url.searchParams.get('include') === 'usage';
+    const isUsageRequest = url.pathname.endsWith('/usage') || url.searchParams.get('include') === 'usage' || url.searchParams.has('include_usage');
 
     // Authenticate via session
     const authResult = await authenticateSession();
@@ -156,6 +166,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // Get user profile
+    const user = await queryOne<UserRecord>(`
+      SELECT id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
+      FROM users WHERE id = $1
+    `, [session.id]);
+
     // Get webhook count
     const webhookCount = await queryOne<{ count: string }>(`
       SELECT COUNT(*) as count FROM webhooks WHERE tenant_id = $1 AND is_active = true
@@ -171,6 +187,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       user: {
         id: session.id,
         email: session.email,
+        name: user?.name ?? null,
+        avatar_url: user?.avatar_url ?? null,
+        twitter_url: user?.twitter_url ?? null,
+        github_url: user?.github_url ?? null,
+        linkedin_url: user?.linkedin_url ?? null,
+        website_url: user?.website_url ?? null,
       },
       tenant: {
         id: tenant.id,
@@ -340,13 +362,45 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // Build dynamic update
+    const setClauses: string[] = ['updated_at = NOW()'];
+    const params: unknown[] = [];
+    let paramIdx = 1;
+
+    if (input.name !== undefined) {
+      setClauses.push(`name = $${paramIdx++}`);
+      params.push(input.name);
+    }
+    if (input.avatar_url !== undefined) {
+      setClauses.push(`avatar_url = $${paramIdx++}`);
+      params.push(input.avatar_url || null);
+    }
+    if (input.twitter_url !== undefined) {
+      setClauses.push(`twitter_url = $${paramIdx++}`);
+      params.push(input.twitter_url || null);
+    }
+    if (input.github_url !== undefined) {
+      setClauses.push(`github_url = $${paramIdx++}`);
+      params.push(input.github_url || null);
+    }
+    if (input.linkedin_url !== undefined) {
+      setClauses.push(`linkedin_url = $${paramIdx++}`);
+      params.push(input.linkedin_url || null);
+    }
+    if (input.website_url !== undefined) {
+      setClauses.push(`website_url = $${paramIdx++}`);
+      params.push(input.website_url || null);
+    }
+
+    params.push(session.id);
+
     // Update user
     const user = await queryOne<UserRecord>(`
       UPDATE users
-      SET name = COALESCE($1, name), updated_at = NOW()
-      WHERE id = $2
-      RETURNING id, tenant_id, email, name, created_at, updated_at
-    `, [input.name ?? null, session.id]);
+      SET ${setClauses.join(', ')}
+      WHERE id = $${paramIdx}
+      RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
+    `, params);
 
     if (!user) {
       return NextResponse.json(
@@ -375,6 +429,11 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
             id: user.id,
             email: user.email,
             name: user.name,
+            avatar_url: user.avatar_url,
+            twitter_url: user.twitter_url,
+            github_url: user.github_url,
+            linkedin_url: user.linkedin_url,
+            website_url: user.website_url,
             updated_at: user.updated_at.toISOString(),
           },
         },

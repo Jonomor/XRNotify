@@ -122,6 +122,13 @@ export default async function WebhookDetailPage({ params }: PageProps) {
               )}
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Edit */}
+              <Link
+                href={`/dashboard/webhooks/${webhook.id}/edit`}
+                className="px-4 py-2 text-sm font-medium rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 no-underline transition-colors"
+              >
+                Edit
+              </Link>
               {/* Toggle active */}
               <form action={toggleWebhookAction}>
                 <input type="hidden" name="webhook_id" value={webhook.id} />
