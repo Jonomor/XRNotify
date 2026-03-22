@@ -4,6 +4,7 @@
 // JWT-based sessions for dashboard authentication with secure cookies
 // =============================================================================
 
+import { createHash } from 'crypto';
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import { hash, compare } from 'bcryptjs';
 import { cookies } from 'next/headers';
@@ -148,21 +149,22 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 /**
  * Create a new session for a tenant
  */
-export async function createSession(tenant: Tenant, email: string): Promise<{ session: Session; token: string }> {
+export async function createSession(tenant: Tenant, email: string, userId: string): Promise<{ session: Session; token: string }> {
   const config = getConfig();
   const sessionId = uuid();
   const now = new Date();
   const expiresAt = new Date(now.getTime() + config.session.maxAgeMs);
-  
+
   const payload: SessionPayload = {
     sid: sessionId,
     tid: tenant.id,
     email,
     version: 1,
   };
-  
+
   const token = await createToken(payload);
-  
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+
   const session: Session = {
     id: sessionId,
     tenantId: tenant.id,
@@ -171,22 +173,22 @@ export async function createSession(tenant: Tenant, email: string): Promise<{ se
     createdAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
   };
-  
+
   // Cache session data
   await set(
     `${SESSION_CACHE_PREFIX}${sessionId}`,
     JSON.stringify(session),
     Math.floor(config.session.maxAgeMs / 1000)
   );
-  
-  // Store session in database
+
+  // Store session in database — sessions table requires user_id and token_hash
   await query(`
-    INSERT INTO sessions (id, tenant_id, email, expires_at)
-    VALUES ($1, $2, $3, $4)
-  `, [sessionId, tenant.id, email, expiresAt]);
-  
+    INSERT INTO sessions (id, user_id, tenant_id, token_hash, expires_at)
+    VALUES ($1, $2, $3, $4, $5)
+  `, [sessionId, userId, tenant.id, tokenHash, expiresAt]);
+
   logger.info({ sessionId, tenantId: tenant.id, email }, 'Session created');
-  
+
   return { session, token };
 }
 
@@ -235,37 +237,36 @@ export async function getSessionFromToken(token: string): Promise<Session | null
     }
   }
   
-  // Look up in database
+  // Look up in database — join users to get email (sessions table has no email column)
   const row = await queryOne<{
     session_id: string;
-    session_email: string;
     session_expires_at: Date;
     session_created_at: Date;
+    user_email: string;
     tenant_id: string;
     tenant_name: string;
-    tenant_email: string;
     tenant_plan: string;
     tenant_is_active: boolean;
     tenant_settings: Tenant['settings'];
     tenant_created_at: Date;
     tenant_updated_at: Date;
   }>(`
-    SELECT 
+    SELECT
       s.id as session_id,
-      s.email as session_email,
       s.expires_at as session_expires_at,
       s.created_at as session_created_at,
+      u.email as user_email,
       t.id as tenant_id,
       t.name as tenant_name,
-      t.email as tenant_email,
       t.plan as tenant_plan,
       t.is_active as tenant_is_active,
       t.settings as tenant_settings,
       t.created_at as tenant_created_at,
       t.updated_at as tenant_updated_at
     FROM sessions s
+    JOIN users u ON s.user_id = u.id
     JOIN tenants t ON s.tenant_id = t.id
-    WHERE s.id = $1 AND s.expires_at > NOW() AND s.revoked_at IS NULL
+    WHERE s.id = $1 AND s.expires_at > NOW()
   `, [payload.sid]);
   
   if (!row) {
@@ -275,11 +276,11 @@ export async function getSessionFromToken(token: string): Promise<Session | null
   const session: Session = {
     id: row.session_id,
     tenantId: row.tenant_id,
-    email: row.session_email,
+    email: row.user_email,
     tenant: {
       id: row.tenant_id,
       name: row.tenant_name,
-      email: row.tenant_email,
+      email: row.user_email,
       plan: row.tenant_plan as Tenant['plan'],
       is_active: row.tenant_is_active,
       settings: row.tenant_settings,
@@ -306,12 +307,10 @@ export async function getSessionFromToken(token: string): Promise<Session | null
 export async function invalidateSession(sessionId: string): Promise<void> {
   // Remove from cache
   await del(`${SESSION_CACHE_PREFIX}${sessionId}`);
-  
-  // Mark as revoked in database
-  await query(`
-    UPDATE sessions SET revoked_at = NOW() WHERE id = $1
-  `, [sessionId]);
-  
+
+  // Delete from database (sessions table has no revoked_at column)
+  await query(`DELETE FROM sessions WHERE id = $1`, [sessionId]);
+
   logger.info({ sessionId }, 'Session invalidated');
 }
 
@@ -319,18 +318,15 @@ export async function invalidateSession(sessionId: string): Promise<void> {
  * Invalidate all sessions for a tenant
  */
 export async function invalidateAllSessions(tenantId: string): Promise<number> {
+  // Fetch IDs first so we can purge the cache
   const result = await query(`
-    UPDATE sessions 
-    SET revoked_at = NOW() 
-    WHERE tenant_id = $1 AND revoked_at IS NULL
-    RETURNING id
+    DELETE FROM sessions WHERE tenant_id = $1 RETURNING id
   `, [tenantId]);
-  
-  // Remove from cache
+
   for (const row of result.rows) {
     await del(`${SESSION_CACHE_PREFIX}${row['id']}`);
   }
-  
+
   logger.info({ tenantId, count: result.rowCount }, 'All sessions invalidated');
   return result.rowCount ?? 0;
 }
@@ -438,7 +434,7 @@ export async function login(email: string, password: string): Promise<LoginResul
   `, [user.id]);
   
   // Create session
-  const { session, token } = await createSession(tenant, user.email);
+  const { session, token } = await createSession(tenant, user.email, user.id);
   
   logger.info({ email, tenantId: tenant.id }, 'User logged in');
   
