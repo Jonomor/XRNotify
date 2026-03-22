@@ -82,7 +82,14 @@ export default function ApiKeyDetailPage() {
         return r.json();
       })
       .then((json) => {
-        setApiKey((json.data?.api_key ?? json.data) as ApiKeyData);
+        const raw = (json.data?.api_key ?? json.data) as ApiKeyData;
+        let scopes: string[] = [];
+        if (Array.isArray(raw.scopes)) {
+          scopes = raw.scopes;
+        } else if (typeof raw.scopes === 'string') {
+          try { scopes = JSON.parse(raw.scopes); } catch { scopes = []; }
+        }
+        setApiKey({ ...raw, scopes });
       })
       .catch(() => setError('API key not found.'))
       .finally(() => setLoading(false));

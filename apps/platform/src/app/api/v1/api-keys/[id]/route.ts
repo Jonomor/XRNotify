@@ -15,6 +15,7 @@ import {
   revokeApiKey,
 } from '@/lib/auth/apiKey';
 import { query, queryOne } from '@/lib/db';
+import { parseJsonArray } from '@/lib/utils/db';
 import { checkRateLimit } from '@/lib/rate-limit/tokenBucket';
 import { createModuleLogger, logSecurityEvent } from '@/lib/logger';
 import { 
@@ -515,7 +516,7 @@ function formatApiKeyResponse(apiKey: ApiKeyRecord): Record<string, unknown> {
     id: apiKey.id,
     name: apiKey.name,
     key_prefix: apiKey.key_prefix,
-    scopes: apiKey.scopes,
+    scopes: parseJsonArray(apiKey.scopes),
     last_used_at: apiKey.last_used_at?.toISOString() ?? null,
     expires_at: apiKey.expires_at?.toISOString() ?? null,
     is_active: apiKey.is_active,

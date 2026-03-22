@@ -13,6 +13,7 @@ import {
   createApiKey, 
   listApiKeys,
 } from '@/lib/auth/apiKey';
+import { parseJsonArray } from '@/lib/utils/db';
 import { checkRateLimit } from '@/lib/rate-limit/tokenBucket';
 import { createModuleLogger, logSecurityEvent } from '@/lib/logger';
 import { 
@@ -354,7 +355,7 @@ function formatApiKeyResponse(apiKey: ApiKeyRecord): Record<string, unknown> {
     id: apiKey.id,
     name: apiKey.name,
     key_prefix: apiKey.key_prefix,
-    scopes: apiKey.scopes,
+    scopes: parseJsonArray(apiKey.scopes),
     last_used_at: apiKey.last_used_at,
     expires_at: apiKey.expires_at,
     is_active: apiKey.is_active,
