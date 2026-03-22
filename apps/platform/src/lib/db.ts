@@ -56,6 +56,7 @@ export function getPool(): Pool {
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000,
       allowExitOnIdle: false,
+      ssl: config.database.ssl ? { rejectUnauthorized: false } : false,
     });
 
     // Pool event handlers
