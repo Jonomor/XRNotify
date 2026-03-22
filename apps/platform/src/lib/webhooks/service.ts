@@ -707,6 +707,17 @@ async function updateWebhookMetrics(): Promise<void> {
 // -----------------------------------------------------------------------------
 
 /**
+ * Parse a DB column that may come back as a JSON string or already-parsed array
+ */
+function parseJsonArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value as string[];
+  if (typeof value === 'string') {
+    try { return JSON.parse(value) as string[]; } catch { return []; }
+  }
+  return [];
+}
+
+/**
  * Format webhook from database row
  */
 function formatWebhook(row: Webhook): Webhook {
@@ -715,8 +726,8 @@ function formatWebhook(row: Webhook): Webhook {
     tenant_id: row.tenant_id,
     url: row.url,
     secret_prefix: row.secret_prefix,
-    event_types: row.event_types,
-    account_filters: row.account_filters ?? [],
+    event_types: parseJsonArray(row.event_types) as Webhook['event_types'],
+    account_filters: parseJsonArray(row.account_filters),
     description: row.description ?? undefined,
     metadata: row.metadata ?? {},
     is_active: row.is_active,
