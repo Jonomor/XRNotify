@@ -7,7 +7,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentSession } from '@/lib/auth/session';
-import { listApiKeys } from '@/lib/auth/apiKey';
+import { listApiKeys, revokeApiKey } from '@/lib/auth/apiKey';
 import { ALL_API_KEY_SCOPES } from '@xrnotify/shared';
 
 export const dynamic = 'force-dynamic';
@@ -135,6 +135,19 @@ function CreateKeyModal() {
 
 // -----------------------------------------------------------------------------
 // Page Component
+// -----------------------------------------------------------------------------
+
+async function revokeKeyAction(formData: FormData) {
+  'use server';
+  const session = await getCurrentSession();
+  if (!session) return;
+  const keyId = formData.get('key_id') as string;
+  if (keyId) {
+    await revokeApiKey(keyId, session.tenantId);
+  }
+  redirect('/dashboard/api-keys');
+}
+
 // -----------------------------------------------------------------------------
 
 export default async function ApiKeysPage() {
@@ -292,16 +305,15 @@ export default async function ApiKeysPage() {
                         >
                           View
                         </Link>
-                        <button
-                          type="button"
-                          className="text-red-400 hover:text-red-300"
-                          onClick={() => {
-                            // This would trigger a confirmation modal in a real app
-                            // For server components, we'd use a form action
-                          }}
-                        >
-                          Revoke
-                        </button>
+                        <form action={revokeKeyAction}>
+                          <input type="hidden" name="key_id" value={apiKey.id} />
+                          <button
+                            type="submit"
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            Revoke
+                          </button>
+                        </form>
                       </div>
                     </td>
                   </tr>
