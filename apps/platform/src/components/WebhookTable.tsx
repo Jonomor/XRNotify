@@ -75,7 +75,7 @@ function HealthBadge({ isActive, failures }: { isActive: boolean; failures: numb
   
   if (failures === 0) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-200">
         <span className="w-1.5 h-1.5 mr-1.5 rounded-full bg-green-500 animate-pulse" />
         Healthy
       </span>
@@ -84,7 +84,7 @@ function HealthBadge({ isActive, failures }: { isActive: boolean; failures: numb
   
   if (failures < 3) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900 text-yellow-200">
         <span className="w-1.5 h-1.5 mr-1.5 rounded-full bg-yellow-500" />
         Degraded
       </span>
@@ -93,7 +93,7 @@ function HealthBadge({ isActive, failures }: { isActive: boolean; failures: numb
   
   if (failures < 10) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-900 text-orange-200">
         <span className="w-1.5 h-1.5 mr-1.5 rounded-full bg-orange-500" />
         Unhealthy
       </span>
@@ -101,7 +101,7 @@ function HealthBadge({ isActive, failures }: { isActive: boolean; failures: numb
   }
   
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900 text-red-200">
       <span className="w-1.5 h-1.5 mr-1.5 rounded-full bg-red-500" />
       Critical
     </span>
@@ -123,14 +123,14 @@ function EventTypeBadges({ types }: { types: string[] }) {
   const getColor = (type: string) => {
     const category = type.split('.')[0] ?? '';
     const colors: Record<string, string> = {
-      payment: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200',
-      nft: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200',
-      dex: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200',
-      trustline: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200',
+      payment: 'bg-blue-900 text-blue-200',
+      nft: 'bg-purple-900 text-purple-200',
+      dex: 'bg-green-900 text-green-200',
+      trustline: 'bg-yellow-900 text-yellow-200',
       escrow: 'bg-emerald-500/10 text-emerald-400',
-      check: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-200',
+      check: 'bg-pink-900 text-pink-200',
     };
-    return colors[category] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+    return colors[category] ?? 'bg-zinc-800 text-zinc-300';
   };
 
   return (
@@ -224,7 +224,7 @@ function ActionMenu({
                   setOpen(false);
                   onDelete();
                 }}
-                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-900/20"
               >
                 Delete
               </button>

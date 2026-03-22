@@ -14,6 +14,7 @@ import type { ApiKey, ApiKeyScope, Tenant, TenantSettings } from '@xrnotify/shar
 import { queryOne, query } from '../db';
 import { get, set, del } from '../redis';
 import { createModuleLogger, logSecurityEvent } from '../logger';
+import { parseJsonArray } from '../utils/db';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -182,7 +183,7 @@ export async function validateApiKey(apiKey: string): Promise<ApiKeyValidationRe
     name: row.api_key_name,
     key_hash: row.api_key_hash,
     key_prefix: row.api_key_prefix,
-    scopes: row.api_key_scopes,
+    scopes: parseJsonArray(row.api_key_scopes) as ApiKeyScope[],
     last_used_at: row.api_key_last_used_at?.toISOString(),
     expires_at: row.api_key_expires_at?.toISOString(),
     is_active: row.api_key_is_active,
@@ -425,6 +426,7 @@ export async function createApiKey(
   return {
     apiKey: {
       ...row,
+      scopes: parseJsonArray(row.scopes) as ApiKeyScope[],
       last_used_at: row.last_used_at ?? undefined,
       expires_at: row.expires_at ?? undefined,
     },
@@ -480,6 +482,7 @@ export async function listApiKeys(tenantId: string): Promise<ApiKey[]> {
   return result.rows.map((row) => ({
     ...row,
     key_hash: '[REDACTED]',
+    scopes: parseJsonArray(row.scopes) as ApiKeyScope[],
     last_used_at: row.last_used_at ?? undefined,
     expires_at: row.expires_at ?? undefined,
   }));

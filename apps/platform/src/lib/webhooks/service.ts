@@ -12,6 +12,7 @@ import { getJson, setJson, del, invalidatePattern } from '../redis';
 import { createModuleLogger } from '../logger';
 import { validateWebhookUrl, validateWebhookUrlSync } from './urlPolicy';
 import { setActiveWebhooks } from '../metrics';
+import { parseJsonArray } from '../utils/db';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -705,17 +706,6 @@ async function updateWebhookMetrics(): Promise<void> {
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
-
-/**
- * Parse a DB column that may come back as a JSON string or already-parsed array
- */
-function parseJsonArray(value: unknown): string[] {
-  if (Array.isArray(value)) return value as string[];
-  if (typeof value === 'string') {
-    try { return JSON.parse(value) as string[]; } catch { return []; }
-  }
-  return [];
-}
 
 /**
  * Format webhook from database row
