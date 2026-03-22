@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getCurrentSession } from '@/lib/auth/session';
 import { getWebhook, deleteWebhook, updateWebhook } from '@/lib/webhooks/service';
 import { listDeliveries } from '@/lib/deliveries/service';
+import { TestWebhookButton } from '@/components/TestWebhookButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -122,6 +123,8 @@ export default async function WebhookDetailPage({ params }: PageProps) {
               )}
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Test */}
+              <TestWebhookButton webhookId={webhook.id} />
               {/* Edit */}
               <Link
                 href={`/dashboard/webhooks/${webhook.id}/edit`}

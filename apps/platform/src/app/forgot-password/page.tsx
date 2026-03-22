@@ -21,9 +21,15 @@ export default function ForgotPasswordPage() {
     if (!email.trim()) return;
 
     startTransition(async () => {
-      // Email integration comes later — show success message immediately
-      // to avoid leaking whether an account exists
-      await new Promise((r) => setTimeout(r, 400)); // brief UX delay
+      try {
+        await fetch('/api/v1/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim() }),
+        });
+      } catch {
+        // Ignore errors — always show success to prevent enumeration
+      }
       setSubmitted(true);
     });
   };

@@ -370,7 +370,7 @@ export function logError(
  */
 export function logSecurityEvent(
   logger: Logger,
-  event: 'auth_failed' | 'rate_limited' | 'invalid_signature' | 'blocked_request' | 'login_failed' | 'login_success' | 'logout' | 'password_change_failed' | 'password_changed',
+  event: 'auth_failed' | 'rate_limited' | 'invalid_signature' | 'blocked_request' | 'login_failed' | 'login_success' | 'logout' | 'password_change_failed' | 'password_changed' | 'password_reset_requested' | 'password_reset_invalid_token' | 'password_reset_completed',
   context: Record<string, unknown>
 ): void {
   logger.warn(
