@@ -291,15 +291,14 @@ async function createDelivery(
   payload: Record<string, unknown>
 ): Promise<string> {
   const deliveryId = `del_${randomUUID().replace(/-/g, '')}`;
-  const idempotencyKey = `${webhookId}:${eventId}`;
-  
+
   await pool.query(
     `INSERT INTO deliveries (
-      id, webhook_id, event_id, event_type, payload, idempotency_key,
+      id, webhook_id, event_id, event_type, payload,
       status, attempt_count, max_attempts, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', 0, $7, NOW())
+    ) VALUES ($1, $2, $3, $4, $5, 'pending', 0, $6, NOW())
     ON CONFLICT (idempotency_key) DO NOTHING`,
-    [deliveryId, webhookId, eventId, eventType, JSON.stringify(payload), idempotencyKey, config.maxRetries]
+    [deliveryId, webhookId, eventId, eventType, JSON.stringify(payload), config.maxRetries]
   );
   
   return deliveryId;
