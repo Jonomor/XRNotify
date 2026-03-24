@@ -177,8 +177,8 @@ export default function SettingsPage() {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 500_000) {
-      setProfileError('Image must be under 500 KB.');
+    if (file.size > 2_000_000) {
+      setProfileError('Image must be under 2 MB.');
       return;
     }
     const reader = new FileReader();
@@ -377,7 +377,7 @@ export default function SettingsPage() {
                     </button>
                   )}
                 </div>
-                <p className="text-xs text-zinc-500">PNG, JPG, GIF, or WebP. Max 500 KB.</p>
+                <p className="text-xs text-zinc-500">PNG, JPG, GIF, or WebP. Max 2 MB.</p>
               </div>
             </div>
 

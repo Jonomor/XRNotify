@@ -123,7 +123,7 @@ function EmptyState() {
       <div className="mt-6">
         <Link
           href="/dashboard/webhooks/new"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+          className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold text-white bg-blue-600 border border-blue-500 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0f]"
         >
           + New Webhook
         </Link>
@@ -237,7 +237,7 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
             </div>
             <Link
               href="/dashboard/webhooks/new"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold text-white bg-blue-600 border border-blue-500 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0f]"
             >
               + New Webhook
             </Link>

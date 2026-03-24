@@ -167,7 +167,7 @@ export default function DocsPage() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/docs/quickstart"
-              className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-500"
+              className="inline-flex items-center justify-center px-6 py-3 text-sm font-bold text-white bg-blue-600 border border-blue-500 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0f]"
             >
               Quick Start Guide
               <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
