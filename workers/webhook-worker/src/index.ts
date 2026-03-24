@@ -298,7 +298,7 @@ async function createDelivery(
     `INSERT INTO deliveries (
       id, tenant_id, webhook_id, event_id, event_type, payload, url,
       status, attempt_count, max_attempts, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending', 0, $8, NOW())
+    ) VALUES ($1, $2, $3, $4, $5::event_type, $6::jsonb, $7, 'pending', 0, $8, NOW())
     ON CONFLICT (idempotency_key) DO NOTHING`,
     [deliveryId, tenantId, webhookId, eventId, eventType, JSON.stringify(payload), webhookUrl, config.maxRetries]
   );
