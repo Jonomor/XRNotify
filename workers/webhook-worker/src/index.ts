@@ -469,9 +469,12 @@ async function processMessage(message: StreamMessage): Promise<void> {
         await updateDeliveryStatus(deliveryId, 'delivered', result);
         await updateWebhookHealth(webhook.id, true);
 
-        // Increment usage counters (event processed, delivery succeeded)
+        // Increment Redis usage counter for dashboard
         try {
-          await pool.query(`SELECT increment_usage($1, 0, 1, 1, 0, 0)`, [webhook.tenant_id]);
+          const month = new Date().toISOString().slice(0, 7);
+          const usageKey = `xrnotify:usage:events:${webhook.tenant_id}:events:${month}`;
+          await redis.incrby(usageKey, 1);
+          await redis.expire(usageKey, 45 * 24 * 60 * 60);
         } catch { /* non-fatal */ }
 
         deliveriesTotal.inc({ status: 'success', event_type });
@@ -603,6 +606,15 @@ async function processRetryQueue(): Promise<void> {
         logger.info({ deliveryId: retry.deliveryId }, 'Retry successful');
         await updateDeliveryStatus(retry.deliveryId, 'delivered', result);
         await updateWebhookHealth(webhook.id, true);
+
+        // Increment Redis usage counter for dashboard
+        try {
+          const month = new Date().toISOString().slice(0, 7);
+          const usageKey = `xrnotify:usage:events:${webhook.tenant_id}:events:${month}`;
+          await redis.incrby(usageKey, 1);
+          await redis.expire(usageKey, 45 * 24 * 60 * 60);
+        } catch { /* non-fatal */ }
+
         deliveriesTotal.inc({ status: 'success', event_type: retry.eventType });
       } else {
         await updateWebhookHealth(webhook.id, false);
