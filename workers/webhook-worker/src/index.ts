@@ -336,12 +336,12 @@ async function updateDeliveryStatus(
 ): Promise<void> {
   await pool.query(
     `UPDATE deliveries SET
-      status = $2,
+      status = $2::delivery_status,
       attempt_count = attempt_count + 1,
       response_status = $3,
       response_time_ms = $4,
       error_message = $5,
-      delivered_at = CASE WHEN $2 = 'delivered' THEN NOW() ELSE delivered_at END,
+      delivered_at = CASE WHEN $2::delivery_status = 'delivered' THEN NOW() ELSE delivered_at END,
       next_retry_at = $6,
       updated_at = NOW()
     WHERE id = $1`,
