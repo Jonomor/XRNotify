@@ -411,7 +411,7 @@ async function processMessage(message: StreamMessage): Promise<void> {
   // Persist event to PostgreSQL (idempotent upsert)
   try {
     const txHash = (payload['tx_hash'] ?? payload['hash'] ?? '') as string;
-    const ledgerIndex = (payload['ledger_index'] ?? payload['ledger'] ?? 0) as number;
+    const ledgerIndex = parseInt(String(payload['ledger_index'] ?? payload['ledger'] ?? 0), 10) || 0;
     await pool.query(`
       INSERT INTO events (id, event_type, ledger_index, tx_hash, timestamp, accounts, payload)
       VALUES ($1, $2::event_type, $3, $4, $5, $6::varchar[], $7)
