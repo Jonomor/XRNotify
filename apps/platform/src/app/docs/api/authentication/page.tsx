@@ -14,7 +14,7 @@ export default function AuthenticationPage() {
           <div className="flex items-center gap-2 text-sm">
             <Link href="/docs" className="text-zinc-500 hover:text-zinc-300 no-underline">Docs</Link>
             <span className="text-zinc-600">/</span>
-            <span className="text-zinc-500">API Reference</span>
+            <Link href="/docs#api" className="text-zinc-500 hover:text-zinc-300 no-underline">API Reference</Link>
             <span className="text-zinc-600">/</span>
             <span className="text-zinc-300">Authentication</span>
           </div>

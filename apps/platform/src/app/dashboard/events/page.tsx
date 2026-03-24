@@ -101,7 +101,7 @@ export default async function EventsPage({ searchParams }: PageProps) {
   let idx = 1;
 
   if (typeFilter) {
-    conditions.push(`event_type = $${idx++}::event_type`);
+    conditions.push(`event_type::text = $${idx++}`);
     values.push(typeFilter);
   }
   if (accountFilter) {
