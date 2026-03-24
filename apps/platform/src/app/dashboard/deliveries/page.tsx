@@ -351,7 +351,45 @@ export default async function DeliveriesPage({ searchParams }: PageProps) {
             <EmptyState hasFilters={hasFilters} />
           ) : (
             <>
-              <table className="min-w-full divide-y divide-zinc-800">
+              {/* Mobile card layout */}
+              <div className="sm:hidden divide-y divide-zinc-800">
+                {deliveries.map((delivery) => {
+                  const webhook = webhookMap.get(delivery.webhook_id as string);
+                  return (
+                    <div key={delivery.id} className="p-4 space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-white">{delivery.event_type}</p>
+                          <p className="text-xs text-zinc-500 font-mono truncate">{truncateEventId(delivery.event_id as string)}</p>
+                        </div>
+                        <StatusBadge status={delivery.status as string} />
+                      </div>
+                      {delivery.last_error && (
+                        <p className="text-xs text-red-400 truncate">{delivery.last_error.slice(0, 60)}</p>
+                      )}
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-3 text-zinc-500">
+                          {webhook ? (
+                            <Link href={`/dashboard/webhooks/${webhook.id}`} className="text-emerald-400 hover:text-emerald-300">
+                              {new URL(webhook.url).hostname}
+                            </Link>
+                          ) : (
+                            <span>Unknown</span>
+                          )}
+                          <span>{delivery.attempt_count}/{delivery.max_attempts} attempts</span>
+                          <span>{formatTimeAgo(delivery.created_at)}</span>
+                        </div>
+                        <Link href={`/dashboard/deliveries/${delivery.id}`} className="text-sm font-medium text-emerald-400 hover:text-emerald-300">
+                          View
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Desktop table layout */}
+              <table className="hidden sm:table min-w-full divide-y divide-zinc-800">
                 <thead className="bg-zinc-950">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
