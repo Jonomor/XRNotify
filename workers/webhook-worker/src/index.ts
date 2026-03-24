@@ -413,9 +413,9 @@ async function processMessage(message: StreamMessage): Promise<void> {
     const ledgerIndex = (payload['ledger_index'] ?? payload['ledger'] ?? 0) as number;
     await pool.query(`
       INSERT INTO events (id, event_type, ledger_index, tx_hash, timestamp, accounts, payload)
-      VALUES ($1, $2::event_type, $3, $4, $5, $6, $7)
+      VALUES ($1, $2::event_type, $3, $4, $5, $6::varchar[], $7)
       ON CONFLICT (id) DO NOTHING
-    `, [event_id, event_type, ledgerIndex, txHash, timestamp || new Date().toISOString(), JSON.stringify(accounts), JSON.stringify(payload)]);
+    `, [event_id, event_type, ledgerIndex, txHash, timestamp || new Date().toISOString(), accounts, JSON.stringify(payload)]);
   } catch (err) {
     log.warn({ error: err }, 'Failed to persist event (non-fatal)');
   }
