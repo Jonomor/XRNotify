@@ -287,6 +287,7 @@ async function deliverWebhook(
 async function createDelivery(
   tenantId: string,
   webhookId: string,
+  webhookUrl: string,
   eventId: string,
   eventType: string,
   payload: Record<string, unknown>
@@ -295,11 +296,11 @@ async function createDelivery(
 
   await pool.query(
     `INSERT INTO deliveries (
-      id, tenant_id, webhook_id, event_id, event_type, payload,
+      id, tenant_id, webhook_id, event_id, event_type, payload, url,
       status, attempt_count, max_attempts, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', 0, $7, NOW())
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending', 0, $8, NOW())
     ON CONFLICT (idempotency_key) DO NOTHING`,
-    [deliveryId, tenantId, webhookId, eventId, eventType, JSON.stringify(payload), config.maxRetries]
+    [deliveryId, tenantId, webhookId, eventId, eventType, JSON.stringify(payload), webhookUrl, config.maxRetries]
   );
   
   return deliveryId;
@@ -439,7 +440,7 @@ async function processMessage(message: StreamMessage): Promise<void> {
     
     try {
       // Create delivery record
-      const deliveryId = await createDelivery(webhook.tenant_id, webhook.id, event_id, event_type, payload);
+      const deliveryId = await createDelivery(webhook.tenant_id, webhook.id, webhook.url, event_id, event_type, payload);
       
       // Get current attempt count
       const deliveryRow = await pool.query<{ attempt_count: number }>(
