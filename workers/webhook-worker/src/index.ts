@@ -315,7 +315,7 @@ async function recordDeliveryAttempt(
   await pool.query(
     `INSERT INTO delivery_attempts (
       delivery_id, attempt_number, status_code, response_body,
-      response_time_ms, error_message, created_at
+      duration_ms, error_message, created_at
     ) VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
     [
       deliveryId,
