@@ -173,14 +173,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
       user = await queryOne<UserRecord>(`
         SELECT id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
-        FROM users WHERE id = $1
-      `, [session.id]);
+        FROM users WHERE email = $1
+      `, [session.email]);
     } catch {
       // Fallback if profile columns don't exist yet
       user = await queryOne<UserRecord>(`
         SELECT id, tenant_id, email, name, NULL as avatar_url, NULL as twitter_url, NULL as github_url, NULL as linkedin_url, NULL as website_url, created_at, updated_at
-        FROM users WHERE id = $1
-      `, [session.id]);
+        FROM users WHERE email = $1
+      `, [session.email]);
     }
 
     // Get webhook count
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Build response
     const responseData: Record<string, unknown> = {
       user: {
-        id: session.id,
+        id: user?.id ?? session.id,
         email: session.email,
         name: user?.name ?? null,
         avatar_url: user?.avatar_url ?? null,
@@ -403,7 +403,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       params.push(input.website_url || null);
     }
 
-    params.push(session.id);
+    params.push(session.email);
 
     // Update user — upsert if row is missing
     let user: UserRecord | null = null;
@@ -411,18 +411,17 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       user = await queryOne<UserRecord>(`
         UPDATE users
         SET ${setClauses.join(', ')}
-        WHERE id = $${paramIdx}
+        WHERE email = $${paramIdx}
         RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
       `, params);
 
       // If UPDATE matched no rows, insert the user
       if (!user) {
         user = await queryOne<UserRecord>(`
-          INSERT INTO users (id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
+          INSERT INTO users (tenant_id, email, name, password_hash, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at)
+          VALUES ($1, $2, $3, '', $4, $5, $6, $7, $8, NOW(), NOW())
           RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
         `, [
-          session.id,
           session.tenantId,
           session.email,
           input.name || null,
@@ -443,11 +442,11 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         fallbackClauses.push(`name = $${fi++}`);
         fallbackParams.push(input.name);
       }
-      fallbackParams.push(session.id);
+      fallbackParams.push(session.email);
       user = await queryOne<UserRecord>(`
         UPDATE users
         SET ${fallbackClauses.join(', ')}
-        WHERE id = $${fi}
+        WHERE email = $${fi}
         RETURNING id, tenant_id, email, name, NULL as avatar_url, NULL as twitter_url, NULL as github_url, NULL as linkedin_url, NULL as website_url, created_at, updated_at
       `, fallbackParams);
     }
@@ -604,8 +603,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const { current_password, new_password } = parseResult.data;
 
+    // Look up user ID by email (session.id is session ID, not user ID)
+    const userRow = await queryOne<{ id: string }>(`SELECT id FROM users WHERE email = $1`, [session.email]);
+    if (!userRow) {
+      return NextResponse.json(
+        { error: { code: 'NOT_FOUND', message: 'User not found' } },
+        { status: 404 }
+      );
+    }
+
     // Change password
-    const passwordChanged = await changePassword(session.id, current_password, new_password);
+    const passwordChanged = await changePassword(userRow.id, current_password, new_password);
 
     if (!passwordChanged) {
       logSecurityEvent(logger, 'password_change_failed', {
