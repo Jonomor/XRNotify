@@ -227,7 +227,48 @@ export default async function ApiKeysPage() {
           {activeKeys.length === 0 ? (
             <EmptyState />
           ) : (
-            <table className="min-w-full divide-y divide-zinc-800">
+            <>
+            {/* Mobile card layout */}
+            <div className="sm:hidden divide-y divide-zinc-800">
+              {activeKeys.map((apiKey) => (
+                <div key={apiKey.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-white">{apiKey.name}</p>
+                      <code className="text-xs font-mono text-zinc-400">{apiKey.key_prefix}••••••••</code>
+                    </div>
+                    <StatusBadge isActive={apiKey.is_active} expiresAt={apiKey.expires_at} />
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {apiKey.scopes.slice(0, 3).map((scope) => (
+                      <ScopeBadge key={scope} scope={scope} />
+                    ))}
+                    {apiKey.scopes.length > 3 && (
+                      <span className="text-xs text-zinc-500">+{apiKey.scopes.length - 3}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-zinc-500">
+                      Used {formatTimeAgo(apiKey.last_used_at)}
+                    </span>
+                    <div className="flex items-center gap-3">
+                      <Link href={`/dashboard/api-keys/${apiKey.id}`} className="text-sm font-medium text-emerald-400 hover:text-emerald-300">
+                        View
+                      </Link>
+                      <form action={revokeKeyAction}>
+                        <input type="hidden" name="key_id" value={apiKey.id} />
+                        <button type="submit" className="text-sm font-medium text-red-400 hover:text-red-300">
+                          Revoke
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table layout */}
+            <table className="hidden sm:table min-w-full divide-y divide-zinc-800">
               <thead className="bg-zinc-950">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
@@ -320,6 +361,7 @@ export default async function ApiKeysPage() {
                 ))}
               </tbody>
             </table>
+            </>
           )}
         </div>
 

@@ -255,7 +255,57 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
             <EmptyState />
           ) : (
             <>
-              <table className="min-w-full divide-y divide-zinc-800">
+              {/* Mobile card layout */}
+              <div className="sm:hidden divide-y divide-zinc-800">
+                {filteredWebhooks.map((webhook) => (
+                  <div key={webhook.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <Link
+                          href={`/dashboard/webhooks/${webhook.id}`}
+                          className="text-sm font-medium text-white hover:text-emerald-400 break-all"
+                        >
+                          {truncateUrl(webhook.url, 35)}
+                        </Link>
+                        {webhook.description && (
+                          <p className="text-xs text-zinc-500 truncate mt-0.5">{webhook.description}</p>
+                        )}
+                      </div>
+                      <StatusBadge isActive={webhook.is_active} failures={webhook.consecutive_failures ?? 0} />
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {webhook.event_types.length === 0 ? (
+                        <span className="text-xs text-zinc-500">All events</span>
+                      ) : (
+                        <>
+                          {webhook.event_types.slice(0, 2).map((type) => (
+                            <EventTypeBadge key={type} type={type} />
+                          ))}
+                          {webhook.event_types.length > 2 && (
+                            <span className="text-xs text-zinc-500">+{webhook.event_types.length - 2}</span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-zinc-500">
+                        {formatDate(webhook.last_success_at ? new Date(webhook.last_success_at) : null)}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <Link href={`/dashboard/webhooks/${webhook.id}`} className="text-sm font-medium text-emerald-400 hover:text-emerald-300">
+                          View
+                        </Link>
+                        <Link href={`/dashboard/webhooks/${webhook.id}/edit`} className="text-sm font-medium text-zinc-400 hover:text-zinc-300">
+                          Edit
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop table layout */}
+              <table className="hidden sm:table min-w-full divide-y divide-zinc-800">
                 <thead className="bg-zinc-950">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
