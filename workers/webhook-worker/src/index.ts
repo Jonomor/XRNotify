@@ -193,7 +193,7 @@ async function getMatchingWebhooks(
      FROM webhooks
      WHERE is_active = true
        AND (cardinality(event_types) = 0 OR $1::event_type = ANY(event_types))
-       AND (cardinality(account_filters) = 0 OR account_filters && $2::text[])`,
+       AND (cardinality(account_filters) = 0 OR account_filters && $2::varchar[])`,
     [eventType, accounts]
   );
   
