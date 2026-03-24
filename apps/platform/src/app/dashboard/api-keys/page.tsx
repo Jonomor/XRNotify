@@ -377,7 +377,7 @@ export default async function ApiKeysPage() {
           <h3 className="text-lg font-medium text-white mb-4">
             Using API Keys
           </h3>
-          <div className="prose prose-sm max-w-none">
+          <div className="prose prose-sm prose-invert max-w-none">
             <p className="text-zinc-400">
               Include your API key in requests using the <code>X-XRNotify-Key</code> header:
             </p>

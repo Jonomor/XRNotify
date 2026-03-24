@@ -10,7 +10,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Brand colors
+        // --- Semantic Variables for Theme Support ---
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+
+        // --- Original Brand colors ---
         brand: {
           50: '#eef7ff',
           100: '#d9edff',
@@ -24,7 +59,6 @@ const config: Config = {
           900: '#193f8f',
           950: '#142857',
         },
-        // XRP Ledger inspired accent
         xrpl: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -38,7 +72,6 @@ const config: Config = {
           900: '#14532d',
           950: '#052e16',
         },
-        // Status colors
         success: {
           light: '#dcfce7',
           DEFAULT: '#22c55e',
@@ -74,6 +107,9 @@ const config: Config = {
       },
       borderRadius: {
         '4xl': '2rem',
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
         'inner-sm': 'inset 0 1px 2px 0 rgb(0 0 0 / 0.05)',
@@ -130,7 +166,7 @@ const config: Config = {
         DEFAULT: {
           css: {
             maxWidth: '72ch',
-            color: 'inherit',
+            color: 'hsl(var(--foreground))',
             a: {
               color: '#338dff',
               textDecoration: 'none',
@@ -138,9 +174,14 @@ const config: Config = {
                 textDecoration: 'underline',
               },
             },
+            strong: { color: 'hsl(var(--foreground))' },
+            h1: { color: 'hsl(var(--foreground))' },
+            h2: { color: 'hsl(var(--foreground))' },
+            h3: { color: 'hsl(var(--foreground))' },
+            h4: { color: 'hsl(var(--foreground))' },
             code: {
               color: '#e879f9',
-              backgroundColor: '#1e1e2e',
+              backgroundColor: 'hsl(var(--muted))',
               padding: '0.2em 0.4em',
               borderRadius: '0.25rem',
               fontWeight: '400',
@@ -151,12 +192,19 @@ const config: Config = {
             'code::after': {
               content: '""',
             },
+            pre: {
+              backgroundColor: 'hsl(var(--card))',
+              color: 'hsl(var(--card-foreground))',
+              border: '1px solid hsl(var(--border))',
+            },
           },
         },
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
 
 export default config;

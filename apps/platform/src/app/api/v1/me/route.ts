@@ -69,7 +69,7 @@ const optionalUrl = z.union([z.string().url().max(500), z.literal('')]).optional
 
 const updateProfileSchema = z.object({
   name: z.string().max(100).optional(),
-  avatar_url: z.string().max(500000).optional().nullable(),
+  avatar_url: z.string().max(2000000).optional().nullable(),
   twitter_url: optionalUrl,
   github_url: optionalUrl,
   linkedin_url: optionalUrl,
