@@ -311,16 +311,13 @@ async function recordDeliveryAttempt(
   result: DeliveryResult,
   attemptNumber: number
 ): Promise<void> {
-  const attemptId = `att_${randomUUID().replace(/-/g, '')}`;
-  
-  // Record the attempt
+  // Record the attempt (id is bigserial, auto-generated)
   await pool.query(
     `INSERT INTO delivery_attempts (
-      id, delivery_id, attempt_number, status_code, response_body,
+      delivery_id, attempt_number, status_code, response_body,
       response_time_ms, error_message, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+    ) VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
     [
-      attemptId,
       deliveryId,
       attemptNumber,
       result.statusCode ?? null,
