@@ -115,24 +115,21 @@ export default async function WebhookDetailPage({ params }: PageProps) {
             <span>/</span>
             <span className="text-white truncate max-w-xs">{new URL(webhook.url).hostname}</span>
           </nav>
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-white break-all">{webhook.url}</h1>
+          <div className="space-y-4">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-white break-all">{webhook.url}</h1>
               {webhook.description && (
                 <p className="mt-1 text-sm text-zinc-400">{webhook.description}</p>
               )}
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {/* Test */}
+            <div className="flex flex-wrap items-center gap-2">
               <TestWebhookButton webhookId={webhook.id} />
-              {/* Edit */}
               <Link
                 href={`/dashboard/webhooks/${webhook.id}/edit`}
                 className="px-4 py-2 text-sm font-medium rounded-lg border border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 no-underline transition-colors"
               >
                 Edit
               </Link>
-              {/* Toggle active */}
               <form action={toggleWebhookAction}>
                 <input type="hidden" name="webhook_id" value={webhook.id} />
                 <input type="hidden" name="is_active" value={String(webhook.is_active)} />
@@ -147,7 +144,6 @@ export default async function WebhookDetailPage({ params }: PageProps) {
                   {webhook.is_active ? 'Disable' : 'Enable'}
                 </button>
               </form>
-              {/* Delete */}
               <form action={deleteWebhookAction}>
                 <input type="hidden" name="webhook_id" value={webhook.id} />
                 <button
