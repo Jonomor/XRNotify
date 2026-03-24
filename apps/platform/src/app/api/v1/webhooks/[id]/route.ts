@@ -9,13 +9,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { updateWebhookSchema } from '@xrnotify/shared';
-import { 
-  extractApiKey, 
-  validateApiKey, 
+import {
+  extractApiKey,
+  validateApiKey,
   hasScope,
   type AuthenticatedContext,
 } from '@/lib/auth/apiKey';
-import { 
+import { getCurrentSession } from '@/lib/auth/session';
+import {
   getWebhook,
   updateWebhook, 
   deleteWebhook,
@@ -59,20 +60,38 @@ const logger = createModuleLogger('webhook-api');
 // Authentication Helper
 // -----------------------------------------------------------------------------
 
-async function authenticate(
-  request: NextRequest
-): Promise<{ context: AuthenticatedContext } | { error: NextResponse<ApiErrorResponse> }> {
+// tenantId resolved from either session cookie or API key
+type AuthResult =
+  | { tenantId: string; apiContext?: AuthenticatedContext }
+  | { error: NextResponse<ApiErrorResponse> };
+
+async function authenticate(request: NextRequest): Promise<AuthResult> {
+  // Try session first (dashboard users)
+  const session = await getCurrentSession();
+  if (session) {
+    if (!session.tenant.is_active) {
+      return {
+        error: NextResponse.json(
+          { error: { code: 'ACCOUNT_INACTIVE', message: 'Your account is inactive.' } },
+          { status: 403 }
+        ),
+      };
+    }
+    return { tenantId: session.tenantId };
+  }
+
+  // Fall back to API key
   const headers = Object.fromEntries(request.headers.entries());
   const apiKey = extractApiKey(headers);
 
   if (!apiKey) {
-    logSecurityEvent(logger, 'auth_failed', { reason: 'Missing API key' });
+    logSecurityEvent(logger, 'auth_failed', { reason: 'No session or API key' });
     return {
       error: NextResponse.json(
         {
           error: {
             code: 'UNAUTHORIZED',
-            message: 'Missing API key. Provide X-XRNotify-Key header.',
+            message: 'Authentication required. Log in or provide X-XRNotify-Key header.',
           },
         },
         { status: 401 }
@@ -85,18 +104,13 @@ async function authenticate(
   if (!result.valid || !result.context) {
     return {
       error: NextResponse.json(
-        {
-          error: {
-            code: 'UNAUTHORIZED',
-            message: result.error ?? 'Invalid API key',
-          },
-        },
+        { error: { code: 'UNAUTHORIZED', message: result.error ?? 'Invalid API key' } },
         { status: 401 }
       ),
     };
   }
 
-  return { context: result.context };
+  return { tenantId: result.context.tenantId, apiContext: result.context };
 }
 
 // -----------------------------------------------------------------------------
@@ -104,12 +118,12 @@ async function authenticate(
 // -----------------------------------------------------------------------------
 
 async function checkApiRateLimit(
-  context: AuthenticatedContext
+  tenantId: string
 ): Promise<{ allowed: true; headers: Record<string, string> } | { error: NextResponse<ApiErrorResponse> }> {
-  const { allowed, headers, retryAfter } = await checkRateLimit(context.tenantId);
+  const { allowed, headers, retryAfter } = await checkRateLimit(tenantId);
 
   if (!allowed) {
-    logSecurityEvent(logger, 'rate_limited', { tenantId: context.tenantId });
+    logSecurityEvent(logger, 'rate_limited', { tenantId: tenantId });
     return {
       error: NextResponse.json(
         {
@@ -151,10 +165,10 @@ export async function GET(
     if ('error' in authResult) {
       return authResult.error;
     }
-    const { context } = authResult;
+    const { tenantId, apiContext } = authResult;
 
     // Check scope
-    if (!hasScope(context, 'webhooks:read')) {
+    if (apiContext && !hasScope(apiContext, 'webhooks:read')) {
       return NextResponse.json(
         {
           error: {
@@ -167,13 +181,13 @@ export async function GET(
     }
 
     // Rate limit
-    const rateLimitResult = await checkApiRateLimit(context);
+    const rateLimitResult = await checkApiRateLimit(tenantId);
     if ('error' in rateLimitResult) {
       return rateLimitResult.error;
     }
 
     // Get webhook
-    const webhook = await getWebhook(webhookId, context.tenantId);
+    const webhook = await getWebhook(webhookId, tenantId);
 
     if (!webhook) {
       return NextResponse.json(
@@ -253,10 +267,10 @@ export async function PATCH(
     if ('error' in authResult) {
       return authResult.error;
     }
-    const { context } = authResult;
+    const { tenantId, apiContext } = authResult;
 
     // Check scope
-    if (!hasScope(context, 'webhooks:write')) {
+    if (apiContext && !hasScope(apiContext, 'webhooks:write')) {
       return NextResponse.json(
         {
           error: {
@@ -269,7 +283,7 @@ export async function PATCH(
     }
 
     // Rate limit
-    const rateLimitResult = await checkApiRateLimit(context);
+    const rateLimitResult = await checkApiRateLimit(tenantId);
     if ('error' in rateLimitResult) {
       return rateLimitResult.error;
     }
@@ -322,7 +336,7 @@ export async function PATCH(
     }
 
     // Update webhook
-    const webhook = await updateWebhook(webhookId, context.tenantId, input);
+    const webhook = await updateWebhook(webhookId, tenantId, input);
 
     if (!webhook) {
       return NextResponse.json(
@@ -430,10 +444,10 @@ export async function DELETE(
     if ('error' in authResult) {
       return authResult.error;
     }
-    const { context } = authResult;
+    const { tenantId, apiContext } = authResult;
 
     // Check scope
-    if (!hasScope(context, 'webhooks:write')) {
+    if (apiContext && !hasScope(apiContext, 'webhooks:write')) {
       return NextResponse.json(
         {
           error: {
@@ -446,13 +460,13 @@ export async function DELETE(
     }
 
     // Rate limit
-    const rateLimitResult = await checkApiRateLimit(context);
+    const rateLimitResult = await checkApiRateLimit(tenantId);
     if ('error' in rateLimitResult) {
       return rateLimitResult.error;
     }
 
     // Delete webhook
-    const deleted = await deleteWebhook(webhookId, context.tenantId);
+    const deleted = await deleteWebhook(webhookId, tenantId);
 
     if (!deleted) {
       return NextResponse.json(
@@ -545,10 +559,10 @@ export async function POST(
     if ('error' in authResult) {
       return authResult.error;
     }
-    const { context } = authResult;
+    const { tenantId, apiContext } = authResult;
 
     // Check scope
-    if (!hasScope(context, 'webhooks:write')) {
+    if (apiContext && !hasScope(apiContext, 'webhooks:write')) {
       return NextResponse.json(
         {
           error: {
@@ -561,13 +575,13 @@ export async function POST(
     }
 
     // Rate limit
-    const rateLimitResult = await checkApiRateLimit(context);
+    const rateLimitResult = await checkApiRateLimit(tenantId);
     if ('error' in rateLimitResult) {
       return rateLimitResult.error;
     }
 
     // Rotate secret
-    const result = await rotateWebhookSecret(webhookId, context.tenantId);
+    const result = await rotateWebhookSecret(webhookId, tenantId);
 
     if (!result) {
       return NextResponse.json(
