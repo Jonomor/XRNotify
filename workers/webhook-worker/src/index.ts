@@ -407,8 +407,10 @@ async function processMessage(message: StreamMessage): Promise<void> {
   
   // Persist event to PostgreSQL (idempotent upsert)
   try {
-    const txHash = (payload['tx_hash'] ?? payload['hash'] ?? '') as string;
-    const ledgerIndex = parseInt(String(payload['ledger_index'] ?? payload['ledger'] ?? 0), 10) || 0;
+    // Parse tx_hash and ledger_index from event_id format: xrpl:<ledger>:<hash>:<type>[:<sub>]
+    const eventIdParts = event_id.split(':');
+    const ledgerIndex = parseInt(eventIdParts[1] ?? '0', 10) || 0;
+    const txHash = eventIdParts[2] ?? '';
     await pool.query(`
       INSERT INTO events (id, event_type, ledger_index, tx_hash, timestamp, accounts, payload)
       VALUES ($1, $2::event_type, $3, $4, $5, $6::varchar[], $7)
@@ -466,7 +468,12 @@ async function processMessage(message: StreamMessage): Promise<void> {
         
         await updateDeliveryStatus(deliveryId, 'delivered', result);
         await updateWebhookHealth(webhook.id, true);
-        
+
+        // Increment usage counters (event processed, delivery succeeded)
+        try {
+          await pool.query(`SELECT increment_usage($1, 0, 1, 1, 0, 0)`, [webhook.tenant_id]);
+        } catch { /* non-fatal */ }
+
         deliveriesTotal.inc({ status: 'success', event_type });
         endTimer({ status: 'success' });
       } else {
@@ -496,8 +503,13 @@ async function processMessage(message: StreamMessage): Promise<void> {
           deliveriesTotal.inc({ status: 'retry', event_type });
         } else {
           webhookLog.error('Max retries exceeded, moving to DLQ');
-          
+
           await updateDeliveryStatus(deliveryId, 'dead_letter', result);
+
+          // Increment usage counters (delivery failed)
+          try {
+            await pool.query(`SELECT increment_usage($1, 0, 1, 0, 1, 0)`, [webhook.tenant_id]);
+          } catch { /* non-fatal */ }
           
           // Add to dead letter queue
           await redis.xadd(
