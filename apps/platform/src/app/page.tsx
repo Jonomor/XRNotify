@@ -131,7 +131,7 @@ export default function LandingPage() {
 
             {/* Trust Indicators */}
             <div className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-zinc-500">
-              {['1,000 free events/month', 'No credit card required', 'Setup in 30 seconds'].map((text) => (
+              {['500 free events/month', 'No credit card required', 'Setup in 30 seconds'].map((text) => (
                 <div key={text} className="flex items-center gap-2">
                   <svg className="h-4 w-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
