@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 
 const sections = [
   {
+    id: 'getting-started',
     title: 'Getting Started',
     description: 'Set up XRNotify in under 5 minutes',
     icon: (
@@ -33,6 +34,7 @@ const sections = [
     ],
   },
   {
+    id: 'api',
     title: 'API Reference',
     description: 'Complete REST API documentation',
     icon: (
@@ -49,6 +51,7 @@ const sections = [
     ],
   },
   {
+    id: 'events',
     title: 'Event Types',
     description: 'All supported XRPL event types',
     icon: (
@@ -66,6 +69,7 @@ const sections = [
     ],
   },
   {
+    id: 'sdks',
     title: 'SDKs & Libraries',
     description: 'Official client libraries',
     icon: (
@@ -81,6 +85,7 @@ const sections = [
     ],
   },
   {
+    id: 'guides',
     title: 'Guides',
     description: 'Step-by-step tutorials',
     icon: (
@@ -96,6 +101,7 @@ const sections = [
     ],
   },
   {
+    id: 'reference',
     title: 'Reference',
     description: 'Technical specifications',
     icon: (
@@ -211,6 +217,7 @@ export default function DocsPage() {
             {sections.map((section) => (
               <div
                 key={section.title}
+                id={section.id}
                 className="rounded-xl bg-zinc-900 p-6 ring-1 ring-white/5"
               >
                 <div className="mb-4 inline-flex rounded-lg bg-emerald-600/10 p-2 text-emerald-500">

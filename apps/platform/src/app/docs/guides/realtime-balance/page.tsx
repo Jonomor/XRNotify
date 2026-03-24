@@ -17,7 +17,7 @@ export default function RealtimeBalancePage() {
               Docs
             </Link>
             <span className="text-zinc-600">/</span>
-            <span className="text-zinc-500 hover:text-zinc-300">Guides</span>
+            <Link href="/docs#guides" className="text-zinc-500 hover:text-zinc-300 no-underline">Guides</Link>
             <span className="text-zinc-600">/</span>
             <span className="text-zinc-300">Real-time Balance Updates</span>
           </div>

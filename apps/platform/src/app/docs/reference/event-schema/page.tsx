@@ -17,7 +17,7 @@ export default function EventSchemaPage() {
               Docs
             </Link>
             <span className="text-zinc-600">/</span>
-            <span className="text-zinc-500 hover:text-zinc-300">Reference</span>
+            <Link href="/docs#reference" className="text-zinc-500 hover:text-zinc-300 no-underline">Reference</Link>
             <span className="text-zinc-600">/</span>
             <span className="text-zinc-300">Event Schema</span>
           </div>
