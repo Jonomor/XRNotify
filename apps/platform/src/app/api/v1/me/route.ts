@@ -405,7 +405,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 
     params.push(session.id);
 
-    // Update user (profile columns may not exist if migration 009 hasn't run)
+    // Update user — upsert if row is missing
     let user: UserRecord | null = null;
     try {
       user = await queryOne<UserRecord>(`
@@ -414,8 +414,28 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         WHERE id = $${paramIdx}
         RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
       `, params);
-    } catch {
-      // Fallback: only update name (profile columns may not exist)
+
+      // If UPDATE matched no rows, insert the user
+      if (!user) {
+        user = await queryOne<UserRecord>(`
+          INSERT INTO users (id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
+          RETURNING id, tenant_id, email, name, avatar_url, twitter_url, github_url, linkedin_url, website_url, created_at, updated_at
+        `, [
+          session.id,
+          session.tenantId,
+          session.email,
+          input.name || null,
+          input.avatar_url || null,
+          input.twitter_url || null,
+          input.github_url || null,
+          input.linkedin_url || null,
+          input.website_url || null,
+        ]);
+      }
+    } catch (dbError) {
+      // If columns don't exist (migration 009 not run), fall back to name-only update
+      logger.warn({ error: dbError }, 'Profile update failed, trying name-only fallback');
       const fallbackParams: unknown[] = [];
       const fallbackClauses = ['updated_at = NOW()'];
       let fi = 1;
