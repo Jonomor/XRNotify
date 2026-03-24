@@ -192,7 +192,7 @@ async function getMatchingWebhooks(
     `SELECT id, tenant_id, url, secret_encrypted as secret, event_types, account_filters, is_active
      FROM webhooks
      WHERE is_active = true
-       AND (event_types = '{}' OR $1 = ANY(event_types))
+       AND (event_types = '{}' OR $1::event_type = ANY(event_types))
        AND (account_filters = '{}' OR account_filters && $2::text[])`,
     [eventType, accounts]
   );
