@@ -68,7 +68,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/signup"
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all hover:shadow-lg hover:shadow-emerald-500/25"
+              className="group relative overflow-hidden rounded-full bg-blue-600 border border-blue-500 px-5 py-2.5 text-sm font-bold text-white no-underline shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
             >
               <span className="relative z-10">Get Started</span>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -108,7 +108,7 @@ export default function LandingPage() {
             <div className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row">
               <Link
                 href="/signup"
-                className="group relative w-full overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-4 text-base font-semibold text-white no-underline shadow-xl shadow-emerald-500/20 transition-all hover:shadow-2xl hover:shadow-emerald-500/30 sm:w-auto"
+                className="group relative w-full overflow-hidden rounded-full bg-blue-600 border border-blue-500 px-8 py-4 text-base font-bold text-white no-underline shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-500/30 sm:w-auto"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   Start Free
@@ -391,7 +391,7 @@ export default function LandingPage() {
                   href="/signup"
                   className={`mt-8 block w-full rounded-full py-3 text-center text-sm font-semibold no-underline transition-all ${
                     plan.featured
-                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:shadow-lg hover:shadow-emerald-500/25'
+                      ? 'bg-blue-600 border border-blue-500 text-white font-bold shadow-md hover:bg-blue-700 hover:shadow-lg'
                       : 'border border-zinc-700 bg-zinc-800/50 text-white hover:bg-zinc-800'
                   }`}
                 >
@@ -423,10 +423,9 @@ export default function LandingPage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="group relative w-full overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-4 text-base font-semibold text-white no-underline shadow-xl shadow-emerald-500/20 transition-all hover:shadow-2xl hover:shadow-emerald-500/30 sm:w-auto"
+              className="group relative w-full overflow-hidden rounded-full bg-blue-600 border border-blue-500 px-8 py-4 text-base font-bold text-white no-underline shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-500/30 sm:w-auto"
             >
               <span className="relative z-10">Create Free Account</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 transition-opacity group-hover:opacity-100" />
             </Link>
             <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">
               Read the docs →
