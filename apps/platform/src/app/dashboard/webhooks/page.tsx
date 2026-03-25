@@ -274,15 +274,15 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                       <StatusBadge isActive={webhook.is_active} failures={webhook.consecutive_failures ?? 0} />
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {webhook.event_types.length === 0 ? (
+                      {(Array.isArray(webhook.event_types) ? webhook.event_types : []).length === 0 ? (
                         <span className="text-xs text-zinc-500">All events</span>
                       ) : (
                         <>
-                          {webhook.event_types.slice(0, 2).map((type) => (
+                          {(Array.isArray(webhook.event_types) ? webhook.event_types : []).slice(0, 2).map((type) => (
                             <EventTypeBadge key={type} type={type} />
                           ))}
-                          {webhook.event_types.length > 2 && (
-                            <span className="text-xs text-zinc-500">+{webhook.event_types.length - 2}</span>
+                          {(Array.isArray(webhook.event_types) ? webhook.event_types : []).length > 2 && (
+                            <span className="text-xs text-zinc-500">+{(Array.isArray(webhook.event_types) ? webhook.event_types : []).length - 2}</span>
                           )}
                         </>
                       )}
@@ -345,19 +345,19 @@ export default async function WebhooksPage({ searchParams }: PageProps) {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1 max-w-xs">
-                          {webhook.event_types.length === 0 ? (
+                          {(Array.isArray(webhook.event_types) ? webhook.event_types : []).length === 0 ? (
                             <span className="text-sm text-zinc-500">All events</span>
-                          ) : webhook.event_types.length > 3 ? (
+                          ) : (Array.isArray(webhook.event_types) ? webhook.event_types : []).length > 3 ? (
                             <>
-                              {webhook.event_types.slice(0, 2).map((type) => (
+                              {(Array.isArray(webhook.event_types) ? webhook.event_types : []).slice(0, 2).map((type) => (
                                 <EventTypeBadge key={type} type={type} />
                               ))}
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-zinc-800 text-zinc-400">
-                                +{webhook.event_types.length - 2} more
+                                +{(Array.isArray(webhook.event_types) ? webhook.event_types : []).length - 2} more
                               </span>
                             </>
                           ) : (
-                            webhook.event_types.map((type) => (
+                            (Array.isArray(webhook.event_types) ? webhook.event_types : []).map((type) => (
                               <EventTypeBadge key={type} type={type} />
                             ))
                           )}

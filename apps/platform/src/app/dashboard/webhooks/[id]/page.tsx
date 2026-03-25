@@ -207,11 +207,11 @@ export default async function WebhookDetailPage({ params }: PageProps) {
           {/* Event types */}
           <div>
             <p className="text-xs text-zinc-500 mb-2">Event types</p>
-            {webhook.event_types.length === 0 ? (
+            {(Array.isArray(webhook.event_types) ? webhook.event_types : []).length === 0 ? (
               <span className="text-sm text-zinc-400">All events</span>
             ) : (
               <div className="flex flex-wrap gap-1.5">
-                {webhook.event_types.map((type) => {
+                {(Array.isArray(webhook.event_types) ? webhook.event_types : []).map((type) => {
                   const category = type.split('.')[0] ?? '';
                   const color = EVENT_CATEGORY_COLORS[category] ?? 'bg-zinc-800 text-zinc-300';
                   return (
@@ -227,11 +227,11 @@ export default async function WebhookDetailPage({ params }: PageProps) {
           {/* Account filters */}
           <div>
             <p className="text-xs text-zinc-500 mb-2">Account filters</p>
-            {webhook.account_filters.length === 0 ? (
+            {(Array.isArray(webhook.account_filters) ? webhook.account_filters : []).length === 0 ? (
               <span className="text-sm text-zinc-400">All accounts</span>
             ) : (
               <div className="flex flex-wrap gap-1.5">
-                {webhook.account_filters.map((addr) => (
+                {(Array.isArray(webhook.account_filters) ? webhook.account_filters : []).map((addr) => (
                   <code key={addr} className="text-xs font-mono text-zinc-300 bg-zinc-800 px-2 py-0.5 rounded">
                     {addr}
                   </code>
