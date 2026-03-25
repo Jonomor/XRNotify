@@ -108,7 +108,7 @@ export type CreateWebhookInput = z.infer<typeof createWebhookSchema>;
  */
 export const updateWebhookSchema = z.object({
   url: webhookUrlSchema.optional(),
-  event_types: eventTypesArraySchema.optional(),
+  event_types: z.array(eventTypeSchema).max(50, 'Maximum 50 event types allowed').optional(),
   account_filters: z
     .array(xrplAddressSchema)
     .max(100, 'Maximum 100 account filters allowed')

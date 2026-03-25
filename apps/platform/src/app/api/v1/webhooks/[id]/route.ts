@@ -312,7 +312,7 @@ export async function PATCH(
         {
           error: {
             code: 'VALIDATION_ERROR',
-            message: 'Invalid request body',
+            message: 'Invalid request body: ' + parseResult.error.issues.map(i => i.message).join(', '),
             details: parseResult.error.flatten(),
           },
         },
