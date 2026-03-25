@@ -136,6 +136,53 @@ interface StreamMessage {
   timestamp: string;
 }
 
+// -----------------------------------------------------------------------------
+// Plan Limits
+// -----------------------------------------------------------------------------
+
+const PLAN_LIMITS: Record<string, number> = {
+  free: 500,
+  starter: 50000,
+  pro: 500000,
+  enterprise: Infinity,
+};
+
+// Cache tenant plans for 5 minutes to avoid querying DB on every delivery
+const tenantPlanCache = new Map<string, { plan: string; expiresAt: number }>();
+
+async function getTenantPlan(tenantId: string): Promise<string> {
+  const cached = tenantPlanCache.get(tenantId);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.plan;
+  }
+
+  const result = await pool.query<{ plan: string }>(
+    'SELECT plan FROM tenants WHERE id = $1',
+    [tenantId]
+  );
+  const plan = result.rows[0]?.plan ?? 'free';
+
+  tenantPlanCache.set(tenantId, { plan, expiresAt: Date.now() + 5 * 60 * 1000 });
+  return plan;
+}
+
+async function isOverLimit(tenantId: string): Promise<boolean> {
+  const plan = await getTenantPlan(tenantId);
+  const limit = PLAN_LIMITS[plan] ?? PLAN_LIMITS['free']!;
+  if (limit === Infinity) return false;
+
+  const month = new Date().toISOString().slice(0, 7);
+  const keyPrefix = process.env['REDIS_KEY_PREFIX'] ?? 'xrnotify:';
+  const usageKey = `${keyPrefix}usage:events:${tenantId}:events:${month}`;
+  const current = parseInt(await redis.get(usageKey) ?? '0', 10);
+
+  return current >= limit;
+}
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
 interface Webhook {
   id: string;
   tenant_id: string;
@@ -433,10 +480,26 @@ async function processMessage(message: StreamMessage): Promise<void> {
   // Deliver to each webhook
   for (const webhook of webhooks) {
     const webhookLog = log.child({ webhookId: webhook.id });
-    
+
+    // Check plan limits before delivering
+    try {
+      if (await isOverLimit(webhook.tenant_id)) {
+        webhookLog.info({ tenantId: webhook.tenant_id }, 'Skipping delivery: plan limit exceeded');
+        // Create delivery record marked as cancelled so the event is logged
+        const skippedId = await createDelivery(webhook.tenant_id, webhook.id, webhook.url, event_id, event_type, payload);
+        await pool.query(
+          `UPDATE deliveries SET status = 'cancelled'::delivery_status, error_message = $2, updated_at = NOW() WHERE id = $1`,
+          [skippedId, 'Monthly event limit exceeded. Upgrade your plan to continue receiving deliveries.']
+        );
+        continue;
+      }
+    } catch (err) {
+      webhookLog.warn({ error: err }, 'Failed to check plan limits, delivering anyway');
+    }
+
     activeDeliveries.inc();
     const endTimer = deliveryDuration.startTimer();
-    
+
     try {
       // Create delivery record
       const deliveryId = await createDelivery(webhook.tenant_id, webhook.id, webhook.url, event_id, event_type, payload);
@@ -472,7 +535,8 @@ async function processMessage(message: StreamMessage): Promise<void> {
         // Increment Redis usage counter for dashboard
         try {
           const month = new Date().toISOString().slice(0, 7);
-          const usageKey = `xrnotify:usage:events:${webhook.tenant_id}:events:${month}`;
+          const keyPrefix = process.env['REDIS_KEY_PREFIX'] ?? 'xrnotify:';
+          const usageKey = `${keyPrefix}usage:events:${webhook.tenant_id}:events:${month}`;
           await redis.incrby(usageKey, 1);
           await redis.expire(usageKey, 45 * 24 * 60 * 60);
         } catch { /* non-fatal */ }
@@ -610,7 +674,8 @@ async function processRetryQueue(): Promise<void> {
         // Increment Redis usage counter for dashboard
         try {
           const month = new Date().toISOString().slice(0, 7);
-          const usageKey = `xrnotify:usage:events:${webhook.tenant_id}:events:${month}`;
+          const keyPrefix = process.env['REDIS_KEY_PREFIX'] ?? 'xrnotify:';
+          const usageKey = `${keyPrefix}usage:events:${webhook.tenant_id}:events:${month}`;
           await redis.incrby(usageKey, 1);
           await redis.expire(usageKey, 45 * 24 * 60 * 60);
         } catch { /* non-fatal */ }
