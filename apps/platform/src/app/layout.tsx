@@ -34,11 +34,11 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://www.xrnotify.io/#app',
+      '@id': 'https://xrnotify.io/#app',
       name: 'XRNotify',
       description:
         'Real-time webhook notification platform for the XRP Ledger — instant event delivery for developers building on XRPL.',
-      url: 'https://www.xrnotify.io',
+      url: 'https://xrnotify.io',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'Web',
       creator: { '@id': 'https://jonomor.com/ali-morgan#person' },
@@ -47,9 +47,9 @@ const jsonLd = {
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://www.xrnotify.io/#website',
+      '@id': 'https://xrnotify.io/#website',
       name: 'XRNotify',
-      url: 'https://www.xrnotify.io',
+      url: 'https://xrnotify.io',
       publisher: { '@id': 'https://jonomor.com/#organization' },
     },
   ],

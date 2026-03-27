@@ -5,7 +5,7 @@ export function EcosystemFooter() {
         <p className="text-xs text-zinc-500">
           Built by{" "}
           <a
-            href="https://www.jonomor.com/ali-morgan"
+            href="https://jonomor.com/ali-morgan"
             className="text-zinc-400 hover:text-white transition-colors no-underline"
             target="_blank"
             rel="noopener noreferrer"
@@ -15,7 +15,7 @@ export function EcosystemFooter() {
           {" · "}
           Part of the{" "}
           <a
-            href="https://www.jonomor.com"
+            href="https://jonomor.com/ecosystem"
             className="text-zinc-400 hover:text-white transition-colors no-underline"
             target="_blank"
             rel="noopener noreferrer"
