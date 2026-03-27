@@ -34,9 +34,54 @@ export const metadata: Metadata = {
 // Page Component
 // -----------------------------------------------------------------------------
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is XRNotify?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'XRNotify is enterprise-grade webhook infrastructure for the XRP Ledger. It provides real-time event detection for wallet activity, transaction events, token movements, and ledger signals.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Who built XRNotify?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How does XRNotify deliver events?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'XRNotify delivers events via webhooks and streaming. When an XRPL event matches your configured filters, XRNotify sends a structured payload to your endpoint in real time.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is XRNotify part of a larger ecosystem?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. XRNotify is the instrumentation layer of the Jonomor ecosystem — the Observe stage that detects events at the point of origin before they flow through interpretation and operational layers.',
+      },
+    },
+  ],
+};
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white antialiased">
+      {/* FAQPage JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       {/* Animated Background Grid */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px]" />
@@ -59,6 +104,7 @@ export default function LandingPage() {
             <Link href="#features" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Features</Link>
             <Link href="#events" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Events</Link>
             <Link href="#pricing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Pricing</Link>
+            <Link href="/about" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">About</Link>
             <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Docs</Link>
           </div>
 
@@ -409,6 +455,41 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Quick Answers (FAQ) */}
+      <section id="faq" className="relative px-6 py-24 lg:px-8 lg:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Quick Answers
+            </h2>
+            <p className="mt-6 text-lg text-zinc-400">
+              Common questions about XRNotify and how it works.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-16 max-w-3xl divide-y divide-white/5">
+            {faqItems.map((item) => (
+              <div key={item.question} className="py-8">
+                <h3 className="text-lg font-semibold text-white">{item.question}</h3>
+                <p className="mt-3 text-zinc-400 leading-relaxed">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Learn More Links */}
+      <section className="border-y border-white/5 bg-zinc-900/30 px-6 py-16 lg:px-8">
+        <div className="mx-auto flex max-w-3xl flex-col items-center justify-center gap-6 text-center sm:flex-row sm:gap-10">
+          <a href="/about" className="text-base font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
+            Learn more about XRNotify
+          </a>
+          <a href="#faq" className="text-base font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
+            View frequently asked questions
+          </a>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="relative overflow-hidden px-6 py-24 lg:px-8 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent" />
@@ -447,6 +528,7 @@ export default function LandingPage() {
               {[
                 { href: '/docs', label: 'Docs' },
                 { href: '/pricing', label: 'Pricing' },
+                { href: '/about', label: 'About' },
                 { href: '/privacy', label: 'Privacy' },
                 { href: '/terms', label: 'Terms' },
               ].map((link) => (
@@ -542,6 +624,29 @@ const eventTypes = [
   { name: 'Checks', emoji: '📋', count: 3 },
   { name: 'Accounts', emoji: '👤', count: 2 },
   { name: 'AMM', emoji: '🌊', count: 4 },
+];
+
+const faqItems = [
+  {
+    question: 'What is XRNotify?',
+    answer:
+      'XRNotify is enterprise-grade webhook infrastructure for the XRP Ledger. It provides real-time event detection for wallet activity, transaction events, token movements, and ledger signals.',
+  },
+  {
+    question: 'Who built XRNotify?',
+    answer:
+      'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence.',
+  },
+  {
+    question: 'How does XRNotify deliver events?',
+    answer:
+      'XRNotify delivers events via webhooks and streaming. When an XRPL event matches your configured filters, XRNotify sends a structured payload to your endpoint in real time.',
+  },
+  {
+    question: 'Is XRNotify part of a larger ecosystem?',
+    answer:
+      'Yes. XRNotify is the instrumentation layer of the Jonomor ecosystem — the Observe stage that detects events at the point of origin before they flow through interpretation and operational layers.',
+  },
 ];
 
 const pricingPlans = [

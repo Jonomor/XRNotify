@@ -33,6 +33,21 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
+      '@type': 'Organization',
+      '@id': 'https://www.jonomor.com/#organization',
+      name: 'Jonomor',
+      url: 'https://www.jonomor.com',
+      description:
+        'Systems architecture studio focused on AI Visibility and real-time infrastructure intelligence.',
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://www.jonomor.com/ali-morgan#person',
+      name: 'Ali Morgan',
+      url: 'https://www.jonomor.com/ali-morgan',
+      worksFor: { '@id': 'https://www.jonomor.com/#organization' },
+    },
+    {
       '@type': 'SoftwareApplication',
       '@id': 'https://www.xrnotify.io/#app',
       name: 'XRNotify',
