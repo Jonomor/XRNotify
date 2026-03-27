@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
     description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
     type: 'website',
-    url: 'https://xrnotify.io',
+    url: 'https://www.xrnotify.io',
   },
   twitter: {
     card: 'summary_large_image',

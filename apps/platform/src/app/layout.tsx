@@ -34,23 +34,23 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://xrnotify.io/#app',
+      '@id': 'https://www.xrnotify.io/#app',
       name: 'XRNotify',
       description:
         'Real-time webhook notification platform for the XRP Ledger — instant event delivery for developers building on XRPL.',
-      url: 'https://xrnotify.io',
+      url: 'https://www.xrnotify.io',
       applicationCategory: 'DeveloperApplication',
       operatingSystem: 'Web',
-      creator: { '@id': 'https://jonomor.com/ali-morgan#person' },
-      publisher: { '@id': 'https://jonomor.com/#organization' },
-      isPartOf: { '@id': 'https://jonomor.com/#organization' },
+      creator: { '@id': 'https://www.jonomor.com/ali-morgan#person' },
+      publisher: { '@id': 'https://www.jonomor.com/#organization' },
+      isPartOf: { '@id': 'https://www.jonomor.com/#organization' },
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://xrnotify.io/#website',
+      '@id': 'https://www.xrnotify.io/#website',
       name: 'XRNotify',
-      url: 'https://xrnotify.io',
-      publisher: { '@id': 'https://jonomor.com/#organization' },
+      url: 'https://www.xrnotify.io',
+      publisher: { '@id': 'https://www.jonomor.com/#organization' },
     },
   ],
 };
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     'real-time events',
     'blockchain infrastructure',
   ],
-  authors: [{ name: 'Ali Morgan', url: 'https://jonomor.com/ali-morgan' }],
+  authors: [{ name: 'Ali Morgan', url: 'https://www.jonomor.com/ali-morgan' }],
   creator: 'Ali Morgan',
   publisher: 'Jonomor',
   metadataBase: new URL(

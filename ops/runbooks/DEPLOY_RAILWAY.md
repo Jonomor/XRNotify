@@ -189,7 +189,7 @@ JWT_SECRET=<generate-64-random-hex-bytes>
 ENCRYPTION_KEY=<generate-32-random-hex-bytes>
 
 # App
-NEXT_PUBLIC_APP_URL=https://xrnotify.io
+NEXT_PUBLIC_APP_URL=https://www.xrnotify.io
 NODE_ENV=production
 LOG_LEVEL=info
 
@@ -292,7 +292,7 @@ Railway automatically provisions SSL certificates via Let's Encrypt. This takes 
 ### Step 4: Verify
 
 ```bash
-curl https://xrnotify.io/api/health
+curl https://www.xrnotify.io/api/health
 # Expected: {"status":"ok","timestamp":"..."}
 ```
 
@@ -304,10 +304,10 @@ curl https://xrnotify.io/api/health
 
 ```bash
 # API health
-curl https://xrnotify.io/api/health
+curl https://www.xrnotify.io/api/health
 
 # Prometheus metrics
-curl https://xrnotify.io/api/metrics
+curl https://www.xrnotify.io/api/metrics
 ```
 
 ### Check Service Logs
@@ -325,7 +325,7 @@ Processing ledger 12345678...
 
 ### Test the Dashboard
 
-1. Go to https://xrnotify.io
+1. Go to https://www.xrnotify.io
 2. Click "Sign Up"
 3. Create an account
 4. Create a webhook
@@ -423,7 +423,7 @@ railway open
 | Railway Dashboard | https://railway.app/dashboard |
 | Railway Docs | https://docs.railway.app |
 | Project URL | https://xrnotify.up.railway.app |
-| Production URL | https://xrnotify.io |
+| Production URL | https://www.xrnotify.io |
 
 ---
 

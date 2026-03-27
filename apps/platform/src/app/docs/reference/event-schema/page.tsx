@@ -239,7 +239,7 @@ xrpl:84512710:123456789ABC...ABCD:dex.offer_partial:1`}
             <pre className="text-zinc-300 text-sm font-mono whitespace-pre">
 {`{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://xrnotify.io/schemas/event.json",
+  "$id": "https://www.xrnotify.io/schemas/event.json",
   "type": "object",
   "required": [
     "event_id",

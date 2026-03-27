@@ -10,7 +10,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Documentation',
   description: 'Learn how to integrate XRNotify into your application. API reference, event types, SDKs, and guides.',
-  alternates: { canonical: 'https://xrnotify.io/docs' },
+  alternates: { canonical: 'https://www.xrnotify.io/docs' },
 };
 
 // -----------------------------------------------------------------------------

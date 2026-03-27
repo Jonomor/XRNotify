@@ -208,7 +208,7 @@ export function middleware(request: NextRequest) {
     // Allow requests from same origin or configured domains
     const allowedOrigins = [
       process.env['NEXT_PUBLIC_APP_URL'],
-      'https://xrnotify.io',
+      'https://www.xrnotify.io',
       'https://xrnotify.dev',
     ].filter(Boolean);
 

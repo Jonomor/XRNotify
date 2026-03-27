@@ -10,7 +10,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'About',
   description: 'XRNotify is a real-time webhook notification platform for the XRP Ledger, built by Ali Morgan as part of the Jonomor ecosystem.',
-  alternates: { canonical: 'https://xrnotify.io/about' },
+  alternates: { canonical: 'https://www.xrnotify.io/about' },
 };
 
 // -----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ export default function AboutPage() {
             <p className="text-stone-400">
               XRNotify is built by{' '}
               <Link 
-                href="https://jonomor.com/ali-morgan" 
+                href="https://www.jonomor.com/ali-morgan" 
                 className="text-indigo-400 hover:text-indigo-300"
               >
                 Ali Morgan
@@ -148,7 +148,7 @@ export default function AboutPage() {
             <p className="text-stone-400">
               XRNotify is part of the{' '}
               <Link 
-                href="https://jonomor.com/ecosystem" 
+                href="https://www.jonomor.com/ecosystem" 
                 className="text-indigo-400 hover:text-indigo-300"
               >
                 Jonomor ecosystem
