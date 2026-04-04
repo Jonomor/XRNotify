@@ -20,25 +20,29 @@ interface EcosystemEntity {
 const entities: EcosystemEntity[] = [
   {
     name: 'Jonomor',
-    description: 'AI Visibility consulting and systems architecture studio.',
+    description:
+      'AI Visibility consulting and systems architecture studio.',
     url: 'https://www.jonomor.com',
     isCurrent: false,
   },
   {
     name: 'Guard-Clause',
-    description: 'AI-powered contract risk analysis with negotiation packs.',
+    description:
+      'AI-powered contract risk analysis with negotiation packs and addendum builders.',
     url: 'https://www.guard-clause.com',
     isCurrent: false,
   },
   {
     name: 'MyPropOps',
-    description: 'Compliance-centered property operations software.',
+    description:
+      'Compliance-centered property operations software for landlords and property managers.',
     url: 'https://www.mypropops.com',
     isCurrent: false,
   },
   {
     name: 'XRNotify',
-    description: 'Real-time XRPL webhook infrastructure.',
+    description:
+      'Real-time XRPL webhook infrastructure for the XRP Ledger.',
     url: 'https://www.xrnotify.io',
     isCurrent: true,
   },
@@ -56,7 +60,8 @@ const entities: EcosystemEntity[] = [
   },
   {
     name: 'H.U.N.I.E.',
-    description: 'Persistent confidence-aware memory engine for AI agents.',
+    description:
+      'Persistent confidence-aware memory engine for AI agents.',
     url: 'https://www.hunie.ai',
     isCurrent: false,
   },
@@ -74,14 +79,23 @@ export default function EcosystemPage() {
       {/* Navigation */}
       <nav className="border-b border-white/5">
         <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-6">
-          <Link href="/" className="text-lg font-semibold text-white no-underline">
+          <Link
+            href="/"
+            className="text-lg font-semibold text-white no-underline"
+          >
             XRNotify
           </Link>
           <div className="flex items-center gap-6">
-            <Link href="/articles" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+            <Link
+              href="/articles"
+              className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
+            >
               Articles
             </Link>
-            <Link href="/docs" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+            <Link
+              href="/docs"
+              className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
+            >
               Docs
             </Link>
           </div>
@@ -92,9 +106,17 @@ export default function EcosystemPage() {
         <h1 className="text-4xl font-bold tracking-tight text-white">
           Jonomor Ecosystem
         </h1>
+        <p className="mt-6 text-lg leading-relaxed text-zinc-400">
+          XRNotify is the instrumentation layer of the Jonomor ecosystem — the
+          foundational data capture layer that feeds analytics, automation,
+          compliance monitoring, and AI-driven decision systems. Every system
+          begins with sensing: capturing the raw signals that downstream
+          intelligence depends on. XRNotify fulfills this role for the XRP
+          Ledger, transforming on-chain activity into structured, deliverable
+          events that other systems can act on.
+        </p>
         <p className="mt-4 text-lg text-zinc-400">
-          XRNotify is part of the Jonomor ecosystem — a suite of interconnected
-          software products built by{' '}
+          The ecosystem is a suite of interconnected software products built by{' '}
           <a
             href="https://www.jonomor.com/ali-morgan"
             className="text-emerald-400 no-underline transition-colors hover:text-emerald-300"
@@ -121,25 +143,35 @@ export default function EcosystemPage() {
             >
               {entity.isCurrent && (
                 <span className="absolute right-4 top-4 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
-                  Current
+                  YOU ARE HERE
                 </span>
               )}
               <h2 className="text-lg font-semibold text-white transition-colors group-hover:text-emerald-400">
                 {entity.name}
               </h2>
-              <p className="mt-2 text-sm text-zinc-400">{entity.description}</p>
+              <p className="mt-2 text-sm text-zinc-400">
+                {entity.description}
+              </p>
               <p className="mt-3 text-xs text-zinc-600">{entity.url}</p>
             </a>
           ))}
         </div>
 
-        <div className="mt-16 text-center">
+        <div className="mt-16 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
           <Link
             href="/"
             className="text-sm text-zinc-500 no-underline transition-colors hover:text-white"
           >
             &larr; Back to XRNotify
           </Link>
+          <a
+            href="https://www.jonomor.com/ecosystem"
+            className="text-sm text-emerald-400 no-underline transition-colors hover:text-emerald-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Full ecosystem overview on Jonomor &rarr;
+          </a>
         </div>
       </main>
     </div>

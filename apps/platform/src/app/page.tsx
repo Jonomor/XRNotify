@@ -15,18 +15,18 @@ import { CONTENT_CLUSTER, FAQ_ITEMS } from '@/lib/schema';
 // -----------------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
+  title: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
   description:
     'Enterprise-grade webhook infrastructure for the XRP Ledger. Real-time event streaming, guaranteed delivery, and developer-first APIs.',
   openGraph: {
-    title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
+    title: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
     description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
     type: 'website',
     url: 'https://www.xrnotify.io',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'XRNotify - Real-Time XRPL Webhook Infrastructure',
+    title: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
     description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
   },
 };
