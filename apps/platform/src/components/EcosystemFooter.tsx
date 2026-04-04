@@ -1,22 +1,27 @@
+import { CANONICAL_URLS } from '@/lib/schema';
+
 export function EcosystemFooter() {
   return (
-    <footer className="border-t border-white/5 mt-20">
-      <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="mt-20 border-t border-white/10 bg-[#0a0a0f]">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
         <p className="text-xs text-zinc-500">
-          Built by{" "}
+          &copy; {new Date().getFullYear()} XRNotify
+        </p>
+        <p className="text-xs text-zinc-500">
+          Built by{' '}
           <a
-            href="https://www.jonomor.com/ali-morgan"
-            className="text-zinc-400 hover:text-white transition-colors no-underline"
+            href={CANONICAL_URLS.aliMorgan}
+            className="text-white no-underline transition-colors hover:text-emerald-400"
             target="_blank"
             rel="noopener noreferrer"
           >
             Ali Morgan
           </a>
-          {" · "}
-          Part of the{" "}
+          {' · '}
+          Part of the{' '}
           <a
-            href="https://www.jonomor.com/ecosystem"
-            className="text-zinc-400 hover:text-white transition-colors no-underline"
+            href={CANONICAL_URLS.ecosystem}
+            className="text-white no-underline transition-colors hover:text-emerald-400"
             target="_blank"
             rel="noopener noreferrer"
           >

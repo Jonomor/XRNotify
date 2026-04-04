@@ -1,0 +1,280 @@
+// =============================================================================
+// XRNotify Platform - Canonical Schema Definitions
+// =============================================================================
+// Entity graph, content cluster, FAQ items, and JSON-LD helper functions.
+// Follows the Jonomor Development Standard for AI Visibility.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Canonical Entity Identifiers - LOCKED. Never modify @id values.
+// -----------------------------------------------------------------------------
+
+export const CANONICAL_IDS = {
+  app: 'https://www.xrnotify.io/#app',
+  organization: 'https://www.xrnotify.io/#organization',
+  website: 'https://www.xrnotify.io/#website',
+  faqpage: 'https://www.xrnotify.io/#faqpage',
+  jonomor: 'https://www.jonomor.com/#organization',
+  aliMorgan: 'https://www.jonomor.com/ali-morgan#person',
+} as const;
+
+export const CANONICAL_URLS = {
+  xrnotify: 'https://www.xrnotify.io',
+  jonomor: 'https://www.jonomor.com',
+  aliMorgan: 'https://www.jonomor.com/ali-morgan',
+  ecosystem: 'https://www.jonomor.com/ecosystem',
+} as const;
+
+export const SAME_AS = {
+  aliMorgan: [
+    'https://www.linkedin.com/in/1automationengineer/',
+    'https://github.com/Jonomor',
+  ],
+  jonomor: [
+    'https://www.crunchbase.com/organization/jonomor',
+    'https://github.com/Jonomor',
+    'https://www.linkedin.com/in/1automationengineer/',
+  ],
+} as const;
+
+export const CANONICAL_COPY = {
+  tagline: 'Real-time webhook notification platform for the XRP Ledger.',
+  fullDescription:
+    'Enterprise-grade webhook infrastructure for the XRP Ledger. Real-time event ingestion, normalized event schemas, HMAC-signed delivery, automatic retries with exponential backoff, dead-letter queues, event replay, delivery logs, and a developer dashboard. Supports payments, NFTs, DEX trades, trustlines, escrows, and account events.',
+  pageTitle: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
+} as const;
+
+// -----------------------------------------------------------------------------
+// Content Cluster
+// -----------------------------------------------------------------------------
+
+export interface ArticleDefinition {
+  slug: string;
+  title: string;
+  description: string;
+  contentType: 'definition' | 'faq' | 'how-to' | 'comparison';
+  wordCount: number;
+  isPillar: boolean;
+  datePublished: string;
+  dateModified: string;
+}
+
+export const CONTENT_CLUSTER: ArticleDefinition[] = [
+  {
+    slug: 'what-is-xrnotify',
+    title: 'What Is XRNotify? Real-Time Webhook Infrastructure for the XRP Ledger',
+    description:
+      'A comprehensive definition of XRNotify, the enterprise-grade webhook notification platform for the XRP Ledger, covering architecture, event types, delivery reliability, and security.',
+    contentType: 'definition',
+    wordCount: 2200,
+    isPillar: true,
+    datePublished: '2026-04-04',
+    dateModified: '2026-04-04',
+  },
+  {
+    slug: 'xrpl-webhook-faq',
+    title: 'XRPL Webhook FAQ — Common Questions About XRNotify',
+    description:
+      'Frequently asked questions about XRNotify webhooks, covering event types, delivery guarantees, signature verification, pricing, and how XRNotify compares to running your own node.',
+    contentType: 'faq',
+    wordCount: 1800,
+    isPillar: false,
+    datePublished: '2026-04-04',
+    dateModified: '2026-04-04',
+  },
+  {
+    slug: 'how-to-monitor-xrpl-wallets',
+    title: 'How to Monitor XRPL Wallets in Real Time with Webhooks',
+    description:
+      'Step-by-step guide to monitoring XRP Ledger wallets in real time using XRNotify webhooks, from account creation to signature verification and production scaling.',
+    contentType: 'how-to',
+    wordCount: 1700,
+    isPillar: false,
+    datePublished: '2026-04-04',
+    dateModified: '2026-04-04',
+  },
+  {
+    slug: 'xrnotify-vs-polling',
+    title: 'XRNotify vs Polling — Why Webhooks Beat Constant Blockchain Queries',
+    description:
+      'A detailed comparison of three XRPL monitoring approaches: polling, running your own node, and XRNotify webhooks. Covers latency, cost, reliability, and complexity trade-offs.',
+    contentType: 'comparison',
+    wordCount: 1600,
+    isPillar: false,
+    datePublished: '2026-04-04',
+    dateModified: '2026-04-04',
+  },
+  {
+    slug: 'webhook-delivery-reliability',
+    title: 'Webhook Delivery Reliability — Retries, Dead Letters, and Replay',
+    description:
+      'Deep dive into XRNotify delivery reliability: retry strategies with exponential backoff, dead-letter queues, idempotency guarantees, event replay, and delivery health monitoring.',
+    contentType: 'how-to',
+    wordCount: 1700,
+    isPillar: false,
+    datePublished: '2026-04-04',
+    dateModified: '2026-04-04',
+  },
+];
+
+// -----------------------------------------------------------------------------
+// FAQ Items
+// -----------------------------------------------------------------------------
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export const FAQ_ITEMS: FAQItem[] = [
+  {
+    question: 'What is XRNotify?',
+    answer:
+      'XRNotify is a real-time webhook notification platform for the XRP Ledger. It monitors XRPL transactions as they confirm on-chain, normalizes them into clean JSON schemas, and delivers them to your endpoints via HMAC-signed HTTPS POST requests. XRNotify eliminates the need to run your own XRPL node or build polling infrastructure.',
+  },
+  {
+    question: 'What XRPL events does XRNotify support?',
+    answer:
+      'XRNotify supports 23+ event types across all major XRPL transaction categories: payments (XRP and issued tokens), NFT operations (minting, burning, offers, transfers), DEX trades (OfferCreate, OfferCancel, AMM operations), trustline changes (TrustSet), escrow events (create, finish, cancel), check operations, and account-level changes like settings modifications and deletions.',
+  },
+  {
+    question: 'How does webhook delivery work?',
+    answer:
+      'When an XRPL transaction matches your configured filters, XRNotify normalizes the event, signs the payload with your webhook secret using HMAC-SHA256, and delivers it as an HTTPS POST to your endpoint. If delivery fails, XRNotify retries with exponential backoff (up to 10 attempts over 12 hours). Events that exhaust all retries are moved to a dead-letter queue for manual inspection and replay.',
+  },
+  {
+    question: 'Is XRNotify free?',
+    answer:
+      'XRNotify offers a free tier with 1,000 events per month and 2 webhook endpoints — enough for testing and hobby projects. Paid plans start at $29/month (Starter: 50,000 events, 10 webhooks, WebSocket streaming) and $99/month (Pro: 500,000 events, 50 webhooks, priority delivery). Enterprise plans with custom SLAs are available on request.',
+  },
+  {
+    question: 'How do I verify webhook signatures?',
+    answer:
+      'Every XRNotify webhook includes an X-XRNotify-Signature header containing an HMAC-SHA256 hash of the request body, computed using your webhook signing secret. To verify, compute the HMAC-SHA256 of the raw request body with your secret and compare it to the header value using a constant-time comparison function to prevent timing attacks.',
+  },
+  {
+    question: 'Who built XRNotify?',
+    answer:
+      'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence. XRNotify is the XRPL instrumentation layer of the Jonomor ecosystem, which also includes Guard-Clause, MyPropOps, The Neutral Bridge, Evenfield, and H.U.N.I.E.',
+  },
+  {
+    question: 'Is XRNotify part of a larger ecosystem?',
+    answer:
+      'Yes. XRNotify is part of the Jonomor ecosystem, a suite of interconnected software products built by Ali Morgan. Within the ecosystem, XRNotify serves as the real-time observation layer — detecting XRPL events at the point of origin before they flow through interpretation and operational layers in other Jonomor properties.',
+  },
+];
+
+// -----------------------------------------------------------------------------
+// JSON-LD Helper Functions
+// -----------------------------------------------------------------------------
+
+export function getPublisherReference(): Record<string, unknown> {
+  return {
+    '@type': 'Organization',
+    '@id': CANONICAL_IDS.jonomor,
+    name: 'Jonomor',
+    url: CANONICAL_URLS.jonomor,
+    sameAs: [...SAME_AS.jonomor],
+  };
+}
+
+export function getCreatorReference(): Record<string, unknown> {
+  return {
+    '@type': 'Person',
+    '@id': CANONICAL_IDS.aliMorgan,
+    name: 'Ali Morgan',
+    url: CANONICAL_URLS.aliMorgan,
+    sameAs: [...SAME_AS.aliMorgan],
+  };
+}
+
+export function getSoftwareApplicationSchema(): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': CANONICAL_IDS.app,
+    name: 'XRNotify',
+    description: CANONICAL_COPY.tagline,
+    url: CANONICAL_URLS.xrnotify,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Web',
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Free',
+        price: '0',
+        priceCurrency: 'USD',
+        description: '1,000 events/month, 2 webhooks',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Starter',
+        price: '29.00',
+        priceCurrency: 'USD',
+        description: '50,000 events/month, 10 webhooks, WebSocket access',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Pro',
+        price: '99.00',
+        priceCurrency: 'USD',
+        description: '500,000 events/month, 50 webhooks, priority delivery',
+      },
+    ],
+    featureList: [
+      'Real-time XRPL event ingestion',
+      'HMAC-SHA256 signed webhook delivery',
+      'Automatic retries with exponential backoff',
+      'Dead-letter queue for failed deliveries',
+      'Event replay and reprocessing',
+      '23+ XRPL event types supported',
+      'Developer dashboard with delivery logs',
+      'Per-webhook filtering by event type and account',
+    ],
+    creator: { '@id': CANONICAL_IDS.aliMorgan },
+    publisher: { '@id': CANONICAL_IDS.jonomor },
+    isPartOf: { '@id': CANONICAL_IDS.jonomor },
+  };
+}
+
+export function getTechArticleSchema(article: ArticleDefinition): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: article.title,
+    description: article.description,
+    url: `${CANONICAL_URLS.xrnotify}/articles/${article.slug}`,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified,
+    wordCount: article.wordCount,
+    author: getCreatorReference(),
+    publisher: getPublisherReference(),
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': CANONICAL_IDS.website,
+      name: 'XRNotify',
+    },
+    about: {
+      '@type': 'SoftwareApplication',
+      '@id': CANONICAL_IDS.app,
+      name: 'XRNotify',
+    },
+  };
+}
+
+export function getFAQPageSchema(items: FAQItem[]): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': CANONICAL_IDS.faqpage,
+    name: 'XRNotify FAQ — Common Questions About XRPL Webhooks',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}

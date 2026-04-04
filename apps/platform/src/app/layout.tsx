@@ -8,6 +8,14 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import '@/styles/globals.css';
 import { EcosystemFooter } from '@/components/EcosystemFooter';
+import {
+  CANONICAL_IDS,
+  CANONICAL_URLS,
+  CANONICAL_COPY,
+  SAME_AS,
+  FAQ_ITEMS,
+  getFAQPageSchema,
+} from '@/lib/schema';
 
 // -----------------------------------------------------------------------------
 // Fonts
@@ -26,49 +34,105 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 // -----------------------------------------------------------------------------
-// JSON-LD Schema (Jonomor Ecosystem Integration)
+// JSON-LD Schema Blocks (6 separate blocks for scanner compatibility)
 // -----------------------------------------------------------------------------
 
-const jsonLd = {
+const jonomorOrgSchema = {
   '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Organization',
-      '@id': 'https://www.jonomor.com/#organization',
-      name: 'Jonomor',
-      url: 'https://www.jonomor.com',
-      description:
-        'Systems architecture studio focused on AI Visibility and real-time infrastructure intelligence.',
-    },
-    {
-      '@type': 'Person',
-      '@id': 'https://www.jonomor.com/ali-morgan#person',
-      name: 'Ali Morgan',
-      url: 'https://www.jonomor.com/ali-morgan',
-      worksFor: { '@id': 'https://www.jonomor.com/#organization' },
-    },
+  '@type': 'Organization',
+  '@id': CANONICAL_IDS.jonomor,
+  name: 'Jonomor',
+  url: CANONICAL_URLS.jonomor,
+  founder: { '@id': CANONICAL_IDS.aliMorgan },
+  sameAs: [...SAME_AS.jonomor],
+  hasPart: [
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://www.xrnotify.io/#app',
+      '@id': CANONICAL_IDS.app,
       name: 'XRNotify',
-      description:
-        'Real-time webhook notification platform for the XRP Ledger — instant event delivery for developers building on XRPL.',
-      url: 'https://www.xrnotify.io',
-      applicationCategory: 'DeveloperApplication',
-      operatingSystem: 'Web',
-      creator: { '@id': 'https://www.jonomor.com/ali-morgan#person' },
-      publisher: { '@id': 'https://www.jonomor.com/#organization' },
-      isPartOf: { '@id': 'https://www.jonomor.com/#organization' },
-    },
-    {
-      '@type': 'WebSite',
-      '@id': 'https://www.xrnotify.io/#website',
-      name: 'XRNotify',
-      url: 'https://www.xrnotify.io',
-      publisher: { '@id': 'https://www.jonomor.com/#organization' },
     },
   ],
 };
+
+const aliMorganSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': CANONICAL_IDS.aliMorgan,
+  name: 'Ali Morgan',
+  url: CANONICAL_URLS.aliMorgan,
+  jobTitle: 'Founder',
+  worksFor: { '@id': CANONICAL_IDS.jonomor },
+  sameAs: [...SAME_AS.aliMorgan],
+};
+
+const xrnotifyOrgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': CANONICAL_IDS.organization,
+  name: 'XRNotify',
+  url: CANONICAL_URLS.xrnotify,
+  parentOrganization: { '@id': CANONICAL_IDS.jonomor },
+  founder: { '@id': CANONICAL_IDS.aliMorgan },
+  hasPart: [{ '@id': CANONICAL_IDS.app }],
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': CANONICAL_IDS.website,
+  name: 'XRNotify',
+  url: CANONICAL_URLS.xrnotify,
+  publisher: { '@id': CANONICAL_IDS.jonomor },
+};
+
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  '@id': CANONICAL_IDS.app,
+  name: 'XRNotify',
+  description: CANONICAL_COPY.tagline,
+  url: CANONICAL_URLS.xrnotify,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Web',
+  offers: [
+    {
+      '@type': 'Offer',
+      name: 'Free',
+      price: '0',
+      priceCurrency: 'USD',
+      description: '1,000 events/month, 2 webhooks',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Starter',
+      price: '29.00',
+      priceCurrency: 'USD',
+      description: '50,000 events/month, 10 webhooks, WebSocket access',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Pro',
+      price: '99.00',
+      priceCurrency: 'USD',
+      description: '500,000 events/month, 50 webhooks, priority delivery',
+    },
+  ],
+  creator: { '@id': CANONICAL_IDS.aliMorgan },
+  publisher: { '@id': CANONICAL_IDS.jonomor },
+  isPartOf: { '@id': CANONICAL_IDS.jonomor },
+  featureList: [
+    'Real-time XRPL event ingestion',
+    'HMAC-SHA256 signed webhook delivery',
+    'Automatic retries with exponential backoff',
+    'Dead-letter queue for failed deliveries',
+    'Event replay and reprocessing',
+    '23+ XRPL event types supported',
+    'Developer dashboard with delivery logs',
+    'Per-webhook filtering by event type and account',
+  ],
+};
+
+const faqPageSchema = getFAQPageSchema(FAQ_ITEMS);
 
 // -----------------------------------------------------------------------------
 // Metadata
@@ -79,7 +143,7 @@ export const metadata: Metadata = {
     google: '_s_OUwLCKNHzjcDJiCzUeNpA1jVH5W9jy3HE5IcoVsc',
   },
   title: {
-    default: 'XRNotify — Real-Time Webhook Notifications for the XRP Ledger',
+    default: CANONICAL_COPY.pageTitle,
     template: '%s — XRNotify',
   },
   description:
@@ -98,31 +162,29 @@ export const metadata: Metadata = {
     'real-time events',
     'blockchain infrastructure',
   ],
-  authors: [{ name: 'Ali Morgan', url: 'https://www.jonomor.com/ali-morgan' }],
+  authors: [{ name: 'Ali Morgan', url: CANONICAL_URLS.aliMorgan }],
   creator: 'Ali Morgan',
   publisher: 'Jonomor',
   metadataBase: new URL(
-    process.env['NEXT_PUBLIC_APP_URL'] ?? 'https://www.xrnotify.io'
+    process.env['NEXT_PUBLIC_APP_URL'] ?? CANONICAL_URLS.xrnotify
   ),
   alternates: {
-    canonical: 'https://www.xrnotify.io',
+    canonical: CANONICAL_URLS.xrnotify,
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://www.xrnotify.io',
+    url: CANONICAL_URLS.xrnotify,
     siteName: 'XRNotify',
-    title: 'XRNotify — Real-Time Webhook Notifications for the XRP Ledger',
+    title: CANONICAL_COPY.pageTitle,
     description:
       'Real-time webhook notification platform for the XRP Ledger. Subscribe to blockchain events and receive instant HTTP callbacks.',
-    // OG image is auto-generated by opengraph-image.tsx
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'XRNotify — Real-Time Webhook Notifications for the XRP Ledger',
+    title: CANONICAL_COPY.pageTitle,
     description:
       'Real-time webhook notification platform for the XRP Ledger. Subscribe to blockchain events and receive instant HTTP callbacks.',
-    // Image auto-generated by opengraph-image.tsx
     creator: '@xrnotify',
   },
   robots: {
@@ -172,12 +234,37 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* JSON-LD Schema for Jonomor Ecosystem */}
+        {/* Block 1 — Jonomor Organization */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jonomorOrgSchema) }}
         />
-        
+        {/* Block 2 — Ali Morgan Person */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(aliMorganSchema) }}
+        />
+        {/* Block 3 — XRNotify Organization */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(xrnotifyOrgSchema) }}
+        />
+        {/* Block 4 — WebSite */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        {/* Block 5 — SoftwareApplication */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+        />
+        {/* Block 6 — FAQPage */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }}
+        />
+
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -185,7 +272,7 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        
+
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.xrnotify.io" />
       </head>
@@ -201,7 +288,7 @@ export default function RootLayout({
         {/* Main content */}
         <div id="main-content" className="flex min-h-screen flex-col">
           {children}
-          
+
           {/* Jonomor Ecosystem Footer */}
           <EcosystemFooter />
         </div>

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { HeroAnimation } from '@/components/HeroAnimation';
+import { CONTENT_CLUSTER, FAQ_ITEMS } from '@/lib/schema';
 
 // -----------------------------------------------------------------------------
 // Metadata
@@ -34,53 +35,17 @@ export const metadata: Metadata = {
 // Page Component
 // -----------------------------------------------------------------------------
 
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What is XRNotify?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'XRNotify is enterprise-grade webhook infrastructure for the XRP Ledger. It provides real-time event detection for wallet activity, transaction events, token movements, and ledger signals.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Who built XRNotify?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How does XRNotify deliver events?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'XRNotify delivers events via webhooks and streaming. When an XRPL event matches your configured filters, XRNotify sends a structured payload to your endpoint in real time.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Is XRNotify part of a larger ecosystem?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes. XRNotify is the instrumentation layer of the Jonomor ecosystem — the Observe stage that detects events at the point of origin before they flow through interpretation and operational layers.',
-      },
-    },
-  ],
+const CONTENT_TYPE_LABELS: Record<string, string> = {
+  definition: 'Guide',
+  faq: 'FAQ',
+  'how-to': 'How-To',
+  comparison: 'Comparison',
 };
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white antialiased">
-      {/* FAQPage JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+{/* FAQPage JSON-LD is now in layout.tsx */}
 
       {/* Animated Background Grid */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -460,7 +425,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-              Quick Answers
+              Frequently Asked Questions
             </h2>
             <p className="mt-6 text-lg text-zinc-400">
               Common questions about XRNotify and how it works.
@@ -468,7 +433,7 @@ export default function LandingPage() {
           </div>
 
           <div className="mx-auto mt-16 max-w-3xl divide-y divide-white/5">
-            {faqItems.map((item) => (
+            {FAQ_ITEMS.map((item) => (
               <div key={item.question} className="py-8">
                 <h3 className="text-lg font-semibold text-white">{item.question}</h3>
                 <p className="mt-3 text-zinc-400 leading-relaxed">{item.answer}</p>
@@ -478,15 +443,81 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Learn More Links */}
-      <section className="border-y border-white/5 bg-zinc-900/30 px-6 py-16 lg:px-8">
-        <div className="mx-auto flex max-w-3xl flex-col items-center justify-center gap-6 text-center sm:flex-row sm:gap-10">
-          <a href="/about" className="text-base font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
-            Learn more about XRNotify
-          </a>
-          <a href="#faq" className="text-base font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
-            View frequently asked questions
-          </a>
+      {/* Articles & Guides */}
+      <section className="border-y border-white/5 bg-zinc-900/30 px-6 py-24 lg:px-8 lg:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
+              Articles & Guides
+            </h2>
+            <p className="mt-6 text-lg text-zinc-400">
+              Technical deep dives into XRNotify, XRPL webhooks, and real-time blockchain monitoring.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-16 max-w-4xl grid gap-4 sm:grid-cols-2">
+            {CONTENT_CLUSTER.map((article) => (
+              <Link
+                key={article.slug}
+                href={`/articles/${article.slug}`}
+                className={`group rounded-xl border p-6 no-underline transition-all ${
+                  article.isPillar
+                    ? 'sm:col-span-2 border-emerald-500/20 bg-emerald-500/5 hover:border-emerald-500/40'
+                    : 'border-white/5 bg-zinc-900/50 hover:border-white/10 hover:bg-zinc-900'
+                }`}
+              >
+                <div className="mb-2 flex items-center gap-3">
+                  <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400">
+                    {CONTENT_TYPE_LABELS[article.contentType] ?? article.contentType}
+                  </span>
+                  <span className="text-xs text-zinc-500">
+                    {Math.ceil(article.wordCount / 200)} min read
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-white transition-colors group-hover:text-emerald-400">
+                  {article.title}
+                </h3>
+                <p className="mt-2 text-sm text-zinc-500">{article.description}</p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-10 flex max-w-3xl flex-col items-center justify-center gap-6 text-center sm:flex-row sm:gap-10">
+            <Link href="/about" className="text-base font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
+              Learn more about XRNotify
+            </Link>
+            <Link href="/ecosystem" className="text-base font-medium text-emerald-400 no-underline transition-colors hover:text-emerald-300">
+              Explore the Jonomor Ecosystem
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Author Byline */}
+      <section className="px-6 py-12 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm text-zinc-500">
+            Built by{' '}
+            <a
+              href="https://www.jonomor.com/ali-morgan"
+              className="text-emerald-400 no-underline transition-colors hover:text-emerald-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ali Morgan
+            </a>
+            {' · '}
+            Part of the{' '}
+            <a
+              href="https://www.jonomor.com"
+              className="text-emerald-400 no-underline transition-colors hover:text-emerald-300"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Jonomor
+            </a>
+            {' ecosystem'}
+          </p>
         </div>
       </section>
 
@@ -529,6 +560,8 @@ export default function LandingPage() {
                 { href: '/docs', label: 'Docs' },
                 { href: '/pricing', label: 'Pricing' },
                 { href: '/about', label: 'About' },
+                { href: '/articles', label: 'Articles' },
+                { href: '/ecosystem', label: 'Ecosystem' },
                 { href: '/privacy', label: 'Privacy' },
                 { href: '/terms', label: 'Terms' },
               ].map((link) => (
@@ -624,29 +657,6 @@ const eventTypes = [
   { name: 'Checks', emoji: '📋', count: 3 },
   { name: 'Accounts', emoji: '👤', count: 2 },
   { name: 'AMM', emoji: '🌊', count: 4 },
-];
-
-const faqItems = [
-  {
-    question: 'What is XRNotify?',
-    answer:
-      'XRNotify is enterprise-grade webhook infrastructure for the XRP Ledger. It provides real-time event detection for wallet activity, transaction events, token movements, and ledger signals.',
-  },
-  {
-    question: 'Who built XRNotify?',
-    answer:
-      'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence.',
-  },
-  {
-    question: 'How does XRNotify deliver events?',
-    answer:
-      'XRNotify delivers events via webhooks and streaming. When an XRPL event matches your configured filters, XRNotify sends a structured payload to your endpoint in real time.',
-  },
-  {
-    question: 'Is XRNotify part of a larger ecosystem?',
-    answer:
-      'Yes. XRNotify is the instrumentation layer of the Jonomor ecosystem — the Observe stage that detects events at the point of origin before they flow through interpretation and operational layers.',
-  },
 ];
 
 const pricingPlans = [

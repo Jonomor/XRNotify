@@ -26,6 +26,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === '' ? 1.0 : 0.8,
   }));
 
+  // Article pages
+  const articlePages = [
+    { path: '/articles', priority: 0.8 },
+    { path: '/articles/what-is-xrnotify', priority: 0.85 },
+    { path: '/articles/xrpl-webhook-faq', priority: 0.8 },
+    { path: '/articles/how-to-monitor-xrpl-wallets', priority: 0.8 },
+    { path: '/articles/xrnotify-vs-polling', priority: 0.8 },
+    { path: '/articles/webhook-delivery-reliability', priority: 0.8 },
+  ];
+
+  const articleEntries = articlePages.map((page) => ({
+    url: `${baseUrl}${page.path}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: page.priority,
+  }));
+
+  // Ecosystem page
+  const ecosystemEntries = [
+    {
+      url: `${baseUrl}/ecosystem`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+  ];
+
   // Documentation pages
   const docPages = [
     '/docs/api',
@@ -63,5 +90,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...docEntries];
+  return [...staticEntries, ...articleEntries, ...ecosystemEntries, ...docEntries];
 }
