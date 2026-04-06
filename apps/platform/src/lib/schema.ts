@@ -34,6 +34,7 @@ export const SAME_AS = {
     'https://www.crunchbase.com/organization/jonomor',
     'https://github.com/Jonomor',
     'https://www.linkedin.com/in/1automationengineer/',
+    'https://www.wikidata.org/wiki/Q138930339',
   ],
 } as const;
 
