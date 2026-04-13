@@ -11,6 +11,7 @@ import pg from 'pg';
 import pino from 'pino';
 import { Registry, Counter, Gauge, Histogram, collectDefaultMetrics } from 'prom-client';
 import type { EventType, XRPLEvent } from '@xrnotify/shared';
+import { writeNetworkState } from './hunie-memory';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -118,6 +119,7 @@ const pool = new pg.Pool({
 });
 
 let xrplClient: Client | null = null;
+let ledgerCounter = 0;
 let currentNodeIndex = 0;
 
 // -----------------------------------------------------------------------------
@@ -604,7 +606,19 @@ async function subscribeToLedgers(): Promise<void> {
       for (const event of events) {
         await publishEvent(event);
       }
-      
+
+      // H.U.N.I.E. memory: periodic network state (fire-and-forget)
+      if (events.length > 0) {
+        ledgerCounter++;
+        if (ledgerCounter % 100 === 0) {
+          writeNetworkState({
+            ledgerIndex: tx.ledger_index ?? 0,
+            baseFee: 10,
+            closeTime: Date.now(),
+          }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeNetworkState failed'));
+        }
+      }
+
     } catch (error) {
       logger.error({ error, txHash: tx.transaction?.hash }, 'Error processing transaction');
     }

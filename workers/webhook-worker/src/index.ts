@@ -11,6 +11,7 @@ import pino from 'pino';
 import { Registry, Counter, Histogram, Gauge, collectDefaultMetrics } from 'prom-client';
 import { createHmac } from 'node:crypto';
 import { signPayload } from '@xrnotify/shared';
+import { writeAlertEvent } from './hunie-memory';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -543,6 +544,15 @@ async function processMessage(message: StreamMessage): Promise<void> {
 
         deliveriesTotal.inc({ status: 'success', event_type });
         endTimer({ status: 'success' });
+
+        // H.U.N.I.E. memory: record successful delivery (fire-and-forget)
+        writeAlertEvent({
+          webhookId: webhook.id,
+          walletAddress: accounts?.[0] ?? 'unknown',
+          eventType: event_type,
+          wasAcknowledged: true,
+          deliverySuccess: true,
+        }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeAlertEvent failed'));
       } else {
         webhookLog.warn({ 
           statusCode: result.statusCode, 
@@ -592,8 +602,17 @@ async function processMessage(message: StreamMessage): Promise<void> {
           
           deliveriesTotal.inc({ status: 'dlq', event_type });
           dlqTotal.inc({ reason: 'max_retries' });
+
+          // H.U.N.I.E. memory: record failed delivery (fire-and-forget)
+          writeAlertEvent({
+            webhookId: webhook.id,
+            walletAddress: accounts?.[0] ?? 'unknown',
+            eventType: event_type,
+            wasAcknowledged: false,
+            deliverySuccess: false,
+          }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeAlertEvent failed'));
         }
-        
+
         endTimer({ status: 'failure' });
       }
     } catch (error) {
