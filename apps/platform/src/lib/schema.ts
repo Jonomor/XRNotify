@@ -42,7 +42,7 @@ export const CANONICAL_COPY = {
   tagline: 'Real-time webhook notification platform for the XRP Ledger.',
   fullDescription:
     'Enterprise-grade webhook infrastructure for the XRP Ledger. Real-time event ingestion, normalized event schemas, HMAC-signed delivery, automatic retries with exponential backoff, dead-letter queues, event replay, delivery logs, and a developer dashboard. Supports payments, NFTs, DEX trades, trustlines, escrows, and account events.',
-  pageTitle: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
+  pageTitle: 'XRNotify: Real-Time XRPL Webhook Infrastructure | Jonomor',
 } as const;
 
 // -----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
   },
   {
     slug: 'xrpl-webhook-faq',
-    title: 'XRPL Webhook FAQ — Common Questions About XRNotify',
+    title: 'XRPL Webhook FAQ: Common Questions About XRNotify',
     description:
       'Frequently asked questions about XRNotify webhooks, covering event types, delivery guarantees, signature verification, pricing, and how XRNotify compares to running your own node.',
     contentType: 'faq',
@@ -96,7 +96,7 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
   },
   {
     slug: 'xrnotify-vs-polling',
-    title: 'XRNotify vs Polling — Why Webhooks Beat Constant Blockchain Queries',
+    title: 'XRNotify vs Polling: Why Webhooks Beat Constant Blockchain Queries',
     description:
       'A detailed comparison of three XRPL monitoring approaches: polling, running your own node, and XRNotify webhooks. Covers latency, cost, reliability, and complexity trade-offs.',
     contentType: 'comparison',
@@ -107,7 +107,7 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
   },
   {
     slug: 'webhook-delivery-reliability',
-    title: 'Webhook Delivery Reliability — Retries, Dead Letters, and Replay',
+    title: 'Webhook Delivery Reliability: Retries, Dead Letters, and Replay',
     description:
       'Deep dive into XRNotify delivery reliability: retry strategies with exponential backoff, dead-letter queues, idempotency guarantees, event replay, and delivery health monitoring.',
     contentType: 'how-to',
@@ -146,7 +146,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: 'Is XRNotify free?',
     answer:
-      'XRNotify offers a free tier with 1,000 events per month and 2 webhook endpoints — enough for testing and hobby projects. Paid plans start at $29/month (Starter: 50,000 events, 10 webhooks, WebSocket streaming) and $99/month (Pro: 500,000 events, 50 webhooks, priority delivery). Enterprise plans with custom SLAs are available on request.',
+      'XRNotify offers a free Developer tier with 500 events per month and 1 webhook endpoint for testing and evaluation. Paid plans include Builder at $79/month (50,000 events, 5 webhooks, WebSocket streaming), Professional at $249/month (500,000 events, 25 webhooks, priority delivery), and Compliance at $599/month (2,000,000 events, NemoClaw governance, continuous audit trails). Enterprise plans with custom SLAs are available on request.',
   },
   {
     question: 'How do I verify webhook signatures?',
@@ -161,7 +161,17 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: 'Is XRNotify part of a larger ecosystem?',
     answer:
-      'Yes. XRNotify is part of the Jonomor ecosystem, a suite of interconnected software products built by Ali Morgan. Within the ecosystem, XRNotify serves as the real-time observation layer — detecting XRPL events at the point of origin before they flow through interpretation and operational layers in other Jonomor properties.',
+      'Yes. XRNotify is part of the Jonomor ecosystem, a suite of interconnected software products built by Ali Morgan. Within the ecosystem, XRNotify serves as the real-time observation layer, detecting XRPL events at the point of origin before they flow through interpretation and operational layers in other Jonomor properties.',
+  },
+  {
+    question: 'What is NemoClaw governance?',
+    answer:
+      'NemoClaw is NVIDIA\'s execution governance framework. On the Compliance tier, every monitoring agent operates within policy-enforced security boundaries with full execution audit logging. Transaction data never leaves the governed environment.',
+  },
+  {
+    question: 'Is XRNotify compliant with the GENIUS Act?',
+    answer:
+      'XRNotify provides the real-time transaction monitoring infrastructure that Permitted Payment Stablecoin Issuers need under the GENIUS Act. The Compliance tier includes continuous audit trails, anomaly detection, and privacy-preserving monitoring designed for BSA obligations.',
   },
 ];
 
@@ -202,24 +212,31 @@ export function getSoftwareApplicationSchema(): Record<string, unknown> {
     offers: [
       {
         '@type': 'Offer',
-        name: 'Free',
+        name: 'Developer',
         price: '0',
         priceCurrency: 'USD',
-        description: '1,000 events/month, 2 webhooks',
+        description: '500 events/month, 1 webhook',
       },
       {
         '@type': 'Offer',
-        name: 'Starter',
-        price: '29.00',
+        name: 'Builder',
+        price: '79.00',
         priceCurrency: 'USD',
-        description: '50,000 events/month, 10 webhooks, WebSocket access',
+        description: '50,000 events/month, 5 webhooks, WebSocket streaming',
       },
       {
         '@type': 'Offer',
-        name: 'Pro',
-        price: '99.00',
+        name: 'Professional',
+        price: '249.00',
         priceCurrency: 'USD',
-        description: '500,000 events/month, 50 webhooks, priority delivery',
+        description: '500,000 events/month, 25 webhooks, priority delivery',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Compliance',
+        price: '599.00',
+        priceCurrency: 'USD',
+        description: '2,000,000 events/month, 100 webhooks, NemoClaw governance',
       },
     ],
     featureList: [
@@ -268,7 +285,7 @@ export function getFAQPageSchema(items: FAQItem[]): Record<string, unknown> {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     '@id': CANONICAL_IDS.faqpage,
-    name: 'XRNotify FAQ — Common Questions About XRPL Webhooks',
+    name: 'XRNotify FAQ: Common Questions About XRPL Webhooks',
     mainEntity: items.map((item) => ({
       '@type': 'Question',
       name: item.question,

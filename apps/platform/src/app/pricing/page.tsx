@@ -79,7 +79,7 @@ const tiers = [
     plan: 'compliance' as const,
     price: '$599',
     period: '/month',
-    description: 'GENIUS Act ready — for regulated institutions',
+    description: 'GENIUS Act ready. For regulated institutions.',
     trial: false,
     features: [
       '2,000,000 events/month',
@@ -91,8 +91,8 @@ const tiers = [
       '1-year delivery logs',
       'Dedicated support channel',
     ],
-    cta: 'Contact Sales',
-    ctaHref: 'mailto:compliance@xrnotify.io',
+    cta: 'Get Started',
+    ctaHref: null,
     highlighted: true,
   },
   {
@@ -125,14 +125,14 @@ const tiers = [
 function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
   return (
     <div
-      className={`relative rounded-2xl p-8 flex flex-col ${
+      className={`relative rounded-2xl p-6 flex flex-col min-h-[520px] ${
         tier.highlighted
           ? 'bg-gradient-to-b from-emerald-500/15 to-zinc-900/50 border border-emerald-500/40 ring-1 ring-emerald-500/20'
           : 'bg-zinc-900/60 border border-zinc-800/60'
       }`}
     >
       {tier.highlighted && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white">
+        <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/30">
           Most Popular
         </span>
       )}
@@ -225,7 +225,7 @@ const faqs = [
   {
     question: 'Do you offer annual billing?',
     answer:
-      'Yes, annual billing saves 20%. Contact us for annual pricing on Starter and Pro plans.',
+      'Yes, annual billing saves 20%. Contact us for annual pricing on Builder and Professional plans.',
   },
   {
     question: "What's the SLA for Enterprise?",

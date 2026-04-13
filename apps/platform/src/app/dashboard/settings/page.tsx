@@ -51,9 +51,13 @@ const cardClass = 'bg-zinc-900/50 border border-zinc-800 rounded-lg p-6';
 function PlanBadge({ plan }: { plan: string }) {
   const colors: Record<string, string> = {
     free: 'bg-zinc-800 text-zinc-300',
+    builder: 'bg-blue-900/50 text-blue-300',
+    professional: 'bg-emerald-500/10 text-emerald-400',
+    compliance: 'bg-amber-900/50 text-amber-300',
+    enterprise: 'bg-purple-900/50 text-purple-300',
+    // Legacy
     starter: 'bg-blue-900/50 text-blue-300',
     pro: 'bg-emerald-500/10 text-emerald-400',
-    enterprise: 'bg-purple-900/50 text-purple-300',
   };
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${colors[plan] ?? 'bg-zinc-800 text-zinc-300'}`}>
@@ -328,6 +332,12 @@ export default function SettingsPage() {
                 <CheckoutButton plan="builder" label="Upgrade to Builder" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
                 <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors" />
               </>
+            )}
+            {plan === 'builder' && (
+              <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
+            )}
+            {plan === 'professional' && (
+              <CheckoutButton plan="compliance" label="Upgrade to Compliance" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
             )}
             {plan !== 'free' && (
               <button

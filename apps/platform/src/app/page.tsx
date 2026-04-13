@@ -15,18 +15,18 @@ import { CONTENT_CLUSTER, FAQ_ITEMS } from '@/lib/schema';
 // -----------------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
+  title: 'XRNotify: Real-Time XRPL Webhook Infrastructure | Jonomor',
   description:
     'Enterprise-grade webhook infrastructure for the XRP Ledger. Real-time event streaming, guaranteed delivery, and developer-first APIs.',
   openGraph: {
-    title: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
+    title: 'XRNotify: Real-Time XRPL Webhook Infrastructure | Jonomor',
     description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
     type: 'website',
     url: 'https://www.xrnotify.io',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'XRNotify — Real-Time XRPL Webhook Infrastructure | Jonomor',
+    title: 'XRNotify: Real-Time XRPL Webhook Infrastructure | Jonomor',
     description: 'Enterprise-grade webhook infrastructure for the XRP Ledger.',
   },
 };
@@ -111,7 +111,7 @@ export default function LandingPage() {
 
             <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-zinc-400 sm:text-xl">
               Stop polling. Start building. Get instant HTTP notifications when
-              transactions confirm — payments, NFTs, DEX trades, and more.
+              transactions confirm: payments, NFTs, DEX trades, and more.
               Enterprise reliability with sub-second delivery.
             </p>
 
@@ -180,7 +180,7 @@ export default function LandingPage() {
                       201 Created
                     </span>
                     <span className="text-sm text-zinc-500">
-                      Webhook active — you&apos;ll receive events instantly
+                      Webhook active. You&apos;ll receive events instantly.
                     </span>
                   </div>
                 </div>
@@ -219,13 +219,13 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl">
-              Built for production.
+              Institutional-grade monitoring.
               <br />
-              <span className="text-zinc-500">Designed for developers.</span>
+              <span className="text-zinc-500">Built for compliance.</span>
             </h2>
             <p className="mt-6 text-lg text-zinc-400">
-              Everything you need to build reactive applications on the XRP Ledger,
-              without managing infrastructure.
+              Real-time XRPL event infrastructure with NemoClaw governance,
+              guaranteed delivery, and continuous audit trails.
             </p>
           </div>
 
@@ -413,9 +413,9 @@ export default function LandingPage() {
           </div>
 
           <p className="mt-12 text-center text-sm text-zinc-500">
-            Need more?{' '}
-            <Link href="/contact" className="text-emerald-400 no-underline hover:underline">Contact us</Link>
-            {' '}for enterprise pricing with custom SLAs, dedicated support, and on-premise options.
+            Need custom infrastructure?{' '}
+            <Link href="mailto:enterprise@xrnotify.io" className="text-emerald-400 no-underline hover:underline">Contact us</Link>
+            {' '}for enterprise pricing with SLA guarantees, dedicated support, and full NemoClaw governance.
           </p>
         </div>
       </section>
@@ -535,9 +535,9 @@ export default function LandingPage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="group relative w-full overflow-hidden rounded-full bg-blue-600 border border-blue-500 px-8 py-4 text-base font-bold text-white no-underline shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-500/30 sm:w-auto"
+              className="w-full rounded-full bg-white px-8 py-4 text-base font-bold text-[#0a0a0f] no-underline shadow-xl transition-all hover:bg-zinc-200 sm:w-auto"
             >
-              <span className="relative z-10">Create Free Account</span>
+              Create Free Account
             </Link>
             <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">
               Read the docs →
@@ -661,52 +661,48 @@ const eventTypes = [
 
 const pricingPlans = [
   {
-    name: 'Free',
-    description: 'Perfect for testing and hobby projects.',
-    price: '$0',
+    name: 'Developer',
+    description: 'For testing and evaluation',
+    price: 'Free',
     period: '',
-    cta: 'Get Started',
-    featured: false,
     features: [
-      '500 events per month',
+      '500 events/month',
       '1 webhook endpoint',
       'Core event types',
       '3-day delivery logs',
-      'Community support',
     ],
+    cta: 'Get Started',
+    featured: false,
   },
   {
-    name: 'Starter',
-    description: 'For indie developers and small teams.',
-    price: '$29',
+    name: 'Builder',
+    description: 'For developers building on XRPL',
+    price: '$79',
     period: '/mo',
-    cta: 'Start Free Trial',
-    featured: true,
     features: [
-      '50,000 events per month',
-      '10 webhook endpoints',
-      'All event types',
+      '50,000 events/month',
+      '5 webhook endpoints',
       'WebSocket streaming',
-      '30-day delivery logs',
       'Event replay',
-      'Email support',
+      '30-day delivery logs',
     ],
-  },
-  {
-    name: 'Pro',
-    description: 'For production applications.',
-    price: '$99',
-    period: '/mo',
     cta: 'Start Free Trial',
     featured: false,
+  },
+  {
+    name: 'Compliance',
+    description: 'GENIUS Act ready. For regulated institutions.',
+    price: '$599',
+    period: '/mo',
     features: [
-      '500,000 events per month',
-      '50 webhook endpoints',
-      'Priority delivery queue',
-      '90-day delivery logs',
-      'Custom retry policies',
-      'Raw transaction data',
-      'Priority support',
+      '2,000,000 events/month',
+      '100 webhook endpoints',
+      'NemoClaw governance layer',
+      'Continuous audit trail',
+      'Anomaly detection alerts',
+      'Privacy-preserving monitoring',
     ],
+    cta: 'Contact Sales',
+    featured: true,
   },
 ];
