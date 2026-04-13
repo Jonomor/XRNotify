@@ -19,13 +19,20 @@ const logger = createModuleLogger('billing-webhook');
 // -----------------------------------------------------------------------------
 
 function getPlanFromPriceId(priceId: string): string {
+  const builderPrice = process.env['STRIPE_PRICE_BUILDER'];
+  const professionalPrice = process.env['STRIPE_PRICE_PROFESSIONAL'];
+  const compliancePrice = process.env['STRIPE_PRICE_COMPLIANCE'];
+  const enterprisePrice = process.env['STRIPE_PRICE_ENTERPRISE'];
   const starterPrice = process.env['STRIPE_PRICE_STARTER'];
   const proPrice = process.env['STRIPE_PRICE_PRO'];
-  const enterprisePrice = process.env['STRIPE_PRICE_ENTERPRISE'];
 
+  if (priceId === builderPrice) return 'builder';
+  if (priceId === professionalPrice) return 'professional';
+  if (priceId === compliancePrice) return 'compliance';
+  if (priceId === enterprisePrice) return 'enterprise';
+  // Legacy fallbacks
   if (priceId === starterPrice) return 'starter';
   if (priceId === proPrice) return 'pro';
-  if (priceId === enterprisePrice) return 'enterprise';
   return 'free';
 }
 

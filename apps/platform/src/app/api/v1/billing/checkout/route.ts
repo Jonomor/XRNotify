@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 const logger = createModuleLogger('billing-checkout');
 
 interface CheckoutBody {
-  plan: 'starter' | 'pro' | 'enterprise';
+  plan: 'builder' | 'professional' | 'compliance' | 'enterprise';
 }
 
 interface TenantRow {

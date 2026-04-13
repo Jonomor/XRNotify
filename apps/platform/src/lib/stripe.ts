@@ -21,16 +21,20 @@ export const stripe = new Stripe(stripeKey || 'sk_test_placeholder', {
 // Plan Types
 // -----------------------------------------------------------------------------
 
-export type PlanType = 'free' | 'starter' | 'pro' | 'enterprise';
+export type PlanType = 'free' | 'builder' | 'professional' | 'compliance' | 'enterprise' | 'starter' | 'pro';
 
 // -----------------------------------------------------------------------------
 // Stripe Price IDs
 // -----------------------------------------------------------------------------
 
-export const STRIPE_PRICES: Record<Exclude<PlanType, 'free'>, string> = {
-  starter: process.env['STRIPE_PRICE_STARTER'] ?? '',
-  pro: process.env['STRIPE_PRICE_PRO'] ?? '',
-  enterprise: process.env['STRIPE_PRICE_ENTERPRISE'] ?? '',
+export const STRIPE_PRICES: Record<string, string | undefined> = {
+  builder: process.env['STRIPE_PRICE_BUILDER'],
+  professional: process.env['STRIPE_PRICE_PROFESSIONAL'],
+  compliance: process.env['STRIPE_PRICE_COMPLIANCE'],
+  enterprise: process.env['STRIPE_PRICE_ENTERPRISE'],
+  // Legacy — keep for existing subscribers
+  starter: process.env['STRIPE_PRICE_STARTER'],
+  pro: process.env['STRIPE_PRICE_PRO'],
 };
 
 // -----------------------------------------------------------------------------
@@ -43,6 +47,27 @@ export const PLAN_LIMITS: Record<PlanType, { events: number; webhooks: number; r
     webhooks: 1,
     retentionDays: 3,
   },
+  builder: {
+    events: 50_000,
+    webhooks: 5,
+    retentionDays: 30,
+  },
+  professional: {
+    events: 500_000,
+    webhooks: 25,
+    retentionDays: 90,
+  },
+  compliance: {
+    events: 2_000_000,
+    webhooks: 100,
+    retentionDays: 365,
+  },
+  enterprise: {
+    events: 10_000_000,
+    webhooks: 500,
+    retentionDays: 365,
+  },
+  // Legacy — keep for existing subscribers
   starter: {
     events: 50_000,
     webhooks: 10,
@@ -52,11 +77,6 @@ export const PLAN_LIMITS: Record<PlanType, { events: number; webhooks: number; r
     events: 500_000,
     webhooks: 50,
     retentionDays: 90,
-  },
-  enterprise: {
-    events: 10_000_000,
-    webhooks: 500,
-    retentionDays: 365,
   },
 };
 

@@ -325,8 +325,8 @@ export default function SettingsPage() {
           <div className="flex flex-wrap gap-3">
             {plan === 'free' && (
               <>
-                <CheckoutButton plan="starter" label="Upgrade to Starter" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
-                <CheckoutButton plan="pro" label="Upgrade to Pro" className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors" />
+                <CheckoutButton plan="builder" label="Upgrade to Builder" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
+                <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors" />
               </>
             )}
             {plan !== 'free' && (
