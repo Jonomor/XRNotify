@@ -111,7 +111,7 @@ function EventTypeBadge({ type }: { type: string }) {
 
 function ResponseBadge({ status, timeMs }: { status: number | null; timeMs: number | null }) {
   if (status === null) {
-    return <span className="text-zinc-500 text-sm">—</span>;
+    return <span className="text-zinc-500 text-sm">-</span>;
   }
 
   const isSuccess = status >= 200 && status < 300;
@@ -170,7 +170,7 @@ function ReplayButton({
 }
 
 function formatTimeAgo(date: Date | null): string {
-  if (!date) return '—';
+  if (!date) return '-';
   const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
 
   if (seconds < 0) return 'scheduled';
@@ -182,7 +182,7 @@ function formatTimeAgo(date: Date | null): string {
 }
 
 function formatNextRetry(date: Date | null): string {
-  if (!date) return '—';
+  if (!date) return '-';
   const seconds = Math.floor((new Date(date).getTime() - Date.now()) / 1000);
 
   if (seconds < 0) return 'now';

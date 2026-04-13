@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Event Schema — XRNotify Docs',
+  title: 'Event Schema: XRNotify Docs',
   description:
     'Canonical structure, TypeScript interface, and JSON Schema for every event delivered by XRNotify.',
 };
@@ -283,8 +283,8 @@ xrpl:84512710:123456789ABC...ABCD:dex.offer_partial:1`}
             </pre>
           </div>
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 text-sm text-zinc-300">
-            Payload schemas for each event type — including all field names, types, and
-            optional fields — are documented in the{' '}
+            Payload schemas for each event type, including all field names, types, and
+            optional fields, are documented in the{' '}
             <Link href="/docs/events" className="text-emerald-400 hover:text-emerald-300">
               Event Types
             </Link>{' '}

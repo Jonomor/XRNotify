@@ -84,7 +84,7 @@ export default function AboutPage() {
             <p className="text-lg text-zinc-300">
               XRNotify is enterprise-grade webhook infrastructure purpose-built for the XRP
               Ledger. It gives developers, platforms, and enterprises a reliable way to
-              receive real-time notifications whenever something happens on-chain — without
+              receive real-time notifications whenever something happens on-chain, without
               running their own node infrastructure or building custom blockchain monitoring
               pipelines.
             </p>
@@ -102,8 +102,8 @@ export default function AboutPage() {
               webhook delivery is cryptographically signed with HMAC-SHA256, giving you a
               simple way to verify authenticity and reject forgeries. If a delivery fails,
               XRNotify retries automatically with exponential backoff and maintains a
-              complete audit trail of every attempt — request payloads, response codes,
-              latency metrics, and response bodies — so you always know what happened and
+              complete audit trail of every attempt (request payloads, response codes,
+              latency metrics, and response bodies) so you always know what happened and
               why.
             </p>
           </div>
@@ -120,8 +120,8 @@ export default function AboutPage() {
               transaction events, token movements, and ledger signals. The system maintains
               persistent WebSocket connections to multiple XRPL nodes, ensuring zero-lag
               awareness of every validated ledger. When a transaction matches your
-              configured filters — whether it is an XRP payment, an NFT mint, a DEX offer
-              create, or a trustline authorization — XRNotify captures the event, enriches
+              configured filters (whether it is an XRP payment, an NFT mint, a DEX offer
+              create, or a trustline authorization), XRNotify captures the event, enriches
               it with contextual metadata, and dispatches a structured payload to your
               registered endpoint.
             </p>
@@ -154,7 +154,7 @@ export default function AboutPage() {
               >
                 Ali Morgan
               </a>
-              , founder of Jonomor — a systems architecture studio focused on AI Visibility
+              , founder of Jonomor, a systems architecture studio focused on AI Visibility
               and real-time infrastructure intelligence. Ali brings deep experience in
               distributed systems, event-driven architecture, and developer tooling to the
               XRPL ecosystem, with a focus on building production-grade infrastructure that
@@ -163,7 +163,7 @@ export default function AboutPage() {
             <p>
               Jonomor operates at the intersection of observability, automation, and
               intelligent systems. The studio builds products that detect signals, interpret
-              context, and drive operational outcomes — and XRNotify is where that pipeline
+              context, and drive operational outcomes. XRNotify is where that pipeline
               begins.
             </p>
           </div>
@@ -185,7 +185,7 @@ export default function AboutPage() {
               >
                 Jonomor ecosystem
               </a>
-              {' '}— the Observe stage that detects events at the point of origin before
+              : the Observe stage that detects events at the point of origin before
               they flow through interpretation and operational layers. In the Jonomor
               architecture, every system begins with sensing: capturing the raw signals
               that downstream intelligence depends on. XRNotify fulfills this role for the
@@ -193,7 +193,7 @@ export default function AboutPage() {
               that other systems can act on.
             </p>
             <p>
-              This positioning means XRNotify is not just a notification service — it is the
+              This positioning means XRNotify is not just a notification service. It is the
               foundational data capture layer that feeds analytics, automation, compliance
               monitoring, and AI-driven decision systems. By providing reliable, real-time
               event streams with guaranteed delivery and complete audit trails, XRNotify

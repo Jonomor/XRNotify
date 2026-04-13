@@ -402,7 +402,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
 
         {formData.event_types.length === 0 && (
           <p className="mt-4 text-sm text-zinc-500 bg-zinc-800 rounded p-3">
-            ℹ️ No events selected — this webhook will receive <strong>all</strong> event types.
+            No events selected. This webhook will receive <strong>all</strong> event types.
           </p>
         )}
       </div>
@@ -484,7 +484,7 @@ export default function WebhookForm({ mode, initialData, webhookId }: WebhookFor
               </div>
             ) : (
               <p className="text-sm text-zinc-500 italic">
-                No account filters — events from all accounts will be delivered.
+                No account filters. Events from all accounts will be delivered.
               </p>
             )}
           </div>

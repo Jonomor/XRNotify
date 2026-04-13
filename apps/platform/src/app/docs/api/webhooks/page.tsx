@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Webhooks API - XRNotify Docs',
-  description: 'Full reference for the XRNotify Webhooks API — create, list, update, delete, rotate secrets, and send test events.',
+  description: 'Full reference for the XRNotify Webhooks API: create, list, update, delete, rotate secrets, and send test events.',
 };
 
 function MethodBadge({ method }: { method: string }) {
@@ -43,7 +43,7 @@ export default function WebhooksApiPage() {
           </span>
           <h1 className="text-4xl font-bold text-white mb-4">Webhooks API</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
-            Manage your webhook endpoints — create, read, update, delete, rotate signing secrets, and trigger test events.
+            Manage your webhook endpoints: create, read, update, delete, rotate signing secrets, and trigger test events.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function WebhooksApiPage() {
             <MethodBadge method="POST" />
             <code className="font-mono text-white text-lg">/v1/webhooks</code>
           </div>
-          <p className="text-zinc-400 mb-6">Create a new webhook endpoint. Returns the webhook object including the signing secret — this is the only time the secret is shown.</p>
+          <p className="text-zinc-400 mb-6">Create a new webhook endpoint. Returns the webhook object including the signing secret. This is the only time the secret is shown.</p>
 
           <h3 className="text-base font-semibold text-white mb-3">Request body</h3>
           <div className="overflow-x-auto mb-6">
@@ -153,7 +153,7 @@ export default function WebhooksApiPage() {
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4"><code className="font-mono text-emerald-400 text-xs">cursor</code></td>
-                  <td className="py-2.5 pr-4"><code className="font-mono text-zinc-400 text-xs">—</code></td>
+                  <td className="py-2.5 pr-4"><code className="font-mono text-zinc-400 text-xs">-</code></td>
                   <td className="py-2.5 text-zinc-300 text-sm">Pagination cursor from a previous response's <code className="font-mono text-zinc-400">next_cursor</code></td>
                 </tr>
               </tbody>
@@ -229,7 +229,7 @@ export default function WebhooksApiPage() {
             <MethodBadge method="PATCH" />
             <code className="font-mono text-white text-lg">/v1/webhooks/<span className="text-zinc-400">:id</span></code>
           </div>
-          <p className="text-zinc-400 mb-4">Update a webhook. Send only the fields you want to change — all others remain unchanged.</p>
+          <p className="text-zinc-400 mb-4">Update a webhook. Send only the fields you want to change. All others remain unchanged.</p>
           <p className="text-zinc-400 mb-6 text-sm">Updatable fields: <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">url</code>, <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">event_types</code>, <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">account_filters</code>, <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">description</code>, <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">is_active</code></p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -36,7 +36,7 @@ export default function CreateWebhookPage() {
         {/* Method 1: Dashboard */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-2">Method 1: Dashboard</h2>
-          <p className="text-zinc-400 mb-6 text-sm">The fastest way to get started — no code required.</p>
+          <p className="text-zinc-400 mb-6 text-sm">The fastest way to get started, with no code required.</p>
           <ol className="space-y-4">
             {[
               {
@@ -62,7 +62,7 @@ export default function CreateWebhookPage() {
               {
                 step: '5',
                 title: 'Click Create',
-                desc: 'Your webhook is created and the signing secret is shown once. Copy it immediately — it cannot be retrieved after you leave this page.',
+                desc: 'Your webhook is created and the signing secret is shown once. Copy it immediately. It cannot be retrieved after you leave this page.',
               },
             ].map(({ step, title, desc }) => (
               <li key={step} className="flex gap-4">
@@ -79,7 +79,7 @@ export default function CreateWebhookPage() {
         {/* Method 2: API */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-2">Method 2: API</h2>
-          <p className="text-zinc-400 mb-4 text-sm">Create webhooks programmatically — useful for automated deployments or multi-tenant applications.</p>
+          <p className="text-zinc-400 mb-4 text-sm">Create webhooks programmatically. Useful for automated deployments or multi-tenant applications.</p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-6">
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`curl -X POST https://api.xrnotify.io/v1/webhooks \\
   -H "X-XRNotify-Key: xrn_live_your_key_here" \\
@@ -136,7 +136,7 @@ export default function CreateWebhookPage() {
             {[
               { ok: true, url: 'https://api.yourapp.com/webhooks', note: 'Valid HTTPS public endpoint' },
               { ok: true, url: 'https://yourapp.ngrok.io/xrpl', note: 'Valid HTTPS tunnel URL' },
-              { ok: false, url: 'http://yourapp.com/webhook', note: 'Not HTTPS — must use TLS' },
+              { ok: false, url: 'http://yourapp.com/webhook', note: 'Not HTTPS. Must use TLS' },
               { ok: false, url: 'https://localhost:3000/webhook', note: 'Localhost not reachable from XRNotify servers' },
               { ok: false, url: 'http://192.168.1.1/hook', note: 'Private IP addresses are blocked' },
             ].map(({ ok, url, note }) => (
@@ -144,7 +144,7 @@ export default function CreateWebhookPage() {
                 <span className={`text-sm mt-0.5 shrink-0 ${ok ? 'text-emerald-400' : 'text-red-400'}`}>{ok ? '✓' : '✗'}</span>
                 <div>
                   <code className="font-mono text-sm text-zinc-200">{url}</code>
-                  <span className="text-zinc-500 text-sm ml-2">— {note}</span>
+                  <span className="text-zinc-500 text-sm ml-2">- {note}</span>
                 </div>
               </div>
             ))}

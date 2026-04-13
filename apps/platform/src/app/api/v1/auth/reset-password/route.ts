@@ -1,8 +1,8 @@
 // =============================================================================
 // XRNotify Platform - Password Reset API
 // =============================================================================
-// POST /api/v1/auth/reset-password — Request a password reset email
-// PUT  /api/v1/auth/reset-password — Complete password reset with token
+// POST /api/v1/auth/reset-password - Request a password reset email
+// PUT  /api/v1/auth/reset-password - Complete password reset with token
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { email } = parsed.data;
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Look up user — always return success to prevent email enumeration
+    // Look up user - always return success to prevent email enumeration
     const user = await queryOne<{ id: string; tenant_id: string }>(`
       SELECT id, tenant_id FROM users WHERE LOWER(email) = $1 AND is_active = true
     `, [normalizedEmail]);
@@ -147,7 +147,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     }
 
     if (new Date(resetRecord.expires_at) < new Date()) {
-      // Token expired — clean it up
+      // Token expired - clean it up
       await execute('DELETE FROM password_reset_tokens WHERE token_hash = $1', [tokenHash]);
       return NextResponse.json(
         { error: { code: 'TOKEN_EXPIRED', message: 'Reset token has expired. Please request a new one.' } },

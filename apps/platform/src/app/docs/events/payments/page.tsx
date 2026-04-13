@@ -29,7 +29,7 @@ export default function PaymentEventsPage() {
           </span>
           <h1 className="text-4xl font-bold text-white mb-4">Payment Events</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
-            XRNotify emits two payment event types from the XRPL. <code className="font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-base">payment.xrp</code> fires for native XRP drop transfers between accounts. <code className="font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-base">payment.issued</code> fires for transfers of issued tokens — also known as IOUs — such as USDC, SOLO, or any other token on the XRPL.
+            XRNotify emits two payment event types from the XRPL. <code className="font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-base">payment.xrp</code> fires for native XRP drop transfers between accounts. <code className="font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-base">payment.issued</code> fires for transfers of issued tokens (also known as IOUs) such as USDC, SOLO, or any other token on the XRPL.
           </p>
         </div>
 
@@ -82,7 +82,7 @@ export default function PaymentEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">delivered_amount</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string</td>
-                  <td className="py-2.5 text-zinc-300">Actual delivered amount in drops — may differ from <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">amount</code> if a partial payment flag was set</td>
+                  <td className="py-2.5 text-zinc-300">Actual delivered amount in drops. May differ from <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">amount</code> if a partial payment flag was set</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">destination_tag</td>
@@ -97,7 +97,7 @@ export default function PaymentEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">tx_hash</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string</td>
-                  <td className="py-2.5 text-zinc-300">Transaction hash — unique identifier for this transaction on the ledger</td>
+                  <td className="py-2.5 text-zinc-300">Transaction hash, the unique identifier for this transaction on the ledger</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">ledger_index</td>
@@ -145,7 +145,7 @@ export default function PaymentEventsPage() {
             <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded px-2 py-0.5">Issued Tokens</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
-            Fires on <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">Payment</code> transactions that move issued tokens — also called IOUs. This includes stablecoins (USDC, RLUSD), DEX tokens (SOLO, CSC), and any token issued by a gateway or project on the XRPL.
+            Fires on <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">Payment</code> transactions that move issued tokens, also called IOUs. This includes stablecoins (USDC, RLUSD), DEX tokens (SOLO, CSC), and any token issued by a gateway or project on the XRPL.
           </p>
 
           <h3 className="text-lg font-semibold text-white mb-3">Additional fields</h3>
@@ -165,7 +165,7 @@ export default function PaymentEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">currency</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string</td>
-                  <td className="py-2.5 text-zinc-300">Currency code — 3-letter ASCII (e.g. <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">USD</code>, <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">BTC</code>) or 40-character hex for non-standard currencies</td>
+                  <td className="py-2.5 text-zinc-300">Currency code: 3-letter ASCII (e.g. <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">USD</code>, <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">BTC</code>) or 40-character hex for non-standard currencies</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">issuer</td>

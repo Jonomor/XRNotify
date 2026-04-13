@@ -331,13 +331,23 @@ export default function SettingsPage() {
               <>
                 <CheckoutButton plan="builder" label="Upgrade to Builder" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
                 <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors" />
+                <a href="mailto:compliance@xrnotify.io" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
+                  Upgrade to Compliance
+                </a>
               </>
             )}
             {plan === 'builder' && (
-              <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
+              <>
+                <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
+                <a href="mailto:compliance@xrnotify.io" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
+                  Upgrade to Compliance
+                </a>
+              </>
             )}
             {plan === 'professional' && (
-              <CheckoutButton plan="compliance" label="Upgrade to Compliance" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
+              <a href="mailto:compliance@xrnotify.io" className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-2 text-sm font-semibold text-white no-underline hover:from-emerald-400 hover:to-teal-400 transition-colors">
+                Upgrade to Compliance
+              </a>
             )}
             {plan !== 'free' && (
               <button

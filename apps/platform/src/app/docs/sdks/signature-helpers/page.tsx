@@ -29,7 +29,7 @@ export default function SignatureHelpersPage() {
           </span>
           <h1 className="text-4xl font-bold text-white mb-4">Webhook Signature Helpers</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
-            Copy-paste ready signature verification functions for any language. No SDK required — these are standalone functions you can drop directly into your application.
+            Copy-paste ready signature verification functions for any language. No SDK required. These are standalone functions you can drop directly into your application.
           </p>
         </div>
 
@@ -79,14 +79,14 @@ function verifyXRNotifySignature(payload, signature, secret) {
       Buffer.from(expected, 'utf8')
     );
   } catch {
-    // Lengths differ — timingSafeEqual throws on mismatched lengths
+    // Lengths differ - timingSafeEqual throws on mismatched lengths
     return false;
   }
 }`}</pre>
           </div>
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
             <p className="text-emerald-300 text-sm">
-              <span className="font-semibold">Key point:</span> <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">crypto.timingSafeEqual</code> throws if the two buffers have different lengths, so the try/catch is required. Pass the raw <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">req.body</code> Buffer — not a parsed object.
+              <span className="font-semibold">Key point:</span> <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">crypto.timingSafeEqual</code> throws if the two buffers have different lengths, so the try/catch is required. Pass the raw <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">req.body</code> Buffer, not a parsed object.
             </p>
           </div>
         </section>

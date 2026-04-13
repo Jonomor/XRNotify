@@ -32,7 +32,7 @@ export const STRIPE_PRICES: Record<string, string | undefined> = {
   professional: process.env['STRIPE_PRICE_PROFESSIONAL'],
   compliance: process.env['STRIPE_PRICE_COMPLIANCE'],
   enterprise: process.env['STRIPE_PRICE_ENTERPRISE'],
-  // Legacy — keep for existing subscribers
+  // Legacy - keep for existing subscribers
   starter: process.env['STRIPE_PRICE_STARTER'],
   pro: process.env['STRIPE_PRICE_PRO'],
 };
@@ -67,7 +67,7 @@ export const PLAN_LIMITS: Record<PlanType, { events: number; webhooks: number; r
     webhooks: 500,
     retentionDays: 365,
   },
-  // Legacy — keep for existing subscribers
+  // Legacy - keep for existing subscribers
   starter: {
     events: 50_000,
     webhooks: 10,

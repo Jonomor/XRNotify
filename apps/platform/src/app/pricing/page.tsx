@@ -125,14 +125,14 @@ const tiers = [
 function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
   return (
     <div
-      className={`relative rounded-2xl p-6 flex flex-col min-h-[520px] ${
+      className={`relative rounded-2xl p-6 flex flex-col min-h-[560px] ${
         tier.highlighted
           ? 'bg-gradient-to-b from-emerald-500/15 to-zinc-900/50 border border-emerald-500/40 ring-1 ring-emerald-500/20'
           : 'bg-zinc-900/60 border border-zinc-800/60'
       }`}
     >
       {tier.highlighted && (
-        <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-emerald-500/30">
+        <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-1.5 text-[11px] font-bold uppercase tracking-widest text-white shadow-lg shadow-emerald-500/25">
           Most Popular
         </span>
       )}
@@ -193,10 +193,12 @@ function PricingCard({ tier }: { tier: (typeof tiers)[number] }) {
         </Link>
       )}
 
-      {tier.trial && (
+      {tier.trial ? (
         <p className="mt-3 text-center text-xs text-zinc-500">
           14-day free trial · No credit card required
         </p>
+      ) : (
+        <div className="h-[44px]" />
       )}
     </div>
   );

@@ -114,7 +114,7 @@ export default function NewApiKeyPage() {
               </div>
               <div>
                 <p className="font-semibold text-white">API key created!</p>
-                <p className="text-sm text-zinc-400">Copy it now — it will not be shown again.</p>
+                <p className="text-sm text-zinc-400">Copy it now. It will not be shown again.</p>
               </div>
             </div>
 

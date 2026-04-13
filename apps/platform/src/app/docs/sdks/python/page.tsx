@@ -95,7 +95,7 @@ client = XRNotify(api_key=os.environ["XRNOTIFY_API_KEY"])
 )
 
 print(webhook.id)      # wh_abc123
-print(webhook.secret)  # Only available on creation — store immediately`}</pre>
+print(webhook.secret)  # Only available on creation - store immediately`}</pre>
           </div>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
             <p className="text-amber-300 text-sm">
@@ -174,7 +174,7 @@ app = Flask(__name__)
 
 @app.route("/webhooks/xrpl", methods=["POST"])
 def handle_webhook():
-    # Verify before parsing — use request.data (raw bytes)
+    # Verify before parsing - use request.data (raw bytes)
     if not verify_signature(
         payload=request.data,
         signature=request.headers.get("X-XRNotify-Signature", ""),

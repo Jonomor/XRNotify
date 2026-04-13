@@ -144,7 +144,7 @@ export const metadata: Metadata = {
   },
   title: {
     default: CANONICAL_COPY.pageTitle,
-    template: '%s — XRNotify',
+    template: '%s | XRNotify',
   },
   description:
     'Real-time webhook notification platform for the XRP Ledger. Subscribe to blockchain events and receive instant HTTP callbacks without running your own node infrastructure.',
@@ -234,32 +234,32 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Block 1 — Jonomor Organization */}
+        {/* Block 1 - Jonomor Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jonomorOrgSchema) }}
         />
-        {/* Block 2 — Ali Morgan Person */}
+        {/* Block 2 - Ali Morgan Person */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(aliMorganSchema) }}
         />
-        {/* Block 3 — XRNotify Organization */}
+        {/* Block 3 - XRNotify Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(xrnotifyOrgSchema) }}
         />
-        {/* Block 4 — WebSite */}
+        {/* Block 4 - WebSite */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {/* Block 5 — SoftwareApplication */}
+        {/* Block 5 - SoftwareApplication */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
         />
-        {/* Block 6 — FAQPage */}
+        {/* Block 6 - FAQPage */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }}

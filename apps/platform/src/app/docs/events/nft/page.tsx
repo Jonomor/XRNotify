@@ -29,7 +29,7 @@ export default function NftEventsPage() {
           </span>
           <h1 className="text-4xl font-bold text-white mb-4">NFT Events</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
-            XRNotify tracks the full lifecycle of Non-Fungible Tokens on the XRPL. Five event types cover every stage — from minting to burning, and the entire offer marketplace. Use <code className="font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-base">nft.*</code> to subscribe to all of them with a single wildcard.
+            XRNotify tracks the full lifecycle of Non-Fungible Tokens on the XRPL. Five event types cover every stage, from minting to burning, and the entire offer marketplace. Use <code className="font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded text-base">nft.*</code> to subscribe to all of them with a single wildcard.
           </p>
         </div>
 
@@ -235,7 +235,7 @@ export default function NftEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">amount</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string | object</td>
-                  <td className="py-2.5 text-zinc-300">Price — a drops string for XRP, or <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">&#123;currency, value, issuer&#125;</code> for issued tokens</td>
+                  <td className="py-2.5 text-zinc-300">Price: a drops string for XRP, or <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">&#123;currency, value, issuer&#125;</code> for issued tokens</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">is_sell_offer</td>
@@ -269,7 +269,7 @@ export default function NftEventsPage() {
             <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">NFTokenAcceptOffer</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
-            Fires when an <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">NFTokenAcceptOffer</code> transaction completes a sale. This is the definitive &quot;NFT sold&quot; event — ownership has transferred and payment has settled.
+            Fires when an <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">NFTokenAcceptOffer</code> transaction completes a sale. This is the definitive &quot;NFT sold&quot; event: ownership has transferred and payment has settled.
           </p>
 
           <h3 className="text-lg font-semibold text-white mb-3">Payload schema</h3>
@@ -306,7 +306,7 @@ export default function NftEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">price</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string | object</td>
-                  <td className="py-2.5 text-zinc-300">Sale price — drops string for XRP or <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">&#123;currency, value, issuer&#125;</code> for tokens</td>
+                  <td className="py-2.5 text-zinc-300">Sale price: drops string for XRP or <code className="font-mono text-zinc-400 bg-zinc-800 px-1 rounded text-xs">&#123;currency, value, issuer&#125;</code> for tokens</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">broker</td>
@@ -356,7 +356,7 @@ export default function NftEventsPage() {
             <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">NFTokenCancelOffer</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
-            Fires when one or more NFT offers are cancelled via <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">NFTokenCancelOffer</code>. A single transaction can cancel multiple offers at once — the <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">offer_id</code> field is an array to accommodate this.
+            Fires when one or more NFT offers are cancelled via <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">NFTokenCancelOffer</code>. A single transaction can cancel multiple offers at once, so the <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">offer_id</code> field is an array to accommodate this.
           </p>
 
           <h3 className="text-lg font-semibold text-white mb-3">Payload schema</h3>
@@ -373,7 +373,7 @@ export default function NftEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">offer_id</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string[]</td>
-                  <td className="py-2.5 text-zinc-300">Array of cancelled offer IDs — may contain one or more entries</td>
+                  <td className="py-2.5 text-zinc-300">Array of cancelled offer IDs (may contain one or more entries)</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">nft_id</td>

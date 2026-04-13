@@ -49,7 +49,7 @@ pnpm add @xrnotify/sdk`}</pre>
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-3">Initialization</h2>
           <p className="text-zinc-400 mb-4 leading-relaxed">
-            Create a client instance with your API key. Store the key in an environment variable — never hard-code it.
+            Create a client instance with your API key. Store the key in an environment variable. Never hard-code it.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`import { XRNotify } from '@xrnotify/sdk';
@@ -62,7 +62,7 @@ const client = new XRNotify({
           </div>
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
             <p className="text-emerald-300 text-sm">
-              <span className="font-semibold">Test environment:</span> Set <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">environment: &apos;test&apos;</code> to use test API keys (<code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">xrn_test_...</code>). Test mode delivers synthetic events only — no real XRPL data is consumed.
+              <span className="font-semibold">Test environment:</span> Set <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">environment: &apos;test&apos;</code> to use test API keys (<code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">xrn_test_...</code>). Test mode delivers synthetic events only, with no real XRPL data consumed.
             </p>
           </div>
         </section>
@@ -71,7 +71,7 @@ const client = new XRNotify({
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-3">Creating a webhook</h2>
           <p className="text-zinc-400 mb-4 leading-relaxed">
-            Register a new webhook endpoint. The response includes a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">secret</code> field that is only returned once — store it securely in your secrets manager.
+            Register a new webhook endpoint. The response includes a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">secret</code> field that is only returned once. Store it securely in your secrets manager.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`const webhook = await client.webhooks.create({
@@ -82,7 +82,7 @@ const client = new XRNotify({
 });
 
 console.log(webhook.id);      // wh_abc123
-console.log(webhook.secret);  // Only available on creation — store immediately`}</pre>
+console.log(webhook.secret);  // Only available on creation - store immediately`}</pre>
           </div>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
             <p className="text-amber-300 text-sm">
@@ -118,7 +118,7 @@ if (hasMore) {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-3">Updating a webhook</h2>
           <p className="text-zinc-400 mb-4 leading-relaxed">
-            Update any field of an existing webhook. Only the fields you provide are changed — unspecified fields retain their current values.
+            Update any field of an existing webhook. Only the fields you provide are changed. Unspecified fields retain their current values.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto">
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`// Pause a webhook
@@ -175,7 +175,7 @@ import express from 'express';
 
 const app = express();
 
-// Use express.raw() — NOT express.json() — to get the raw body buffer
+// Use express.raw(), NOT express.json(), to get the raw body buffer
 app.post('/webhooks', express.raw({ type: 'application/json' }), (req, res) => {
   const isValid = verifySignature({
     payload: req.body,

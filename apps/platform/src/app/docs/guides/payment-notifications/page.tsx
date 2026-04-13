@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Building a Payment Notification System — XRNotify Docs',
+  title: 'Building a Payment Notification System: XRNotify Docs',
   description:
     'End-to-end tutorial for building a real-time payment notification system on XRPL using XRNotify webhooks.',
 };
@@ -60,27 +60,27 @@ export default function PaymentNotificationsPage() {
           </div>
           <ul className="space-y-3 text-zinc-300">
             <li>
-              <span className="text-white font-medium">XRPL Mainnet</span> — the source of
+              <span className="text-white font-medium">XRPL Mainnet</span>: the source of
               truth. Every payment, NFT transfer, and DEX trade is recorded in an immutable
               ledger that closes roughly every 3–4 seconds.
             </li>
             <li>
-              <span className="text-white font-medium">XRNotify</span> — listens to the
+              <span className="text-white font-medium">XRNotify</span>: listens to the
               validated ledger stream, detects events matching your webhook configuration,
               signs and delivers HTTP POST requests to your server with a 10-second timeout
               and automatic retries.
             </li>
             <li>
-              <span className="text-white font-medium">Your Server</span> — verifies the
+              <span className="text-white font-medium">Your Server</span>: verifies the
               webhook signature, updates your database, and dispatches the notification.
             </li>
             <li>
-              <span className="text-white font-medium">Push Notification Service</span> — any
+              <span className="text-white font-medium">Push Notification Service</span>: any
               provider such as Firebase Cloud Messaging, Apple Push Notification Service, or
               a third-party service like OneSignal.
             </li>
             <li>
-              <span className="text-white font-medium">User</span> — receives a push
+              <span className="text-white font-medium">User</span>: receives a push
               notification on their device within seconds of the ledger closing.
             </li>
           </ul>
@@ -108,7 +108,7 @@ export default function PaymentNotificationsPage() {
             </pre>
           </div>
           <p className="text-zinc-400 text-sm">
-            The response includes the webhook&apos;s <code className="text-emerald-400 bg-zinc-800 px-1 rounded">secret</code> field — store this securely. You will use
+            The response includes the webhook&apos;s <code className="text-emerald-400 bg-zinc-800 px-1 rounded">secret</code> field. Store this securely. You will use
             it to verify signatures on every incoming delivery.
           </p>
         </section>
@@ -168,9 +168,9 @@ export default function PaymentNotificationsPage() {
             Step 3: Handle <code className="text-emerald-400">payment.issued</code> events
           </h2>
           <p className="text-zinc-400 text-sm mb-4 leading-relaxed">
-            Issued currency payments carry additional fields — <code className="text-emerald-400 bg-zinc-800 px-1 rounded">currency</code>,{' '}
+            Issued currency payments carry additional fields (<code className="text-emerald-400 bg-zinc-800 px-1 rounded">currency</code>,{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">issuer</code>, and{' '}
-            <code className="text-emerald-400 bg-zinc-800 px-1 rounded">value</code> — instead of a raw drops amount.
+            <code className="text-emerald-400 bg-zinc-800 px-1 rounded">value</code>) instead of a raw drops amount.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
             <pre className="text-zinc-300 text-sm font-mono whitespace-pre">

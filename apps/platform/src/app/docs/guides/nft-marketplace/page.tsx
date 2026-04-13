@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'NFT Marketplace Integration — XRNotify Docs',
+  title: 'NFT Marketplace Integration: XRNotify Docs',
   description:
-    'End-to-end guide for tracking the full NFT lifecycle — mint, list, sale, and burn — in your XRPL marketplace using XRNotify webhooks.',
+    'End-to-end guide for tracking the full NFT lifecycle (mint, list, sale, and burn) in your XRPL marketplace using XRNotify webhooks.',
 };
 
 export default function NftMarketplacePage() {
@@ -53,23 +53,23 @@ export default function NftMarketplacePage() {
           <ul className="space-y-2 text-zinc-300 text-sm">
             <li className="flex gap-2">
               <span className="text-emerald-400 mt-0.5">→</span>
-              <span><strong className="text-white">Mint</strong> — index new NFTs as soon as they appear on-chain</span>
+              <span><strong className="text-white">Mint</strong>: index new NFTs as soon as they appear on-chain</span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-400 mt-0.5">→</span>
-              <span><strong className="text-white">Offer created</strong> — mark NFTs as &quot;listed for sale&quot; or record incoming bids</span>
+              <span><strong className="text-white">Offer created</strong>: mark NFTs as &quot;listed for sale&quot; or record incoming bids</span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-400 mt-0.5">→</span>
-              <span><strong className="text-white">Offer accepted</strong> — transfer ownership and record the sale</span>
+              <span><strong className="text-white">Offer accepted</strong>: transfer ownership and record the sale</span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-400 mt-0.5">→</span>
-              <span><strong className="text-white">Offer cancelled</strong> — remove stale listings and bids</span>
+              <span><strong className="text-white">Offer cancelled</strong>: remove stale listings and bids</span>
             </li>
             <li className="flex gap-2">
               <span className="text-emerald-400 mt-0.5">→</span>
-              <span><strong className="text-white">Burn</strong> — delist and archive burned tokens</span>
+              <span><strong className="text-white">Burn</strong>: delist and archive burned tokens</span>
             </li>
           </ul>
         </section>
@@ -79,7 +79,7 @@ export default function NftMarketplacePage() {
           <h2 className="text-xl font-semibold text-white mb-4">Subscribe to NFT events</h2>
           <p className="text-zinc-300 text-sm mb-4 leading-relaxed">
             Create a single webhook that covers all NFT event types. Because this webhook
-            has no <code className="text-emerald-400 bg-zinc-800 px-1 rounded">account_filters</code>, it will fire for any NFT activity on the network —
+            has no <code className="text-emerald-400 bg-zinc-800 px-1 rounded">account_filters</code>, it will fire for any NFT activity on the network,
             suitable for a public marketplace. You can add filters later to narrow scope.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
@@ -290,7 +290,7 @@ export default function NftMarketplacePage() {
     burned_at: event.timestamp,
   });
 
-  // Remove all bids — there is nothing left to bid on
+  // Remove all bids - there is nothing left to bid on
   await db.bids.deleteWhere({ nft_id });
 }`}
             </pre>

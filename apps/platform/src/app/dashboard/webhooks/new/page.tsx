@@ -56,7 +56,7 @@ export default function NewWebhookPage() {
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set());
   const [accountFilters, setAccountFilters] = useState('');
 
-  // After creation — show secret once
+  // After creation - show secret once
   const [createdSecret, setCreatedSecret] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -138,7 +138,7 @@ export default function NewWebhookPage() {
               </div>
               <div>
                 <p className="font-semibold text-white">Webhook created!</p>
-                <p className="text-sm text-zinc-400">Save the secret below — it will only be shown once.</p>
+                <p className="text-sm text-zinc-400">Save the secret below. It will only be shown once.</p>
               </div>
             </div>
 
@@ -157,7 +157,7 @@ export default function NewWebhookPage() {
 
             <p className="text-xs text-zinc-500">
               Use this secret to verify HMAC signatures on incoming webhook payloads.
-              Store it securely — it cannot be retrieved again.
+              Store it securely. It cannot be retrieved again.
             </p>
 
             <Link

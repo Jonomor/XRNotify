@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
           body: JSON.stringify({ email: email.trim() }),
         });
       } catch {
-        // Ignore errors — always show success to prevent enumeration
+        // Ignore errors - always show success to prevent enumeration
       }
       setSubmitted(true);
     });

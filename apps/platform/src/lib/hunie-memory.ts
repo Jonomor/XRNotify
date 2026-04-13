@@ -1,5 +1,5 @@
 // =============================================================================
-// XRNotify — H.U.N.I.E. Memory Functions
+// XRNotify - H.U.N.I.E. Memory Functions
 // =============================================================================
 // Domain-specific memory write/read helpers for XRNotify agents.
 // Every function is fire-and-forget safe: never throws, logs errors only.
@@ -37,8 +37,11 @@ export async function writeAnomalyPattern(
   try {
     await client.writeMemory({
       agentId: WALLET_MONITOR_AGENT,
-      content: `Anomaly detected for ${params.walletAddress}: ${params.anomalyDescription}`,
-      contentType: 'OBSERVATION',
+      content: {
+        contentType: 'KNOWLEDGE_GRAPH',
+        text: `Anomaly detected for ${params.walletAddress}: ${params.anomalyDescription}`,
+      },
+      source: { type: 'DIRECT_OBSERVATION', reliabilityWeight: 0.9 },
       namespace: 'xrnotify.wallet-monitor.anomaly-pattern',
       metadata: {
         walletAddress: params.walletAddress,
@@ -73,8 +76,11 @@ export async function writeAlertEvent(
   try {
     await client.writeMemory({
       agentId: WALLET_MONITOR_AGENT,
-      content: `Alert for ${params.walletAddress}: ${params.eventType} — delivery ${params.deliverySuccess ? 'succeeded' : 'failed'}, ${params.wasAcknowledged ? 'acknowledged' : 'unacknowledged'}`,
-      contentType: 'EXPERIENCE',
+      content: {
+        contentType: 'KNOWLEDGE_GRAPH',
+        text: `Alert for ${params.walletAddress}: ${params.eventType} - delivery ${params.deliverySuccess ? 'succeeded' : 'failed'}, ${params.wasAcknowledged ? 'acknowledged' : 'unacknowledged'}`,
+      },
+      source: { type: 'DIRECT_OBSERVATION', reliabilityWeight: 0.85 },
       namespace: 'xrnotify.wallet-monitor.alert-history',
       metadata: {
         webhookId: params.webhookId,
@@ -110,8 +116,11 @@ export async function writeNetworkState(
   try {
     await client.writeMemory({
       agentId: NETWORK_AGENT,
-      content: `XRPL ledger ${params.ledgerIndex}: baseFee=${params.baseFee}, closeTime=${params.closeTime}${params.noteworthy ? ` — ${params.noteworthy}` : ''}`,
-      contentType: 'FACT',
+      content: {
+        contentType: 'KNOWLEDGE_GRAPH',
+        text: `XRPL ledger ${params.ledgerIndex}: baseFee=${params.baseFee}, closeTime=${params.closeTime}${params.noteworthy ? ` - ${params.noteworthy}` : ''}`,
+      },
+      source: { type: 'EXTERNAL_SYSTEM', reliabilityWeight: 0.95 },
       namespace: 'xrnotify.network-agent.xrpl-state',
       metadata: {
         ledgerIndex: params.ledgerIndex,
@@ -147,8 +156,11 @@ export async function writeUsageMetrics(
   try {
     await client.writeMemory({
       agentId: USAGE_AGENT,
-      content: `Usage snapshot: ${params.totalWebhooks} webhooks, ${params.totalDeliveries} deliveries, ${(params.successRate * 100).toFixed(1)}% success, ${params.avgLatencyMs}ms avg latency, ${params.activeWallets} active wallets`,
-      contentType: 'FACT',
+      content: {
+        contentType: 'KNOWLEDGE_GRAPH',
+        text: `Usage snapshot: ${params.totalWebhooks} webhooks, ${params.totalDeliveries} deliveries, ${(params.successRate * 100).toFixed(1)}% success, ${params.avgLatencyMs}ms avg latency, ${params.activeWallets} active wallets`,
+      },
+      source: { type: 'DIRECT_OBSERVATION', reliabilityWeight: 0.9 },
       namespace: 'xrnotify.usage-agent.product-metrics',
       metadata: {
         totalWebhooks: params.totalWebhooks,

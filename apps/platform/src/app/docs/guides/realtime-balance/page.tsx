@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Real-time Balance Updates — XRNotify Docs',
+  title: 'Real-time Balance Updates: XRNotify Docs',
   description:
     'Stream live XRP and token balance changes to your frontend using XRNotify webhooks and Server-Sent Events.',
 };
@@ -39,7 +39,7 @@ export default function RealtimeBalancePage() {
           <h1 className="text-3xl font-bold text-white mb-3">Real-time Balance Updates</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
             Push live XRP and token balance changes directly to browser clients the instant
-            a payment lands on-chain — no polling required.
+            a payment lands on-chain, with no polling required.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function RealtimeBalancePage() {
           </p>
           <div className="space-y-3 mb-4">
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-              <div className="text-sm font-medium text-white mb-1">Approach 1 — Webhook-driven (this guide)</div>
+              <div className="text-sm font-medium text-white mb-1">Approach 1: Webhook-driven (this guide)</div>
               <p className="text-zinc-400 text-xs leading-relaxed">
                 XRNotify pushes a payment event to your server. Your server updates the
                 database and emits a Server-Sent Event (SSE) to connected browser clients.
@@ -60,7 +60,7 @@ export default function RealtimeBalancePage() {
               </p>
             </div>
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
-              <div className="text-sm font-medium text-white mb-1">Approach 2 — Client polling</div>
+              <div className="text-sm font-medium text-white mb-1">Approach 2: Client polling</div>
               <p className="text-zinc-400 text-xs leading-relaxed">
                 The frontend polls your balance API on a fixed interval. Simpler to implement
                 but introduces latency equal to the poll interval and generates unnecessary
@@ -132,7 +132,7 @@ export default function RealtimeBalancePage() {
       break;
     }
     case 'trustline.created': {
-      // A new trustline was established — client may want to show zero balance
+      // A new trustline was established - client may want to show zero balance
       await broadcastTrustlineCreated(receiver, currency, issuer);
       break;
     }
@@ -163,7 +163,7 @@ export async function broadcastBalanceUpdate(address, currency, issuer, delta) {
   balanceEmitter.emit('update', { address, currency, issuer, delta });
 }
 
-// SSE endpoint — authenticate before registering the listener
+// SSE endpoint - authenticate before registering the listener
 app.get('/api/balance-stream', requireAuth, (req, res) => {
   const userId = req.user.id;
 
@@ -227,7 +227,7 @@ function useRealtimeBalance(address: string, initialBalance: number = 0) {
     };
 
     es.onerror = () => {
-      // EventSource auto-reconnects — no manual retry needed
+      // EventSource auto-reconnects - no manual retry needed
       console.warn('SSE connection lost, reconnecting...');
     };
 
@@ -293,7 +293,7 @@ function WalletBalance({ address }: { address: string }) {
             During an SSE reconnect, the browser sends the last seen{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">Last-Event-ID</code> header if you set event IDs server-side.
             However, a simpler strategy is to initialize the balance from your REST API on
-            mount, then apply SSE deltas on top — this way a reconnect just means a brief
+            mount, then apply SSE deltas on top. This way a reconnect just means a brief
             gap with no missed net balance change:
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
@@ -328,7 +328,7 @@ function WalletBalance({ address }: { address: string }) {
             Because XRNotify uses the{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">X-XRNotify-Delivery-Id</code> header for every delivery (including retries),
             your webhook handler&apos;s idempotency cache prevents the same delta from being
-            applied twice to the database — ensuring the REST API always returns an accurate
+            applied twice to the database, ensuring the REST API always returns an accurate
             balance even during retry storms.
           </p>
         </section>

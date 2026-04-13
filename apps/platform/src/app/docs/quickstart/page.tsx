@@ -46,7 +46,7 @@ export default function QuickstartPage() {
             <li>Open your <Link href="/dashboard" className="text-emerald-400 hover:text-emerald-300">Dashboard</Link></li>
             <li>Go to <span className="text-white font-medium">Settings → API Keys</span></li>
             <li>Click <span className="text-white font-medium">Create new key</span></li>
-            <li>Copy and store the key securely — it won't be shown again</li>
+            <li>Copy and store the key securely. It won't be shown again</li>
           </ol>
           <p className="text-zinc-400 mb-4 text-sm">
             Your key will look like this:
@@ -56,7 +56,7 @@ export default function QuickstartPage() {
           </div>
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
             <p className="text-emerald-300 text-sm">
-              <span className="font-semibold">Tip:</span> Use test keys (<code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">xrn_test_...</code>) during development. Test keys behave identically but only deliver test events — no real XRPL data.
+              <span className="font-semibold">Tip:</span> Use test keys (<code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">xrn_test_...</code>) during development. Test keys behave identically but only deliver test events, with no real XRPL data.
             </p>
           </div>
         </section>
@@ -81,7 +81,7 @@ export default function QuickstartPage() {
   }'`}</pre>
           </div>
           <p className="text-zinc-400 text-sm">
-            The <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">account_filters</code> field is optional — omit it to receive events for all XRPL accounts. The response includes a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">secret</code> field that you'll use to verify incoming requests.
+            The <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">account_filters</code> field is optional. Omit it to receive events for all XRPL accounts. The response includes a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">secret</code> field that you'll use to verify incoming requests.
           </p>
         </section>
 
@@ -131,7 +131,7 @@ app.listen(3000);`}</pre>
           </div>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
             <p className="text-amber-300 text-sm">
-              <span className="font-semibold">Important:</span> Use <code className="font-mono text-amber-200 bg-amber-500/10 px-1 rounded">express.raw()</code> — not <code className="font-mono text-amber-200 bg-amber-500/10 px-1 rounded">express.json()</code> — so you can verify the raw bytes. Parsing JSON before verification will break signature checks.
+              <span className="font-semibold">Important:</span> Use <code className="font-mono text-amber-200 bg-amber-500/10 px-1 rounded">express.raw()</code>, not <code className="font-mono text-amber-200 bg-amber-500/10 px-1 rounded">express.json()</code>, so you can verify the raw bytes. Parsing JSON before verification will break signature checks.
             </p>
           </div>
         </section>

@@ -29,7 +29,7 @@ export default function DexEventsPage() {
           </span>
           <h1 className="text-4xl font-bold text-white mb-4">DEX Events</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
-            XRNotify monitors the XRPL decentralized exchange (DEX) — a native on-ledger order book that lets any account trade any two assets without a centralized intermediary. Offers are limit orders; when two compatible offers cross, a trade executes automatically as part of ledger consensus.
+            XRNotify monitors the XRPL decentralized exchange (DEX), a native on-ledger order book that lets any account trade any two assets without a centralized intermediary. Offers are limit orders; when two compatible offers cross, a trade executes automatically as part of ledger consensus.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export default function DexEventsPage() {
             <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">OfferCancel / auto-expired</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
-            Fires when an offer is removed from the order book — either explicitly via an <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">OfferCancel</code> transaction, or automatically when an expiry time passes and the ledger removes the offer during the next close.
+            Fires when an offer is removed from the order book, either explicitly via an <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">OfferCancel</code> transaction, or automatically when an expiry time passes and the ledger removes the offer during the next close.
           </p>
 
           <h3 className="text-lg font-semibold text-white mb-3">Payload schema</h3>
@@ -206,7 +206,7 @@ export default function DexEventsPage() {
         <section className="mb-14">
           <div className="flex items-center gap-3 mb-2">
             <h2 className="text-2xl font-semibold text-white">dex.offer_filled</h2>
-            <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">Trade — fully consumed</span>
+            <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">Trade - fully consumed</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
             Fires when an offer on the order book is completely consumed by a crossing trade. The offer no longer exists on the ledger after this event. Both the offer creator and the taker receive these events when account filters match.
@@ -291,7 +291,7 @@ export default function DexEventsPage() {
         <section className="mb-14">
           <div className="flex items-center gap-3 mb-2">
             <h2 className="text-2xl font-semibold text-white">dex.offer_partial</h2>
-            <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">Trade — partially consumed</span>
+            <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">Trade - partially consumed</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
             Fires when an offer is partially filled by a crossing trade but remains on the order book with a reduced amount. The offer continues to exist and will fire additional <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">dex.offer_partial</code> or <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">dex.offer_filled</code> events as more trades cross it.
@@ -331,7 +331,7 @@ export default function DexEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">remaining</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string | object</td>
-                  <td className="py-2.5 text-zinc-300">Amount still unfilled — what remains on the order book</td>
+                  <td className="py-2.5 text-zinc-300">Amount still unfilled, representing what remains on the order book</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">fill_percent</td>

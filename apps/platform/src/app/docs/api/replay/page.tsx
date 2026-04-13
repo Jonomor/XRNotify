@@ -184,7 +184,7 @@ export default function ReplayApiPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-zinc-500 text-xs mb-2">Request — replay by event IDs (all plans)</p>
+              <p className="text-zinc-500 text-xs mb-2">Request - replay by event IDs (all plans)</p>
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto h-full">
                 <pre className="text-xs text-zinc-300 font-mono whitespace-pre">{`curl -X POST https://api.xrnotify.io/v1/replay \\
   -H "X-XRNotify-Key: xrn_live_..." \\
@@ -199,7 +199,7 @@ export default function ReplayApiPage() {
               </div>
             </div>
             <div>
-              <p className="text-zinc-500 text-xs mb-2">Request — replay with filters (Pro+)</p>
+              <p className="text-zinc-500 text-xs mb-2">Request - replay with filters (Pro+)</p>
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto h-full">
                 <pre className="text-xs text-zinc-300 font-mono whitespace-pre">{`curl -X POST https://api.xrnotify.io/v1/replay \\
   -H "X-XRNotify-Key: xrn_live_..." \\
@@ -251,7 +251,7 @@ export default function ReplayApiPage() {
               <tbody className="divide-y divide-zinc-800/60">
                 {[
                   { status: 'queued', color: 'bg-zinc-700 text-zinc-300', desc: 'Job has been created and is waiting to start' },
-                  { status: 'running', color: 'bg-blue-500/20 text-blue-400', desc: 'Replay is in progress — events are being re-delivered' },
+                  { status: 'running', color: 'bg-blue-500/20 text-blue-400', desc: 'Replay is in progress. Events are being re-delivered' },
                   { status: 'completed', color: 'bg-emerald-500/20 text-emerald-400', desc: 'All events have been queued for delivery' },
                   { status: 'cancelled', color: 'bg-zinc-600 text-zinc-400', desc: 'Job was cancelled via the DELETE endpoint before completion' },
                   { status: 'failed', color: 'bg-red-500/20 text-red-400', desc: 'Job encountered an unrecoverable error. Contact support.' },

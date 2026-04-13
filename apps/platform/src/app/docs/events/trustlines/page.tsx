@@ -74,7 +74,7 @@ export default function TrustlineEventsPage() {
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">currency</td>
                   <td className="py-2.5 pr-4 text-zinc-500 text-xs">string</td>
-                  <td className="py-2.5 text-zinc-300">Currency code — 3-letter ASCII or 40-character hex</td>
+                  <td className="py-2.5 text-zinc-300">Currency code: 3-letter ASCII or 40-character hex</td>
                 </tr>
                 <tr>
                   <td className="py-2.5 pr-4 font-mono text-emerald-400 text-xs">limit</td>
@@ -146,7 +146,7 @@ export default function TrustlineEventsPage() {
             <span className="text-xs font-mono text-zinc-500 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5">TrustSet (update)</span>
           </div>
           <p className="text-zinc-400 text-sm mb-6">
-            Fires when a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">TrustSet</code> transaction changes an existing trust line — for example, updating the limit amount, toggling the NoRipple flag, or when an issuer freezes or unfreezes the line. The payload includes both the new values and the previous values so you can see exactly what changed.
+            Fires when a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">TrustSet</code> transaction changes an existing trust line, for example, updating the limit amount, toggling the NoRipple flag, or when an issuer freezes or unfreezes the line. The payload includes both the new values and the previous values so you can see exactly what changed.
           </p>
 
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 mb-6">

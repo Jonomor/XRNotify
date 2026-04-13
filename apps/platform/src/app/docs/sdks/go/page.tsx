@@ -84,7 +84,7 @@ func main() {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-3">Creating a webhook</h2>
           <p className="text-zinc-400 mb-4 leading-relaxed">
-            Register a webhook endpoint. The returned struct includes <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">Secret</code> — this field is only populated on the creation response.
+            Register a webhook endpoint. The returned struct includes <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">Secret</code>. This field is only populated on the creation response.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`webhook, err := client.Webhooks.Create(ctx, &xrnotify.CreateWebhookParams{
@@ -98,7 +98,7 @@ if err != nil {
 }
 
 fmt.Println("ID:", webhook.ID)
-fmt.Println("Secret:", webhook.Secret) // Store immediately — only available once`}</pre>
+fmt.Println("Secret:", webhook.Secret) // Store immediately - only available once`}</pre>
           </div>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
             <p className="text-amber-300 text-sm">
@@ -241,7 +241,7 @@ func main() {
             The SDK provides typed structs for all event envelopes and payloads. The <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">Payload</code> field is a <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">json.RawMessage</code> so you can unmarshal it into the appropriate typed struct based on <code className="font-mono text-zinc-300 bg-zinc-800 px-1 rounded">EventType</code>.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto">
-            <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`// Event envelope — same structure for all event types
+            <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`// Event envelope - same structure for all event types
 type Event struct {
     EventID     string          `+"`"+`json:"event_id"`+"`"+`
     EventType   string          `+"`"+`json:"event_type"`+"`"+`

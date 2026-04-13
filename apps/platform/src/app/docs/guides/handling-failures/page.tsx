@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Handling Webhook Failures — XRNotify Docs',
+  title: 'Handling Webhook Failures: XRNotify Docs',
   description:
     'Learn how XRNotify retries failed deliveries, how to recover missed events with the Replay API, and how to build an idempotent webhook handler.',
 };
@@ -188,7 +188,7 @@ export default function HandlingFailuresPage() {
 
   // 2. Check if already processed
   const processed = await cache.get(\`delivery:\${deliveryId}\`);
-  if (processed) return res.sendStatus(200); // Already done — safe to ack
+  if (processed) return res.sendStatus(200); // Already done - safe to ack
 
   // 3. Process event
   const event = JSON.parse(req.body);
@@ -227,7 +227,7 @@ export default function HandlingFailuresPage() {
               <span className="text-emerald-400 shrink-0 mt-0.5">→</span>
               <span>
                 <strong className="text-white">Always return 200 on receipt.</strong> Acknowledge the delivery as soon as you&apos;ve
-                safely queued the event — even if downstream processing fails. Track your
+                safely queued the event, even if downstream processing fails. Track your
                 own processing failures in a dead-letter queue separate from XRNotify&apos;s
                 retry mechanism.
               </span>
@@ -281,7 +281,7 @@ export default function HandlingFailuresPage() {
             <Link href="/dashboard/deliveries" className="text-emerald-400 hover:text-emerald-300">
               Deliveries page
             </Link>{' '}
-            in the dashboard — no API call needed.
+            in the dashboard, with no API call needed.
           </p>
         </section>
 

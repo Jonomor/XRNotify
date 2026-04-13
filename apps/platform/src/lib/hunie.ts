@@ -14,9 +14,15 @@ const HUNIE_API_KEY = process.env['HUNIE_API_KEY'];
 
 interface WriteMemoryParams {
   agentId: string;
-  content: string;
-  contentType: 'FACT' | 'EXPERIENCE' | 'OBSERVATION' | 'DECISION' | 'PREFERENCE';
-  namespace: string;
+  content: {
+    contentType: 'KNOWLEDGE_GRAPH' | 'CONVERSATIONAL_CONTEXT';
+    text: string;
+  };
+  source: {
+    type: 'DIRECT_OBSERVATION' | 'AGENT_INFERENCE' | 'USER_INPUT' | 'EXTERNAL_SYSTEM';
+    reliabilityWeight: number;
+  };
+  namespace?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -57,7 +63,7 @@ export class HunieClient {
         );
       }
       console.warn(
-        '[H.U.N.I.E.] HUNIE_API_URL or HUNIE_API_KEY not set — running without H.U.N.I.E. integration'
+        '[H.U.N.I.E.] HUNIE_API_URL or HUNIE_API_KEY not set - running without H.U.N.I.E. integration'
       );
     }
     this.baseUrl = HUNIE_API_URL ?? '';
@@ -91,7 +97,7 @@ export class HunieClient {
             ? String((data as { message: unknown }).message)
             : 'Unknown error';
         throw new Error(
-          `[H.U.N.I.E.] ${method} ${path} failed: ${response.status} — ${message}`
+          `[H.U.N.I.E.] ${method} ${path} failed: ${response.status} - ${message}`
         );
       }
 

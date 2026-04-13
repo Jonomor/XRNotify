@@ -185,7 +185,7 @@ export default function VerifySignaturesPage() {
                 {[
                   { header: 'X-XRNotify-Signature', desc: 'HMAC-SHA256 of the raw body, formatted as sha256=<hex_digest>' },
                   { header: 'X-XRNotify-Timestamp', desc: 'Unix timestamp (seconds) of when the delivery was initiated' },
-                  { header: 'X-XRNotify-Delivery-Id', desc: 'Unique delivery ID — use for idempotency checks in your database' },
+                  { header: 'X-XRNotify-Delivery-Id', desc: 'Unique delivery ID. Use for idempotency checks in your database' },
                   { header: 'X-XRNotify-Webhook-Id', desc: 'ID of the webhook this event was delivered to' },
                 ].map(({ header, desc }) => (
                   <tr key={header}>

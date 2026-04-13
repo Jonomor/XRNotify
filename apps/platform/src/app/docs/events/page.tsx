@@ -125,7 +125,7 @@ export default function EventsPage() {
                     <Link href="/docs/events/dex" className="font-mono text-emerald-400 hover:text-emerald-300 text-xs no-underline">dex.offer_filled</Link>
                   </td>
                   <td className="py-3 pr-4"><span className="text-xs text-zinc-500 bg-zinc-800 rounded px-1.5 py-0.5">DEX</span></td>
-                  <td className="py-3 pr-4 text-zinc-300">Order fully executed — 100% filled</td>
+                  <td className="py-3 pr-4 text-zinc-300">Order fully executed, 100% filled</td>
                   <td className="py-3 text-zinc-500 text-xs font-mono">Trade</td>
                 </tr>
                 <tr className="bg-zinc-900/20">
@@ -221,7 +221,7 @@ export default function EventsPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-zinc-500 text-xs mt-3">Events without dedicated doc pages are available via the API — payload schemas follow the same conventions.</p>
+          <p className="text-zinc-500 text-xs mt-3">Events without dedicated doc pages are available via the API. Payload schemas follow the same conventions.</p>
         </section>
 
         {/* Wildcard subscriptions */}

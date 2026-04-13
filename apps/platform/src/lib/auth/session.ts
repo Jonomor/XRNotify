@@ -181,7 +181,7 @@ export async function createSession(tenant: Tenant, email: string, userId: strin
     Math.floor(config.session.maxAgeMs / 1000)
   );
 
-  // Store session in database — sessions table requires user_id and token_hash
+  // Store session in database - sessions table requires user_id and token_hash
   await query(`
     INSERT INTO sessions (id, user_id, tenant_id, token_hash, expires_at)
     VALUES ($1, $2, $3, $4, $5)
@@ -237,7 +237,7 @@ export async function getSessionFromToken(token: string): Promise<Session | null
     }
   }
   
-  // Look up in database — join users to get email (sessions table has no email column)
+  // Look up in database - join users to get email (sessions table has no email column)
   const row = await queryOne<{
     session_id: string;
     session_expires_at: Date;

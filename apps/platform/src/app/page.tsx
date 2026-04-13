@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { HeroAnimation } from '@/components/HeroAnimation';
+import { FaqAccordion } from '@/components/FaqAccordion';
 import { CONTENT_CLUSTER, FAQ_ITEMS } from '@/lib/schema';
 
 // -----------------------------------------------------------------------------
@@ -369,7 +370,7 @@ export default function LandingPage() {
             {pricingPlans.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative overflow-hidden rounded-2xl border p-8 ${
+                className={`relative overflow-hidden rounded-2xl border p-8 flex flex-col min-h-[480px] ${
                   plan.featured
                     ? 'border-emerald-500/50 bg-gradient-to-b from-emerald-500/10 to-transparent'
                     : 'border-white/5 bg-zinc-900/50'
@@ -388,7 +389,7 @@ export default function LandingPage() {
                   <span className="text-4xl font-bold text-white">{plan.price}</span>
                   {plan.period && <span className="text-zinc-500">{plan.period}</span>}
                 </div>
-                <ul className="mt-8 space-y-4">
+                <ul className="mt-8 space-y-4 flex-1">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3 text-sm">
                       <svg className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -400,7 +401,7 @@ export default function LandingPage() {
                 </ul>
                 <Link
                   href="/signup"
-                  className={`mt-8 block w-full rounded-full py-3 text-center text-sm font-semibold no-underline transition-all ${
+                  className={`block w-full rounded-full py-3 text-center text-sm font-semibold no-underline transition-all ${
                     plan.featured
                       ? 'bg-blue-600 border border-blue-500 text-white font-bold shadow-md hover:bg-blue-700 hover:shadow-lg'
                       : 'border border-zinc-700 bg-zinc-800/50 text-white hover:bg-zinc-800'
@@ -432,13 +433,8 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mx-auto mt-16 max-w-3xl divide-y divide-white/5">
-            {FAQ_ITEMS.map((item) => (
-              <div key={item.question} className="py-8">
-                <h3 className="text-lg font-semibold text-white">{item.question}</h3>
-                <p className="mt-3 text-zinc-400 leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
+          <div className="mt-16">
+            <FaqAccordion faqs={FAQ_ITEMS} />
           </div>
         </div>
       </section>
@@ -535,7 +531,7 @@ export default function LandingPage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="w-full rounded-full bg-white px-8 py-4 text-base font-bold text-[#0a0a0f] no-underline shadow-xl transition-all hover:bg-zinc-200 sm:w-auto"
+              className="w-full rounded-full bg-blue-600 px-8 py-4 text-base font-bold text-white no-underline shadow-lg transition-all hover:bg-blue-700 sm:w-auto"
             >
               Create Free Account
             </Link>

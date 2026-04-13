@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Retry Policy — XRNotify Docs',
+  title: 'Retry Policy: XRNotify Docs',
   description:
     'Full retry schedule, failure conditions, jitter formula, auto-disable behavior, and manual recovery options for XRNotify webhook deliveries.',
 };
@@ -50,7 +50,7 @@ export default function RetryPolicyPage() {
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
             Every event detected on the XRPL is delivered to your webhook endpoint at least
             once. In practice, the vast majority of deliveries succeed on the first attempt.
-            The retry mechanism exists to handle transient failures — network blips, brief
+            The retry mechanism exists to handle transient failures: network blips, brief
             endpoint unavailability, or accidental non-2xx responses.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
@@ -148,7 +148,7 @@ export default function RetryPolicyPage() {
 {`# Backoff formula with jitter:
 delay(attempt) = base_delay[attempt] × (1 + random(-0.1, 0.1))
 
-# Example — attempt 3 base delay = 5 minutes:
+# Example - attempt 3 base delay = 5 minutes:
 # Actual delay will be between 4m30s and 5m30s`}
             </pre>
           </div>
@@ -170,7 +170,7 @@ delay(attempt) = base_delay[attempt] × (1 + random(-0.1, 0.1))
           </p>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-sm text-zinc-300 mb-4">
             <strong className="text-amber-300">Auto-disable:</strong> A disabled webhook stops
-            receiving new events. No events are queued during the disabled period — use the
+            receiving new events. No events are queued during the disabled period. Use the
             Replay API to recover missed events after re-enabling.
           </div>
           <p className="text-zinc-300 text-sm leading-relaxed">
@@ -203,7 +203,7 @@ delay(attempt) = base_delay[attempt] × (1 + random(-0.1, 0.1))
                   ['delivering', 'Currently being sent to your endpoint.'],
                   ['succeeded', 'Your endpoint returned a 2xx status within the timeout.'],
                   ['failed', 'All retry attempts have been exhausted. Manual action required.'],
-                  ['dead', 'Alias for failed — delivery will not be retried automatically.'],
+                  ['dead', 'Alias for failed. Delivery will not be retried automatically.'],
                 ].map(([status, desc]) => (
                   <tr key={status}>
                     <td className="py-2.5 pr-6">
@@ -242,8 +242,8 @@ delay(attempt) = base_delay[attempt] × (1 + random(-0.1, 0.1))
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-white mb-4">Bulk recovery with Replay</h2>
           <p className="text-zinc-300 text-sm mb-4 leading-relaxed">
-            For large-scale recovery — such as when your endpoint was down for several hours
-            and hundreds of deliveries failed — use the Replay API to re-deliver all events
+            For large-scale recovery, such as when your endpoint was down for several hours
+            and hundreds of deliveries failed, use the Replay API to re-deliver all events
             matching a time window in one request, rather than retrying them individually.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
@@ -286,7 +286,7 @@ delay(attempt) = base_delay[attempt] × (1 + random(-0.1, 0.1))
             <strong className="text-white">Secret rotation note:</strong> Events are retried
             against your webhook&apos;s current configuration. If you rotate your webhook secret
             between the original delivery and a retry, the retry will be signed with the
-            new secret — not the original one. Ensure your signature verification uses the
+            new secret, not the original one. Ensure your signature verification uses the
             current secret stored in your environment.
           </div>
         </section>

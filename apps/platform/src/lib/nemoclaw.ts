@@ -2,7 +2,7 @@
 // NemoClaw Execution Governance Wrapper
 // =============================================================================
 // NVIDIA OpenShell execution governance framework integration.
-// Fire-and-forget pattern — NemoClaw must NEVER gate primary operations.
+// Fire-and-forget pattern - NemoClaw must NEVER gate primary operations.
 // If NemoClaw is unreachable, XRNotify continues normally.
 // =============================================================================
 
@@ -99,7 +99,7 @@ export class NemoClawClient {
             ? String((data as { message: unknown }).message)
             : 'Unknown error';
         throw new Error(
-          `NemoClaw ${method} ${path} failed: ${response.status} — ${message}`
+          `NemoClaw ${method} ${path} failed: ${response.status} - ${message}`
         );
       }
 
@@ -111,7 +111,7 @@ export class NemoClawClient {
 
   /**
    * Apply a named security policy to an agent execution context.
-   * Returns safe defaults on failure — never throws.
+   * Returns safe defaults on failure - never throws.
    */
   async governAgent(
     agentId: string,
@@ -135,7 +135,7 @@ export class NemoClawClient {
 
   /**
    * Write an execution audit record. Fire-and-forget in calling code.
-   * Logs error on failure — never throws.
+   * Logs error on failure - never throws.
    */
   async logExecution(params: ExecutionLogParams): Promise<void> {
     if (!this.enabled) {

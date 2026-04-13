@@ -405,7 +405,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
 
     params.push(session.email);
 
-    // Update user — upsert if row is missing
+    // Update user - upsert if row is missing
     let user: UserRecord | null = null;
     try {
       user = await queryOne<UserRecord>(`

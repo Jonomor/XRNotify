@@ -1,7 +1,7 @@
 // =============================================================================
 // XRNotify Platform - User Registration
 // =============================================================================
-// POST /api/v1/auth/register — Create tenant + user account
+// POST /api/v1/auth/register - Create tenant + user account
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const { name, email, password } = parseResult.data;
-  // company is not in registerSchema — extract it manually from raw body if present
+  // company is not in registerSchema - extract it manually from raw body if present
   const rawBody = body as Record<string, unknown>;
   const company = typeof rawBody['company'] === 'string' ? rawBody['company'] : undefined;
   const normalizedEmail = email.toLowerCase();

@@ -2,9 +2,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Jonomor Ecosystem — XRNotify',
+  title: 'Jonomor Ecosystem: XRNotify',
   description:
-    'XRNotify is part of the Jonomor ecosystem — a suite of interconnected software products built by Ali Morgan, spanning AI Visibility, contract analysis, property operations, financial research, education, and real-time XRPL infrastructure.',
+    'XRNotify is part of the Jonomor ecosystem, a suite of interconnected software products built by Ali Morgan, spanning AI Visibility, contract analysis, property operations, financial research, education, and real-time XRPL infrastructure.',
   alternates: {
     canonical: 'https://www.xrnotify.io/ecosystem',
   },
@@ -107,7 +107,7 @@ export default function EcosystemPage() {
           Jonomor Ecosystem
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-zinc-400">
-          XRNotify is the instrumentation layer of the Jonomor ecosystem — the
+          XRNotify is the instrumentation layer of the Jonomor ecosystem: the
           foundational data capture layer that feeds analytics, automation,
           compliance monitoring, and AI-driven decision systems. Every system
           begins with sensing: capturing the raw signals that downstream

@@ -60,7 +60,7 @@ function MetricCard({ title, value, subtitle, trend, href }: MetricCardProps) {
             trend === 'down' ? 'text-red-500' : 
             'text-zinc-400'
           }`}>
-            {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '—'}
+            {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '-'}
           </span>
         )}
       </div>

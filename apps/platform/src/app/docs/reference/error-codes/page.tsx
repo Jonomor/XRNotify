@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Error Codes — XRNotify Docs',
+  title: 'Error Codes: XRNotify Docs',
   description:
     'Complete reference for all XRNotify API error codes, HTTP status codes, and error response format.',
 };
@@ -39,7 +39,7 @@ export default function ErrorCodesPage() {
           <h1 className="text-3xl font-bold text-white mb-3">Error Codes</h1>
           <p className="text-zinc-400 text-lg leading-relaxed">
             All API errors use a consistent JSON structure with machine-readable error codes.
-            Use the <code className="text-emerald-400">code</code> field — not the HTTP status — for programmatic error handling.
+            Use the <code className="text-emerald-400">code</code> field, not the HTTP status, for programmatic error handling.
           </p>
         </div>
 

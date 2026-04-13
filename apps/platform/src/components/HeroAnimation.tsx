@@ -140,7 +140,7 @@ export function HeroAnimation() {
           </button>
         </div>
 
-        {/* Body — stacked on mobile, 3-col on md+ */}
+        {/* Body - stacked on mobile, 3-col on md+ */}
         <div className="relative grid grid-cols-1 md:grid-cols-3 divide-y divide-zinc-800/50 md:divide-y-0 md:divide-x md:divide-zinc-800/50">
 
           {/* Column 1: XRPL Feed */}
@@ -206,7 +206,7 @@ export function HeroAnimation() {
               <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">XRNotify</span>
             </div>
 
-            {/* Hub visualization — visible on md+, simplified row on mobile */}
+            {/* Hub visualization - visible on md+, simplified row on mobile */}
             <div className="hidden md:flex flex-col items-center justify-center flex-1 w-full">
               <div className="relative flex items-center justify-center w-full" style={{ height: '160px' }}>
                 {/* Clipped container so rings don't bleed */}
