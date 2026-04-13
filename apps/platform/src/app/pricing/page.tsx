@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 
 const tiers = [
   {
-    name: 'Free',
-    plan: null as null | 'starter' | 'pro' | 'enterprise',
+    name: 'Developer',
+    plan: null as null | 'builder' | 'professional' | 'compliance' | 'enterprise',
     price: '$0',
     period: 'forever',
-    description: 'For hobbyists and testing',
+    description: 'For testing and evaluation',
     trial: false,
     features: [
       '500 events/month',
@@ -36,60 +36,81 @@ const tiers = [
     highlighted: false,
   },
   {
-    name: 'Starter',
-    plan: 'starter' as const,
-    price: '$29',
+    name: 'Builder',
+    plan: 'builder' as const,
+    price: '$79',
     period: '/month',
-    description: 'For indie developers',
+    description: 'For developers building on XRPL',
     trial: true,
     features: [
       '50,000 events/month',
-      '10 webhook endpoints',
+      '5 webhook endpoints',
       'WebSocket streaming',
       'Event replay',
       '30-day delivery logs',
-      'Priority email support',
+      'Email support',
     ],
     cta: 'Start Free Trial',
     ctaHref: null,
     highlighted: false,
   },
   {
-    name: 'Pro',
-    plan: 'pro' as const,
-    price: '$99',
+    name: 'Professional',
+    plan: 'professional' as const,
+    price: '$249',
     period: '/month',
-    description: 'For growing startups',
+    description: 'For production applications',
     trial: true,
     features: [
       '500,000 events/month',
-      '50 webhook endpoints',
+      '25 webhook endpoints',
       'Priority delivery queue',
       'Custom retry policies',
-      'Raw transaction data',
+      'Event replay with filtering',
       '90-day delivery logs',
-      'Slack support channel',
+      'Priority support',
     ],
     cta: 'Start Free Trial',
     ctaHref: null,
+    highlighted: false,
+  },
+  {
+    name: 'Compliance',
+    plan: 'compliance' as const,
+    price: '$599',
+    period: '/month',
+    description: 'GENIUS Act ready — for regulated institutions',
+    trial: false,
+    features: [
+      '2,000,000 events/month',
+      '100 webhook endpoints',
+      'NemoClaw governance layer',
+      'Continuous audit trail',
+      'Anomaly detection alerts',
+      'Privacy-preserving monitoring',
+      '1-year delivery logs',
+      'Dedicated support channel',
+    ],
+    cta: 'Contact Sales',
+    ctaHref: 'mailto:compliance@xrnotify.io',
     highlighted: true,
   },
   {
     name: 'Enterprise',
-    plan: null as null | 'starter' | 'pro' | 'enterprise',
+    plan: null as null | 'builder' | 'professional' | 'compliance' | 'enterprise',
     price: 'Custom',
     period: '',
-    description: 'For exchanges & institutions',
+    description: 'For exchanges and stablecoin issuers',
     trial: false,
     features: [
       'Unlimited events',
       'Unlimited webhooks',
       'Dedicated infrastructure',
       '99.99% SLA guarantee',
+      'Full NemoClaw governance suite',
       'Custom retention policies',
-      'On-premise deployment',
       'Dedicated support engineer',
-      'SOC 2 compliance',
+      'SOC 2 compliance roadmap',
     ],
     cta: 'Contact Sales',
     ctaHref: 'mailto:enterprise@xrnotify.io',
@@ -194,7 +215,7 @@ const faqs = [
   {
     question: 'What happens if I exceed my event limit?',
     answer:
-      'On Starter and Pro plans, overage events are billed at $0.50 and $0.30 per 1,000 events respectively. On Free, events stop delivering until the next billing cycle.',
+      'Overage events are billed at $0.40 per 1,000 events on Builder, $0.30 on Professional, and $0.20 on Compliance. On the free Developer tier, delivery pauses until the next billing cycle.',
   },
   {
     question: 'Can I change plans anytime?',
@@ -209,7 +230,7 @@ const faqs = [
   {
     question: "What's the SLA for Enterprise?",
     answer:
-      'Enterprise customers get 99.99% uptime SLA with financial credits for any downtime. We also offer custom SLAs based on your requirements.',
+      'Enterprise and Compliance customers receive uptime SLA guarantees with financial credits for any downtime. Enterprise includes 99.99% SLA with custom terms available.',
   },
 ];
 
@@ -248,7 +269,7 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
             {tiers.map((tier) => (
               <PricingCard key={tier.name} tier={tier} />
             ))}

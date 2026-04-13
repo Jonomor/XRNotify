@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 
 interface CheckoutButtonProps {
-  plan: 'starter' | 'pro' | 'enterprise';
+  plan: 'builder' | 'professional' | 'compliance' | 'enterprise';
   label: string;
   className: string;
 }
