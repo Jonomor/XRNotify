@@ -489,34 +489,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Author Byline */}
-      <section className="px-6 py-12 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm text-zinc-500">
-            Built by{' '}
-            <a
-              href="https://www.jonomor.com/ali-morgan"
-              className="text-emerald-400 no-underline transition-colors hover:text-emerald-300"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Ali Morgan
-            </a>
-            {' · '}
-            Part of the{' '}
-            <a
-              href="https://www.jonomor.com"
-              className="text-emerald-400 no-underline transition-colors hover:text-emerald-300"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Jonomor
-            </a>
-            {' ecosystem'}
-          </p>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="relative overflow-hidden px-6 py-24 lg:px-8 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent" />
