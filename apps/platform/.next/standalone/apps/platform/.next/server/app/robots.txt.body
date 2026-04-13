@@ -1,8 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /dashboard
-Disallow: /dashboard/*
-Disallow: /api/
-Disallow: /api/*
-
-Sitemap: https://xrnotify.io/sitemap.xml
