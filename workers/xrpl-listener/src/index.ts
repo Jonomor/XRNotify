@@ -12,6 +12,7 @@ import pino from 'pino';
 import { Registry, Counter, Gauge, Histogram, collectDefaultMetrics } from 'prom-client';
 import type { EventType, XRPLEvent } from '@xrnotify/shared';
 import { writeNetworkState } from './hunie-memory';
+import { getNemoClaw } from './nemoclaw';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -595,7 +596,16 @@ async function subscribeToLedgers(): Promise<void> {
       transaction.hash = tx.transaction.hash ?? '';
       
       transactionsProcessed.inc({ type: transaction.TransactionType });
-      
+
+      // NemoClaw governance: govern the monitoring agent (fire-and-forget)
+      const governance = await getNemoClaw().governAgent(
+        'xrpl-listener',
+        'xrnotify-monitoring'
+      );
+      if (governance.governed) {
+        logger.debug({ auditId: governance.auditId }, '[NemoClaw] Agent governed');
+      }
+
       // Parse and publish events
       const events = parseTransaction(
         transaction,
@@ -605,6 +615,20 @@ async function subscribeToLedgers(): Promise<void> {
       
       for (const event of events) {
         await publishEvent(event);
+      }
+
+      // NemoClaw: log successful event processing (fire-and-forget)
+      for (const event of events) {
+        getNemoClaw().logExecution({
+          agentId: 'xrpl-listener',
+          action: 'event_processed',
+          result: 'success',
+          metadata: {
+            eventId: event.event_id,
+            eventType: event.event_type,
+            ledgerIndex: event.ledger_index,
+          },
+        }).catch(err => logger.error({ err }, '[NemoClaw] logExecution failed'));
       }
 
       // H.U.N.I.E. memory: periodic network state (fire-and-forget)

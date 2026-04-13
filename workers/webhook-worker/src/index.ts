@@ -12,6 +12,7 @@ import { Registry, Counter, Histogram, Gauge, collectDefaultMetrics } from 'prom
 import { createHmac } from 'node:crypto';
 import { signPayload } from '@xrnotify/shared';
 import { writeAlertEvent } from './hunie-memory';
+import { getNemoClaw } from './nemoclaw';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -553,6 +554,20 @@ async function processMessage(message: StreamMessage): Promise<void> {
           wasAcknowledged: true,
           deliverySuccess: true,
         }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeAlertEvent failed'));
+
+        // NemoClaw: log delivery execution (fire-and-forget)
+        getNemoClaw().logExecution({
+          agentId: 'webhook-worker',
+          action: 'webhook_delivered',
+          result: 'success',
+          metadata: {
+            deliveryId,
+            webhookId: webhook.id,
+            eventType: event_type,
+            statusCode: result.statusCode,
+            latencyMs: result.responseTimeMs,
+          },
+        }).catch(err => logger.error({ err }, '[NemoClaw] logExecution failed'));
       } else {
         webhookLog.warn({ 
           statusCode: result.statusCode, 
@@ -611,6 +626,19 @@ async function processMessage(message: StreamMessage): Promise<void> {
             wasAcknowledged: false,
             deliverySuccess: false,
           }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeAlertEvent failed'));
+
+          // NemoClaw: log failed delivery (fire-and-forget)
+          getNemoClaw().logExecution({
+            agentId: 'webhook-worker',
+            action: 'webhook_delivery_failed',
+            result: 'failure',
+            metadata: {
+              deliveryId,
+              webhookId: webhook.id,
+              eventType: event_type,
+              error: result.error,
+            },
+          }).catch(err => logger.error({ err }, '[NemoClaw] logExecution failed'));
         }
 
         endTimer({ status: 'failure' });
