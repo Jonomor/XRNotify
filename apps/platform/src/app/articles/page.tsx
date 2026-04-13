@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { CONTENT_CLUSTER } from '@/lib/schema';
 
 export const metadata: Metadata = {
-  title: 'Articles & Guides — XRNotify',
+  title: 'Articles & Guides: XRNotify',
   description:
     'Technical articles, how-to guides, and FAQs about XRNotify, XRPL webhooks, and real-time blockchain monitoring.',
   alternates: {

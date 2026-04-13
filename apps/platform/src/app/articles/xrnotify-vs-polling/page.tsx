@@ -207,11 +207,13 @@ export default function XrnotifyVsPollingPage() {
       <h3>Cost</h3>
 
       <p>
-        XRNotify offers a free tier for developers getting started and paid plans starting at
-        $19 per month for production workloads, scaling to $99 per month for high-volume use
-        cases. Compare this to the $500 to $2,000 per month for running your own node, or the
-        hidden engineering cost of maintaining a polling system. For most teams, XRNotify is the
-        most cost-effective option by a wide margin.
+        XRNotify offers a free Developer tier for testing and evaluation, with paid plans
+        starting at $79 per month (Builder) for production workloads, $249 per month
+        (Professional) for high-volume applications, and $599 per month (Compliance) for
+        regulated institutions requiring NemoClaw governance and audit trails. Compare this
+        to the $500 to $2,000 per month for running your own node, or the hidden engineering
+        cost of maintaining a polling system. For most teams, XRNotify is the most
+        cost-effective option by a wide margin.
       </p>
 
       <h3>Setup Time</h3>
@@ -245,7 +247,7 @@ export default function XrnotifyVsPollingPage() {
             <td><strong>Monthly Cost</strong></td>
             <td>$50 - 300 (API / compute)</td>
             <td>$500 - 2,000+</td>
-            <td>$0 - 99</td>
+            <td>$0 - 599</td>
           </tr>
           <tr>
             <td><strong>Setup Time</strong></td>
@@ -328,8 +330,8 @@ export default function XrnotifyVsPollingPage() {
         migration path. You replace hundreds or thousands of lines of polling, state management,
         and deduplication code with a single webhook endpoint. For teams evaluating whether to
         run their own node, XRNotify eliminates months of infrastructure work and ongoing
-        DevOps cost. The $19 to $99 per month XRNotify pricing is a fraction of what it costs
-        to run and maintain a reliable XRPL monitoring pipeline in-house.
+        DevOps cost. XRNotify pricing from $79 to $599 per month is a fraction of what it
+        costs to run and maintain a reliable XRPL monitoring pipeline in-house.
       </p>
 
       <h2>Conclusion</h2>

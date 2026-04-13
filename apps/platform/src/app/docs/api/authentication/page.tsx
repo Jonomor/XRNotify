@@ -37,7 +37,7 @@ export default function AuthenticationPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-4">Making an authenticated request</h2>
           <p className="text-zinc-300 mb-4 leading-relaxed">
-            Include your API key in every request using the <code className="font-mono text-zinc-200 bg-zinc-800 px-1 rounded">X-XRNotify-Key</code> header. The key is passed as a plain string — no encoding or prefix is required.
+            Include your API key in every request using the <code className="font-mono text-zinc-200 bg-zinc-800 px-1 rounded">X-XRNotify-Key</code> header. The key is passed as a plain string. No encoding or prefix is required.
           </p>
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto mb-4">
             <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`curl https://api.xrnotify.io/v1/webhooks \\
@@ -77,11 +77,11 @@ data = response.json()`}</pre>
           <ul className="space-y-3 text-zinc-300 text-sm leading-relaxed">
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#x2713;</span>
-              Store API keys in environment variables or a secrets manager — never hard-code them.
+              Store API keys in environment variables or a secrets manager. Never hard-code them.
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#x2713;</span>
-              Use the principle of least privilege — only grant the scopes each key actually needs.
+              Use the principle of least privilege. Only grant the scopes each key actually needs.
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#x2713;</span>
@@ -93,7 +93,7 @@ data = response.json()`}</pre>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#x2713;</span>
-              Use separate keys for production and development — never share keys across environments.
+              Use separate keys for production and development. Never share keys across environments.
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#x2713;</span>
@@ -144,7 +144,7 @@ data = response.json()`}</pre>
 
           <h3 className="text-lg font-semibold text-white mb-2">Via dashboard</h3>
           <p className="text-zinc-300 mb-4 text-sm">
-            Navigate to <span className="text-white">Settings → API Keys → Create Key</span>. Give it a name, select the scopes you need, and optionally set an expiration date. The key is shown once on creation — copy it before closing the dialog.
+            Navigate to <span className="text-white">Settings → API Keys → Create Key</span>. Give it a name, select the scopes you need, and optionally set an expiration date. The key is shown once on creation. Copy it before closing the dialog.
           </p>
 
           <h3 className="text-lg font-semibold text-white mb-2">Via API</h3>
@@ -199,9 +199,10 @@ data = response.json()`}</pre>
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
                 {[
-                  { plan: 'Free', perMin: '60', perDay: '1,000' },
-                  { plan: 'Starter', perMin: '300', perDay: '10,000' },
-                  { plan: 'Pro', perMin: '1,000', perDay: '100,000' },
+                  { plan: 'Developer', perMin: '60', perDay: '1,000' },
+                  { plan: 'Builder', perMin: '300', perDay: '10,000' },
+                  { plan: 'Professional', perMin: '1,000', perDay: '100,000' },
+                  { plan: 'Compliance', perMin: '1,000', perDay: '100,000' },
                   { plan: 'Enterprise', perMin: 'Custom', perDay: 'Custom' },
                 ].map(({ plan, perMin, perDay }) => (
                   <tr key={plan}>

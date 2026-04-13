@@ -17,9 +17,9 @@ export default function WhatIsXRNotifyPage() {
 
       <p>
         XRNotify is a real-time webhook notification platform purpose-built for
-        the XRP Ledger. It monitors on-ledger activity — payments, NFT
+        the XRP Ledger. It monitors on-ledger activity, including payments, NFT
         operations, DEX trades, trust line changes, escrow events, and account
-        mutations — and delivers structured webhook payloads to your HTTP
+        mutations, and delivers structured webhook payloads to your HTTP
         endpoints within seconds of ledger validation. Instead of writing and
         maintaining your own XRPL monitoring infrastructure, you register the
         accounts and event types you care about, point XRNotify at your server,
@@ -57,7 +57,7 @@ export default function WhatIsXRNotifyPage() {
       <h3>Polling the Ledger</h3>
 
       <p>
-        The simplest approach is to poll a public rippled node on a timer —
+        The simplest approach is to poll a public rippled node on a timer,
         calling <code>account_tx</code> or <code>ledger</code> every few seconds
         and diffing the results against your local state. Polling works for
         prototypes, but it scales poorly. Public nodes enforce rate limits,
@@ -87,8 +87,8 @@ export default function WhatIsXRNotifyPage() {
 
       <p>
         XRNotify eliminates both trade-offs. You get the latency of a direct
-        WebSocket subscription — typically under two seconds from ledger close to
-        webhook delivery — without operating any XRPL infrastructure yourself.
+        WebSocket subscription, typically under two seconds from ledger close to
+        webhook delivery, without operating any XRPL infrastructure yourself.
         XRNotify handles node connectivity, transaction filtering, payload
         normalization, delivery retries, and cryptographic signing. You implement
         a single HTTP endpoint, verify the HMAC signature, and process the
@@ -256,9 +256,9 @@ export default function WhatIsXRNotifyPage() {
       <h3>Retries with Exponential Backoff</h3>
 
       <p>
-        When a delivery attempt fails — meaning your endpoint returns a
+        When a delivery attempt fails, meaning your endpoint returns a
         non-<code>2xx</code> status code, the TCP connection is refused, or the
-        request times out after 10 seconds — XRNotify schedules a retry. The
+        request times out after 10 seconds, XRNotify schedules a retry. The
         retry schedule uses exponential backoff with jitter: the first retry
         fires after approximately 30 seconds, the second after roughly 2
         minutes, then 8 minutes, 30 minutes, and so on up to a maximum of 6
@@ -283,7 +283,7 @@ export default function WhatIsXRNotifyPage() {
 
       <p>
         XRNotify retains a log of all delivered events for each webhook. If your
-        application loses state — for example, due to a database failure — you
+        application loses state (for example, due to a database failure), you
         can replay events from a specific ledger index or timestamp forward.
         Replay redelivers the original payloads with the original signatures,
         so your handler can process them identically to the first delivery. To
@@ -320,8 +320,8 @@ export default function WhatIsXRNotifyPage() {
         XRNotify API keys are displayed exactly once at creation time. The
         platform stores only a SHA-256 hash of each key, meaning that even a
         full database compromise does not expose usable credentials. API keys
-        support scoped permissions — you can create read-only keys for dashboard
-        integrations and write keys for webhook management — and can be revoked
+        support scoped permissions. You can create read-only keys for dashboard
+        integrations and write keys for webhook management, and keys can be revoked
         instantly from the dashboard or API.
       </p>
 
@@ -346,7 +346,7 @@ export default function WhatIsXRNotifyPage() {
         minute and vary by plan tier. When you exceed your rate limit, the API
         returns a <code>429 Too Many Requests</code> response with a{' '}
         <code>Retry-After</code> header indicating when you can resume. Webhook
-        deliveries are not subject to API rate limits — they are governed by
+        deliveries are not subject to API rate limits. They are governed by
         your plan&apos;s event volume quota instead.
       </p>
 
@@ -371,7 +371,7 @@ export default function WhatIsXRNotifyPage() {
           mints, burns, offer creation, and sales. When an NFTokenAcceptOffer
           transaction closes on-ledger, XRNotify delivers the event, and the
           platform updates ownership records, triggers royalty distributions, and
-          refreshes the marketplace listing — all within seconds.
+          refreshes the marketplace listing, all within seconds.
         </li>
         <li>
           <strong>DEX aggregators</strong> consume OfferCreate and OfferCancel
@@ -382,7 +382,7 @@ export default function WhatIsXRNotifyPage() {
         <li>
           <strong>Exchanges and custodians</strong> rely on XRNotify for deposit
           detection and withdrawal confirmation. The platform&apos;s delivery
-          guarantees — retries, dead-letter queues, and replay — align with the
+          guarantees (retries, dead-letter queues, and replay) align with the
           reliability requirements of financial infrastructure where missed
           events can result in incorrect balances.
         </li>
@@ -398,8 +398,8 @@ export default function WhatIsXRNotifyPage() {
       <h2>Pricing</h2>
 
       <p>
-        XRNotify offers four plan tiers designed to scale from side projects to
-        enterprise workloads.
+        XRNotify offers five plan tiers designed to scale from evaluation to
+        institutional workloads.
       </p>
 
       <table>
@@ -414,25 +414,32 @@ export default function WhatIsXRNotifyPage() {
         </thead>
         <tbody>
           <tr>
-            <td>Free</td>
+            <td>Developer</td>
             <td>$0</td>
-            <td>2</td>
-            <td>1,000</td>
+            <td>1</td>
+            <td>500</td>
             <td>3 days</td>
           </tr>
           <tr>
-            <td>Starter</td>
-            <td>$29/mo</td>
-            <td>10</td>
+            <td>Builder</td>
+            <td>$79/mo</td>
+            <td>5</td>
             <td>50,000</td>
-            <td>7 days</td>
+            <td>30 days</td>
           </tr>
           <tr>
-            <td>Pro</td>
-            <td>$99/mo</td>
-            <td>50</td>
+            <td>Professional</td>
+            <td>$249/mo</td>
+            <td>25</td>
             <td>500,000</td>
-            <td>30 days</td>
+            <td>90 days</td>
+          </tr>
+          <tr>
+            <td>Compliance</td>
+            <td>$599/mo</td>
+            <td>100</td>
+            <td>2,000,000</td>
+            <td>1 year</td>
           </tr>
           <tr>
             <td>Enterprise</td>
@@ -445,12 +452,14 @@ export default function WhatIsXRNotifyPage() {
       </table>
 
       <p>
-        The Free tier is intended for development and experimentation. It
-        includes full access to all event types and HMAC signing but limits the
-        number of active webhooks and monthly event deliveries. The Starter tier
-        suits early-stage applications with moderate transaction volumes. Pro is
-        designed for production workloads with higher throughput requirements and
-        longer event retention for replay and debugging. Enterprise plans include
+        The Developer tier is intended for testing and evaluation. It includes
+        full access to all event types and HMAC signing but limits the number of
+        active webhooks and monthly event deliveries. The Builder tier suits
+        developers building on XRPL with moderate transaction volumes.
+        Professional is designed for production workloads with higher throughput
+        requirements and longer event retention for replay and debugging. The
+        Compliance tier adds NemoClaw governance, continuous audit trails, and
+        anomaly detection for regulated institutions. Enterprise plans include
         dedicated support, custom SLAs, higher rate limits, and volume-based
         pricing negotiated directly with the XRNotify team.
       </p>
@@ -459,7 +468,7 @@ export default function WhatIsXRNotifyPage() {
         All paid plans include priority delivery queues, which means webhook
         deliveries for paid accounts are processed ahead of free-tier traffic
         during load spikes. This is not a throttle on free-tier delivery speed
-        under normal conditions — it is a prioritization mechanism that activates
+        under normal conditions. It is a prioritization mechanism that activates
         only when the delivery pipeline is near capacity.
       </p>
 

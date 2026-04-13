@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Rate Limits — XRNotify Docs',
+  title: 'Rate Limits: XRNotify Docs',
   description:
     'Per-plan API rate limits, response headers, token bucket algorithm explanation, and best practices for handling 429 responses.',
 };
@@ -74,9 +74,10 @@ export default function RateLimitsPage() {
               </thead>
               <tbody className="divide-y divide-zinc-800/50">
                 {[
-                  ['Free', '60', '1,000', '20'],
-                  ['Starter', '300', '10,000', '50'],
-                  ['Pro', '1,000', '100,000', '200'],
+                  ['Developer', '60', '1,000', '20'],
+                  ['Builder', '300', '10,000', '50'],
+                  ['Professional', '1,000', '100,000', '200'],
+                  ['Compliance', '1,000', '100,000', '200'],
                   ['Enterprise', 'Custom', 'Unlimited', 'Custom'],
                 ].map(([plan, rpm, rpd, burst]) => (
                   <tr key={plan}>
@@ -102,7 +103,7 @@ export default function RateLimitsPage() {
             capacity ceiling.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-4">
-            For example, a Pro plan key refills at roughly 16.7 tokens/second and can absorb
+            For example, a Professional plan key refills at roughly 16.7 tokens/second and can absorb
             a burst of 200 requests before the rate limit is enforced. This means short
             bursts of activity are handled gracefully without triggering 429 errors, as long
             as the average request rate over time stays within the per-minute limit.
@@ -112,7 +113,7 @@ export default function RateLimitsPage() {
 {`# Token bucket refill rate formula:
 refill_rate = requests_per_minute / 60   # tokens per second
 
-# Example for Pro plan:
+# Example for Professional plan:
 refill_rate = 1000 / 60 = ~16.7 tokens/second
 burst_capacity = 200 tokens
 
@@ -180,7 +181,7 @@ burst_capacity = 200 tokens
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(\`API error: \${error.error.code} — \${error.error.message}\`);
+    throw new Error(\`API error: \${error.error.code} - \${error.error.message}\`);
   }
 
   return response.json();
@@ -250,7 +251,7 @@ const webhooks = await apiCall('https://api.xrnotify.io/v1/webhooks', {
               <span>
                 <strong className="text-white">Monitor X-RateLimit-Remaining.</strong> When the
                 remaining token count drops below 20% of your limit, slow your request rate
-                proactively — before you hit 0 and start receiving 429 errors.
+                proactively, before you hit 0 and start receiving 429 errors.
               </span>
             </li>
             <li className="flex gap-3">
@@ -265,8 +266,8 @@ const webhooks = await apiCall('https://api.xrnotify.io/v1/webhooks', {
               <span className="text-emerald-400 shrink-0 mt-0.5">→</span>
               <span>
                 <strong className="text-white">Consider upgrading your plan.</strong> If you
-                consistently need more than 60 requests/minute, the Starter or Pro plan may
-                be more appropriate. Contact us for Enterprise limits.
+                consistently need more than 60 requests/minute, the Builder or Professional
+                plan may be more appropriate. Contact us for Enterprise limits.
               </span>
             </li>
           </ul>

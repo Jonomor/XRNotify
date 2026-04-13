@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Events API - XRNotify Docs',
-  description: 'Query the XRNotify event log — browse normalized XRPL transactions, filter by account or event type, and understand the event ID format.',
+  description: 'Query the XRNotify event log. Browse normalized XRPL transactions, filter by account or event type, and understand the event ID format.',
 };
 
 function MethodBadge({ method }: { method: string }) {
@@ -49,7 +49,7 @@ export default function EventsApiPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-4">Events vs Deliveries</h2>
           <p className="text-zinc-300 mb-4 leading-relaxed">
-            It's important to understand the distinction between events and deliveries — these are two separate but related concepts:
+            It's important to understand the distinction between events and deliveries. These are two separate but related concepts:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4">
@@ -67,7 +67,7 @@ export default function EventsApiPage() {
                 <p className="text-white font-medium">Delivery</p>
               </div>
               <p className="text-zinc-400 text-sm leading-relaxed">
-                One attempt to send an event to a webhook endpoint. One event can have multiple deliveries — one per matching webhook, with retries creating additional delivery records.
+                One attempt to send an event to a webhook endpoint. One event can have multiple deliveries: one per matching webhook, with retries creating additional delivery records.
               </p>
             </div>
           </div>
@@ -254,10 +254,11 @@ export default function EventsApiPage() {
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
                 {[
-                  { plan: 'Free', retention: '3 days' },
-                  { plan: 'Starter', retention: '7 days' },
-                  { plan: 'Pro', retention: '30 days' },
-                  { plan: 'Enterprise', retention: '90 days' },
+                  { plan: 'Developer', retention: '3 days' },
+                  { plan: 'Builder', retention: '30 days' },
+                  { plan: 'Professional', retention: '90 days' },
+                  { plan: 'Compliance', retention: '1 year' },
+                  { plan: 'Enterprise', retention: 'Custom' },
                 ].map(({ plan, retention }) => (
                   <tr key={plan}>
                     <td className="py-2.5 pr-6 text-white font-medium">{plan}</td>

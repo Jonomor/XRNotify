@@ -220,7 +220,7 @@ function verifyXRNotifySignature(rawBody, signatureHeader, secret) {
     const secret = process.env.XRNOTIFY_SIGNING_SECRET;
 
     if (!signature || !verifyXRNotifySignature(rawBody, signature, secret)) {
-      console.warn('Invalid XRNotify signature — rejecting payload');
+      console.warn('Invalid XRNotify signature - rejecting payload');
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
@@ -447,22 +447,22 @@ function verifyXRNotifySignature(rawBody, signatureHeader, secret) {
 
       <ul>
         <li>
-          <strong>Delivery success rate</strong> — the percentage of deliveries that received a 2xx
+          <strong>Delivery success rate:</strong> the percentage of deliveries that received a 2xx
           response on the first attempt. A healthy integration should maintain a success rate above
           99%. If you see this number dropping, check your server logs for errors or timeouts.
         </li>
         <li>
-          <strong>Average latency</strong> — the time between when XRNotify sends the POST request
+          <strong>Average latency:</strong> the time between when XRNotify sends the POST request
           and when your server responds. Keep this under 1 second for best results. If latency
           creeps up, consider offloading processing to a background queue.
         </li>
         <li>
-          <strong>Retry rate</strong> — the percentage of deliveries that required at least one
+          <strong>Retry rate:</strong> the percentage of deliveries that required at least one
           retry. A rising retry rate is an early warning sign that your endpoint is struggling under
           load or experiencing intermittent failures.
         </li>
         <li>
-          <strong>Event volume</strong> — a time-series chart showing the number of events delivered
+          <strong>Event volume:</strong> a time-series chart showing the number of events delivered
           per hour. Use this to understand traffic patterns and plan capacity accordingly.
         </li>
       </ul>
@@ -555,9 +555,9 @@ curl -X POST https://api.xrnotify.io/v1/webhooks \\
       <h3>Plan Limits and Upgrades</h3>
 
       <p>
-        The XRNotify free tier supports up to 10 webhook subscriptions and 10,000 deliveries per
-        month. If your volume exceeds this, upgrade to the Pro or Enterprise tier for higher limits,
-        priority support, and dedicated infrastructure. Visit the{' '}
+        The XRNotify Developer tier supports 1 webhook endpoint and 500 events per month. If
+        your volume exceeds this, upgrade to the Builder, Professional, or Compliance tier for
+        higher limits, priority support, and NemoClaw governance. Visit the{' '}
         <a href="https://www.xrnotify.io/pricing" target="_blank" rel="noopener noreferrer">
           XRNotify pricing page
         </a>{' '}

@@ -111,7 +111,7 @@ export default function XrplWebhookFaqPage() {
         the XRNotify dashboard and can be rotated at any time. XRNotify provides
         verification helper libraries for Node.js, Python, Go, and Ruby, as well
         as code examples for other languages. <strong>Never skip signature
-        verification in production</strong> — without it, an attacker could forge
+        verification in production</strong>. Without it, an attacker could forge
         webhook payloads and trick your application into processing fabricated
         transactions.
       </p>
@@ -124,7 +124,7 @@ export default function XrplWebhookFaqPage() {
         transactions where at least one of your watched addresses appears as the
         sender, destination, or is otherwise affected by the transaction. You can
         combine account filters with transaction type filters for precise
-        targeting — for example, you could watch a specific issuer address for
+        targeting. For example, you could watch a specific issuer address for
         only <code>TrustSet</code> transactions, or monitor a hot wallet for{' '}
         <code>Payment</code> events exclusively. Each XRNotify plan supports a
         different number of watched addresses, ranging from 5 on the free tier to
@@ -159,8 +159,8 @@ export default function XrplWebhookFaqPage() {
       <p>
         Event replay allows you to re-deliver previously sent webhook events to
         your endpoint on demand. XRNotify stores every event for a rolling
-        retention window — seven days on the Pro plan and thirty days on the
-        Enterprise plan. You can trigger a replay from the XRNotify dashboard by
+        retention window: thirty days on the Professional plan, one year on the
+        Compliance plan, and custom retention on Enterprise. You can trigger a replay from the XRNotify dashboard by
         selecting individual events or by specifying a time range and optional
         filters. Replayed events are sent to your current endpoint URL with an
         additional <code>X-XRNotify-Replay: true</code> header so your
@@ -188,31 +188,33 @@ export default function XrplWebhookFaqPage() {
         If you exceed a rate limit, the API returns a <code>429 Too Many
         Requests</code> response with a <code>Retry-After</code> header
         indicating how many seconds to wait. For most integrations, these limits
-        are more than sufficient. If your application requires higher throughput —
-        for example, monitoring thousands of accounts with high transaction
-        volume — the XRNotify Enterprise plan offers configurable rate limits and
+        are more than sufficient. If your application requires higher throughput,
+        for example monitoring thousands of accounts with high transaction
+        volume, the XRNotify Enterprise plan offers configurable rate limits and
         dedicated delivery infrastructure tailored to your workload.
       </p>
 
       <h3>10. How much does XRNotify cost?</h3>
       <p>
-        XRNotify offers a generous free tier and two paid plans designed to scale
-        with your project. The <strong>Free</strong> plan includes up to 1,000
-        webhook deliveries per month, 1 endpoint, 5 watched accounts, and
-        community support — ideal for hobby projects and initial prototyping. The{' '}
-        <strong>Pro</strong> plan is aimed at production applications and includes
-        up to 100,000 deliveries per month, 10 endpoints, 100 watched accounts,
-        7-day event replay, priority email support, and delivery analytics. The{' '}
-        <strong>Enterprise</strong> plan is designed for high-volume and
-        mission-critical deployments and includes unlimited deliveries, unlimited
-        endpoints and watched accounts, 30-day event replay, a dedicated account
-        manager, an SLA with uptime guarantees, custom rate limits, and dedicated
-        infrastructure options. All XRNotify plans include HMAC signature
-        verification, automatic retries with exponential backoff, and access to
-        the full range of XRPL transaction types. Pricing details and a plan
-        comparison table are available at{' '}
+        XRNotify offers five tiers designed to scale with your project. The{' '}
+        <strong>Developer</strong> tier is free and includes 500 events per
+        month, 1 webhook endpoint, and community support, ideal for testing and
+        evaluation. <strong>Builder</strong> ($79/month) is for developers
+        building on XRPL with 50,000 events, 5 webhooks, WebSocket streaming,
+        and event replay. <strong>Professional</strong> ($249/month) is designed
+        for production applications with 500,000 events, 25 webhooks, priority
+        delivery, and 90-day log retention.{' '}
+        <strong>Compliance</strong> ($599/month) adds NemoClaw governance,
+        continuous audit trails, anomaly detection, and privacy-preserving
+        monitoring for regulated institutions with 2,000,000 events and 100
+        webhooks. The <strong>Enterprise</strong> tier includes unlimited
+        events, unlimited webhooks, dedicated infrastructure, 99.99% SLA
+        guarantees, and a dedicated support engineer. All plans include HMAC
+        signature verification, automatic retries with exponential backoff, and
+        access to the full range of XRPL transaction types. Pricing details and
+        a plan comparison table are available at{' '}
         <strong>xrnotify.io/pricing</strong>. You can upgrade, downgrade, or
-        cancel your XRNotify plan at any time without long-term contracts.
+        cancel your plan at any time without long-term contracts.
       </p>
 
       <h3>11. Is XRNotify open source?</h3>
@@ -229,7 +231,7 @@ export default function XrplWebhookFaqPage() {
         testing webhook endpoints locally; and example integration projects
         demonstrating common patterns like payment monitoring and NFT tracking.
         The open-source approach means you are never locked into the XRNotify
-        hosted service — you can inspect exactly how signature verification works,
+        hosted service. You can inspect exactly how signature verification works,
         understand the event schema at the code level, and even self-host the
         platform if your requirements demand it. XRNotify welcomes community
         contributions through GitHub issues and pull requests.
