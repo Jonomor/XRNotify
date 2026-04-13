@@ -61,6 +61,5 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
-  },
-  "_cacheBust": 1776119138984
+  }
 }
