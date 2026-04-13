@@ -44,40 +44,6 @@ export async function writeAlertEvent(params: AlertEventParams): Promise<void> {
   }
 }
 
-interface AnomalyPatternParams {
-  walletAddress: string;
-  eventType: string;
-  anomalyDescription: string;
-  thresholdBreached?: string;
-  severity: 'high' | 'medium' | 'low';
-}
-
-export async function writeAnomalyPattern(params: AnomalyPatternParams): Promise<void> {
-  const client = getHunieClient();
-  if (!client) return;
-
-  try {
-    await client.writeMemory({
-      agentId: WALLET_MONITOR_AGENT,
-      content: {
-        contentType: 'KNOWLEDGE_GRAPH',
-        text: `Anomaly detected for ${params.walletAddress}: ${params.anomalyDescription}`,
-      },
-      source: { type: 'DIRECT_OBSERVATION', reliabilityWeight: 0.9 },
-      namespace: 'xrnotify.wallet-monitor.anomaly-pattern',
-      metadata: {
-        walletAddress: params.walletAddress,
-        eventType: params.eventType,
-        severity: params.severity,
-        thresholdBreached: params.thresholdBreached,
-        detectedAt: new Date().toISOString(),
-      },
-    });
-  } catch (error) {
-    console.error('[H.U.N.I.E.] Failed to write anomaly pattern:', error instanceof Error ? error.message : error);
-  }
-}
-
 interface NetworkStateParams {
   ledgerIndex: number;
   baseFee: number;

@@ -11,10 +11,9 @@ import pg from 'pg';
 import pino from 'pino';
 import { Registry, Counter, Gauge, Histogram, collectDefaultMetrics } from 'prom-client';
 import type { EventType, XRPLEvent } from '@xrnotify/shared';
-import { writeNetworkState, writeAnomalyPattern } from './hunie-memory';
+import { writeNetworkState } from './hunie-memory';
 import { getNemoClaw } from './nemoclaw';
 import { traceOperation } from './langfuse';
-import { classifyTransaction, shouldClassify } from './anomaly-classifier';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -660,37 +659,6 @@ async function subscribeToLedgers(): Promise<void> {
             baseFee: 10,
             closeTime: Date.now(),
           }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeNetworkState failed'));
-        }
-      }
-
-      // AI anomaly classification (sampled, fire-and-forget)
-      for (const event of events) {
-        if (shouldClassify(event.event_type)) {
-          classifyTransaction({
-            eventId: event.event_id,
-            eventType: event.event_type,
-            ledgerIndex: event.ledger_index,
-            txHash: event.tx_hash,
-            accounts: event.accounts,
-            payload: event.payload as Record<string, unknown>,
-          }).then(classification => {
-            if (classification && classification.isAnomalous) {
-              writeAnomalyPattern({
-                walletAddress: event.accounts[0] || 'unknown',
-                eventType: event.event_type,
-                anomalyDescription: classification.reasoning,
-                thresholdBreached: classification.category,
-                severity: classification.confidence > 0.8 ? 'high' : classification.confidence > 0.5 ? 'medium' : 'low',
-              }).catch(err => logger.error({ err }, '[H.U.N.I.E.] writeAnomalyPattern failed'));
-
-              logger.warn({
-                eventId: event.event_id,
-                category: classification.category,
-                confidence: classification.confidence,
-                reasoning: classification.reasoning,
-              }, 'Anomalous transaction detected');
-            }
-          }).catch(err => logger.error({ err }, '[AI] Classification failed'));
         }
       }
 
