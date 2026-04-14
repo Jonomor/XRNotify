@@ -72,10 +72,6 @@ const nextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
-          {
-            key: 'X-Robots-Tag',
-            value: 'noai, noimageai',
-          },
         ],
       },
       {
