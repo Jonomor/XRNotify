@@ -280,7 +280,7 @@ export default function PricingPage() {
       </section>
 
       {/* Enterprise Licensing */}
-      <section className="mt-20 border-t border-white/5 pt-20">
+      <section className="mt-24 border-t border-white/5 pt-24">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold text-white">
             Enterprise Licensing
