@@ -5,6 +5,7 @@
 // =============================================================================
 
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import '@/styles/globals.css';
 import { EcosystemFooter } from '@/components/EcosystemFooter';
@@ -277,6 +278,18 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.xrnotify.io" />
       </head>
       <body className="min-h-screen bg-[#0a0a0f] font-sans text-white antialiased">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-6JSBF4CQS6"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-6JSBF4CQS6');
+          `}
+        </Script>
         {/* Skip to content link for accessibility */}
         <a
           href="#main-content"
