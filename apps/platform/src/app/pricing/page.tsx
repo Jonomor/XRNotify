@@ -37,11 +37,11 @@ const tiers = [
   },
   {
     name: 'Builder',
-    plan: 'builder' as const,
+    plan: null as null | 'builder' | 'professional' | 'compliance' | 'enterprise',
     price: '$79',
     period: '/month',
     description: 'For developers building on XRPL',
-    trial: true,
+    trial: false,
     features: [
       '50,000 events/month',
       '5 webhook endpoints',
@@ -50,17 +50,17 @@ const tiers = [
       '30-day delivery logs',
       'Email support',
     ],
-    cta: 'Start Free Trial',
-    ctaHref: null,
+    cta: 'Get Started',
+    ctaHref: 'https://buy.stripe.com/28E6oHgJp6DF9NlbP4eQM00',
     highlighted: false,
   },
   {
     name: 'Professional',
-    plan: 'professional' as const,
+    plan: null as null | 'builder' | 'professional' | 'compliance' | 'enterprise',
     price: '$249',
     period: '/month',
     description: 'For production applications',
-    trial: true,
+    trial: false,
     features: [
       '500,000 events/month',
       '25 webhook endpoints',
@@ -70,13 +70,13 @@ const tiers = [
       '90-day delivery logs',
       'Priority support',
     ],
-    cta: 'Start Free Trial',
-    ctaHref: null,
+    cta: 'Get Started',
+    ctaHref: 'https://buy.stripe.com/cNi14nal16DFe3BaL0eQM01',
     highlighted: false,
   },
   {
     name: 'Compliance',
-    plan: 'compliance' as const,
+    plan: null as null | 'builder' | 'professional' | 'compliance' | 'enterprise',
     price: '$599',
     period: '/month',
     description: 'GENIUS Act ready. For regulated institutions.',
@@ -92,7 +92,7 @@ const tiers = [
       'Dedicated support channel',
     ],
     cta: 'Get Started',
-    ctaHref: null,
+    ctaHref: 'https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02',
     highlighted: true,
   },
   {
@@ -279,6 +279,28 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* Enterprise Licensing */}
+      <section className="mt-20 border-t border-white/5 pt-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-white">
+            Enterprise Licensing
+          </h2>
+          <p className="mt-4 text-lg text-zinc-400">
+            License XRNotify's governed monitoring infrastructure for
+            white-label deployment, OEM integration, or framework
+            reference implementation. Built for exchanges, wallet
+            providers, and fintech platforms that require
+            institutional-grade XRPL monitoring under their own brand.
+          </p>
+          <a
+            href="mailto:licensing@xrnotify.io"
+            className="mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-4 text-base font-bold !text-white no-underline shadow-lg transition-all hover:from-emerald-400 hover:to-teal-400 hover:!text-white hover:no-underline"
+          >
+            Contact Licensing
+          </a>
+        </div>
+      </section>
+
       {/* All Plans Include */}
       <section className="border-t border-white/5 py-20">
         <div className="mx-auto max-w-4xl px-6">
@@ -357,6 +379,18 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      <div className="mt-12 text-center text-sm text-zinc-500">
+        By subscribing, you agree to our{' '}
+        <a href="/terms" className="text-zinc-400 underline hover:text-white">
+          Terms of Service
+        </a>
+        {' '}and{' '}
+        <a href="/privacy" className="text-zinc-400 underline hover:text-white">
+          Privacy Policy
+        </a>
+        .
+      </div>
     </main>
   );
 }
