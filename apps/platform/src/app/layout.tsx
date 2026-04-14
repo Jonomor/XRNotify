@@ -142,6 +142,9 @@ const faqPageSchema = getFAQPageSchema(FAQ_ITEMS);
 export const metadata: Metadata = {
   verification: {
     google: 'YhuIdV0Jy5-29A_vLZOuL9jcVsq0x11cOs0DcbszKlI',
+    other: {
+      'msvalidate.01': 'D4B9CF4C2CB35389E3E96D762B457221',
+    },
   },
   title: {
     default: CANONICAL_COPY.pageTitle,
