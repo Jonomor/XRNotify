@@ -22,10 +22,10 @@ export default function ErrorCodesPage() {
             <span className="text-zinc-300">Error Codes</span>
           </div>
           <Link
-            href="/dashboard"
+            href="/"
             className="text-zinc-400 hover:text-white transition-colors text-sm no-underline"
           >
-            Dashboard →
+            Home →
           </Link>
         </div>
       </nav>

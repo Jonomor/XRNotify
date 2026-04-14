@@ -154,8 +154,8 @@ export default function DocsPage() {
       {/* Nav */}
       <nav className="border-b border-white/5 px-6 py-5 lg:px-8">
         <div className="mx-auto max-w-6xl flex items-center justify-between">
-          <Link href="/dashboard" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
-            ← Back to Dashboard
+          <Link href="/" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+            ← Back to Home
           </Link>
         </div>
       </nav>

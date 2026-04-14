@@ -22,10 +22,10 @@ export default function PaymentNotificationsPage() {
             <span className="text-zinc-300">Payment Notifications</span>
           </div>
           <Link
-            href="/dashboard"
+            href="/"
             className="text-zinc-400 hover:text-white transition-colors text-sm no-underline"
           >
-            Dashboard →
+            Home →
           </Link>
         </div>
       </nav>
@@ -257,7 +257,7 @@ await cache.set(\`delivery:\${deliveryId}\`, 'done', 86400); // 24h TTL`}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">failed_deliveries</code>, and{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">success_rate</code>.
             You can also view a visual breakdown on the{' '}
-            <Link href="/dashboard" className="text-emerald-400 hover:text-emerald-300">
+            <Link href="/" className="text-emerald-400 hover:text-emerald-300">
               dashboard
             </Link>
             .

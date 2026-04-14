@@ -31,7 +31,7 @@ export default function ReplayApiPage() {
             <span className="text-zinc-600">/</span>
             <span className="text-zinc-300">Replay</span>
           </div>
-          <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors text-sm no-underline">Dashboard →</Link>
+          <Link href="/" className="text-zinc-400 hover:text-white transition-colors text-sm no-underline">Home →</Link>
         </div>
       </nav>
 

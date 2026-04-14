@@ -22,10 +22,10 @@ export default function RetryPolicyPage() {
             <span className="text-zinc-300">Retry Policy</span>
           </div>
           <Link
-            href="/dashboard"
+            href="/"
             className="text-zinc-400 hover:text-white transition-colors text-sm no-underline"
           >
-            Dashboard →
+            Home →
           </Link>
         </div>
       </nav>

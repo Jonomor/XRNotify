@@ -142,7 +142,7 @@ export default function VerifySignaturesPage() {
             <span className="text-zinc-600">/</span>
             <span className="text-zinc-300">Verify Signatures</span>
           </div>
-          <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors text-sm no-underline">Dashboard →</Link>
+          <Link href="/" className="text-zinc-400 hover:text-white transition-colors text-sm no-underline">Home →</Link>
         </div>
       </nav>
 
