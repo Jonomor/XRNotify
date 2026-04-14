@@ -99,14 +99,6 @@ export function ArticleLayout({ article, children }: ArticleLayoutProps) {
             >
               Ali Morgan
             </a>
-            <span className="mx-1">·</span>
-            <time dateTime={article.datePublished}>
-              {new Date(article.datePublished).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </time>
           </div>
         </header>
 

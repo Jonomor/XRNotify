@@ -34,7 +34,6 @@ export const SAME_AS = {
     'https://www.crunchbase.com/organization/jonomor',
     'https://github.com/Jonomor',
     'https://www.linkedin.com/in/1automationengineer/',
-    'https://www.wikidata.org/wiki/Q138930339',
   ],
 } as const;
 
@@ -56,8 +55,6 @@ export interface ArticleDefinition {
   contentType: 'definition' | 'faq' | 'how-to' | 'comparison';
   wordCount: number;
   isPillar: boolean;
-  datePublished: string;
-  dateModified: string;
 }
 
 export const CONTENT_CLUSTER: ArticleDefinition[] = [
@@ -69,8 +66,6 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
     contentType: 'definition',
     wordCount: 2200,
     isPillar: true,
-    datePublished: '2026-04-04',
-    dateModified: '2026-04-04',
   },
   {
     slug: 'xrpl-webhook-faq',
@@ -80,8 +75,6 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
     contentType: 'faq',
     wordCount: 1800,
     isPillar: false,
-    datePublished: '2026-04-04',
-    dateModified: '2026-04-04',
   },
   {
     slug: 'how-to-monitor-xrpl-wallets',
@@ -91,8 +84,6 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
     contentType: 'how-to',
     wordCount: 1700,
     isPillar: false,
-    datePublished: '2026-04-04',
-    dateModified: '2026-04-04',
   },
   {
     slug: 'xrnotify-vs-polling',
@@ -102,8 +93,6 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
     contentType: 'comparison',
     wordCount: 1600,
     isPillar: false,
-    datePublished: '2026-04-04',
-    dateModified: '2026-04-04',
   },
   {
     slug: 'webhook-delivery-reliability',
@@ -113,8 +102,6 @@ export const CONTENT_CLUSTER: ArticleDefinition[] = [
     contentType: 'how-to',
     wordCount: 1700,
     isPillar: false,
-    datePublished: '2026-04-04',
-    dateModified: '2026-04-04',
   },
 ];
 
@@ -262,8 +249,6 @@ export function getTechArticleSchema(article: ArticleDefinition): Record<string,
     headline: article.title,
     description: article.description,
     url: `${CANONICAL_URLS.xrnotify}/articles/${article.slug}`,
-    datePublished: article.datePublished,
-    dateModified: article.dateModified,
     wordCount: article.wordCount,
     author: getCreatorReference(),
     publisher: getPublisherReference(),
