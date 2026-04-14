@@ -264,9 +264,6 @@ export default function LicensingPage() {
           >
             Contact Licensing
           </a>
-          <p className="mt-4 text-sm text-zinc-500">
-            licensing@xrnotify.io
-          </p>
         </div>
       </section>
 
