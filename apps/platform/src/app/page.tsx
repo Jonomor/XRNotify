@@ -366,7 +366,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-6xl gap-8 lg:grid-cols-3">
+          <div className="mx-auto mt-16 grid max-w-6xl gap-8 lg:grid-cols-4">
             {pricingPlans.map((plan) => (
               <div
                 key={plan.name}
@@ -682,7 +682,22 @@ const pricingPlans = [
       'Event replay',
       '30-day delivery logs',
     ],
-    cta: 'Start Free Trial',
+    cta: 'Get Started',
+    featured: false,
+  },
+  {
+    name: 'Professional',
+    description: 'For production applications',
+    price: '$249',
+    period: '/mo',
+    features: [
+      '500,000 events/month',
+      '25 webhook endpoints',
+      'Priority delivery queue',
+      'Custom retry policies',
+      '90-day delivery logs',
+    ],
+    cta: 'Get Started',
     featured: false,
   },
   {
