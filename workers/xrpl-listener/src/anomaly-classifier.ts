@@ -9,6 +9,7 @@ import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { traceGeneration } from './langfuse';
 import { executeInSandbox } from './sandbox';
+import { gatewayCompletion } from './bifrost';
 import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 
@@ -73,35 +74,61 @@ export async function classifyTransaction(
       .replace('{ledgerIndex}', ctx.ledgerIndex.toString())
       .replace('{payload}', JSON.stringify(ctx.payload, null, 2).slice(0, 2000));
 
-    // Execute classification in E2B sandbox (falls back to local if unavailable)
-    const sandboxResult = await executeInSandbox(
-      'anomaly_classification',
-      async () => {
-        const result = await generateText({
-          model: anthropic('claude-sonnet-4-20250514'),
-          prompt,
-          maxTokens: 300,
-          temperature: 0,
-          abortSignal: AbortSignal.timeout(15000),
-        });
-        return result;
-      },
-    );
+    // Try Bifrost gateway first (caching + governance)
+    const gatewayResult = await gatewayCompletion({
+      model: 'claude-sonnet-4-20250514',
+      prompt,
+      maxTokens: 300,
+      temperature: 0,
+    });
 
-    if (!sandboxResult.success || !sandboxResult.data) {
-      logger.warn({ eventId: ctx.eventId, error: sandboxResult.error }, 'Sandboxed classification failed');
-      return null;
+    let resultText: string;
+    let resultUsage: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
+    let wasCached = false;
+    let sandboxId: string | null = null;
+
+    if (gatewayResult) {
+      resultText = gatewayResult.text;
+      resultUsage = gatewayResult.usage;
+      wasCached = gatewayResult.cached;
+    } else {
+      // Gateway unavailable - fall back to E2B sandboxed direct call
+      const sandboxResult = await executeInSandbox(
+        'anomaly_classification',
+        async () => {
+          const result = await generateText({
+            model: anthropic('claude-sonnet-4-20250514'),
+            prompt,
+            maxOutputTokens: 300,
+            temperature: 0,
+            abortSignal: AbortSignal.timeout(15000),
+          });
+          return result;
+        },
+      );
+
+      if (!sandboxResult.success || !sandboxResult.data) {
+        logger.warn({ eventId: ctx.eventId, error: sandboxResult.error }, 'Classification failed');
+        return null;
+      }
+
+      sandboxId = sandboxResult.sandboxId;
+      resultText = sandboxResult.data.text;
+      resultUsage = {
+        promptTokens: sandboxResult.data.usage?.inputTokens,
+        completionTokens: sandboxResult.data.usage?.outputTokens,
+        totalTokens: sandboxResult.data.usage?.totalTokens,
+      };
     }
 
-    const result = sandboxResult.data;
     const endTime = new Date();
 
     let classification: ClassificationResult;
     try {
-      const cleaned = result.text.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+      const cleaned = resultText.replace(/```json\n?/g, '').replace(/```/g, '').trim();
       classification = JSON.parse(cleaned) as ClassificationResult;
     } catch {
-      logger.warn({ text: result.text }, 'Failed to parse classification response');
+      logger.warn({ text: resultText }, 'Failed to parse classification response');
       return null;
     }
 
@@ -111,20 +138,18 @@ export async function classifyTransaction(
       name: 'anomaly_classification',
       model: 'claude-sonnet-4-20250514',
       input: prompt,
-      output: result.text,
-      usage: {
-        promptTokens: result.usage?.promptTokens,
-        completionTokens: result.usage?.completionTokens,
-        totalTokens: result.usage?.totalTokens,
-      },
+      output: resultText,
+      usage: resultUsage,
       metadata: {
         eventId: ctx.eventId,
         eventType: ctx.eventType,
         isAnomalous: classification.isAnomalous,
         category: classification.category,
         confidence: classification.confidence,
-        sandboxId: sandboxResult.sandboxId,
-        sandboxed: sandboxResult.sandboxId !== null,
+        gateway: gatewayResult !== null,
+        cached: wasCached,
+        sandboxId,
+        sandboxed: sandboxId !== null,
       },
       startTime,
       endTime,
@@ -135,7 +160,9 @@ export async function classifyTransaction(
       isAnomalous: classification.isAnomalous,
       category: classification.category,
       confidence: classification.confidence,
-      sandboxed: sandboxResult.sandboxId !== null,
+      gateway: gatewayResult !== null,
+      cached: wasCached,
+      sandboxed: sandboxId !== null,
     }, 'Transaction classified');
 
     return classification;
