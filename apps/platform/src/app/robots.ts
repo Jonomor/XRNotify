@@ -1,7 +1,7 @@
 // =============================================================================
 // XRNotify Robots.txt
 // =============================================================================
-// Dynamic robots.txt generation with AI crawler protection
+// Dynamic robots.txt generation
 // =============================================================================
 
 import type { MetadataRoute } from 'next';
@@ -9,24 +9,14 @@ import type { MetadataRoute } from 'next';
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      // Block AI training crawlers
-      { userAgent: 'GPTBot', disallow: '/' },
-      { userAgent: 'ChatGPT-User', disallow: '/' },
-      { userAgent: 'CCBot', disallow: '/' },
-      { userAgent: 'anthropic-ai', disallow: '/' },
-      { userAgent: 'Claude-Web', disallow: '/' },
-      { userAgent: 'Google-Extended', disallow: '/' },
-      { userAgent: 'FacebookBot', disallow: '/' },
-      { userAgent: 'Bytespider', disallow: '/' },
-      // Allow all other crawlers with restrictions
       {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/dashboard/',
+          '/dashboard',
+          '/dashboard/*',
           '/api/',
-          '/login',
-          '/signup',
+          '/api/*',
         ],
       },
     ],
