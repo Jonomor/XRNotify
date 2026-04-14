@@ -66,6 +66,13 @@ const entities: EcosystemEntity[] = [
     isCurrent: false,
   },
   {
+    name: 'AI-Presence',
+    description:
+      'AI Visibility scoring and optimization platform for websites.',
+    url: 'https://www.ai-presence.com',
+    isCurrent: false,
+  },
+  {
     name: 'Ali Morgan',
     description: 'Founder and architect of the Jonomor ecosystem.',
     url: 'https://www.jonomor.com/ali-morgan',

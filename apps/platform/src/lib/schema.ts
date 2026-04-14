@@ -143,7 +143,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     question: 'Who built XRNotify?',
     answer:
-      'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence. XRNotify is the XRPL instrumentation layer of the Jonomor ecosystem, which also includes Guard-Clause, MyPropOps, The Neutral Bridge, Evenfield, and H.U.N.I.E.',
+      'XRNotify was built by Ali Morgan, founder of Jonomor, a systems architecture studio focused on AI Visibility and real-time infrastructure intelligence. XRNotify is the XRPL instrumentation layer of the Jonomor ecosystem, which also includes Guard-Clause, MyPropOps, The Neutral Bridge, Evenfield, H.U.N.I.E., and AI-Presence.',
   },
   {
     question: 'Is XRNotify part of a larger ecosystem?',
