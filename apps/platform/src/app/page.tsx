@@ -70,6 +70,7 @@ export default function LandingPage() {
             <Link href="#features" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Features</Link>
             <Link href="#events" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Events</Link>
             <Link href="/pricing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Pricing</Link>
+            <Link href="/licensing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Licensing</Link>
             <Link href="/about" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">About</Link>
             <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Docs</Link>
           </div>
@@ -555,6 +556,7 @@ export default function LandingPage() {
               {[
                 { href: '/docs', label: 'Docs' },
                 { href: '/pricing', label: 'Pricing' },
+                { href: '/licensing', label: 'Licensing' },
                 { href: '/about', label: 'About' },
                 { href: '/articles', label: 'Articles' },
                 { href: '/ecosystem', label: 'Ecosystem' },
