@@ -553,7 +553,7 @@ export default function LandingPage() {
             </div>
             <span className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} XRNotify</span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm items-start">
             <div>
               <p className="font-semibold text-zinc-400 mb-3">Product</p>
               <div className="flex flex-col gap-2">
