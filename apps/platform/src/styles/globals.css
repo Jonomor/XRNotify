@@ -154,7 +154,7 @@
     @apply bg-transparent p-0 text-inherit;
   }
 
-  a {
+  a:not(.no-underline) {
     @apply text-brand-600 dark:text-brand-400 hover:underline;
   }
 
