@@ -42,18 +42,15 @@ export default function WebhookDeliveryReliabilityPage() {
         subscription, and a millisecond-precision timestamp.
       </p>
 
-      <h3>Queue Ingestion</h3>
+      <h3>Event Processing</h3>
       <p>
-        The normalized event is written to a durable, partitioned message queue. XRNotify
-        uses partitioning keyed on <code>webhook_id</code> to preserve per-subscription
-        ordering while allowing horizontal scale-out across delivery workers. Messages
-        are persisted to disk before the write is acknowledged, so events survive worker
-        restarts and infrastructure failures.
+        The normalized event is written to a durable event queue. Events are queued per subscription to preserve ordering and ensure reliable delivery.
+        Events are persisted before delivery, ensuring zero data loss.
       </p>
 
       <h3>Delivery Attempt</h3>
       <p>
-        A delivery worker dequeues the event and issues an HTTP POST to the endpoint URL
+        The delivery system picks up the event and sends an HTTPS POST to the endpoint URL
         you configured. XRNotify considers a delivery successful when your server
         responds with any <code>2xx</code> status code within the configured timeout
         window (default 15 seconds, configurable up to 30 seconds on paid plans). The
@@ -126,7 +123,7 @@ export default function WebhookDeliveryReliabilityPage() {
         If your endpoint fails consistently across multiple events, XRNotify
         automatically pauses the webhook subscription and notifies you via email. This
         circuit-breaker behavior protects both your infrastructure and XRNotify&apos;s
-        delivery workers from wasting resources on an endpoint that is clearly down.
+        the delivery system from wasting resources on an endpoint that is clearly down.
         Once you resolve the underlying issue, you can resume the subscription from the
         dashboard or API, and any events that accumulated during the pause will be
         replayed.
@@ -153,7 +150,7 @@ export default function WebhookDeliveryReliabilityPage() {
       <h3>DLQ Retention</h3>
       <p>
         XRNotify retains DLQ events for <strong>30 days</strong> on paid plans and{' '}
-        <strong>7 days</strong> on the free tier. After the retention window closes,
+        <strong>3 days</strong> on the Developer tier. After the retention window closes,
         events are permanently deleted. If you need longer retention, you can export DLQ
         events via the API or configure a webhook that forwards DLQ notifications to
         your own archival storage.

@@ -83,8 +83,8 @@ export default function TermsPage() {
           Ali Morgan
         </a>
         {' · '}
-        <a href="https://www.jonomor.com" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">
-          Jonomor Ecosystem
+        <a href="https://www.jonomor.com/ecosystem" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">
+          Part of the Jonomor Ecosystem
         </a>
       </footer>
     </div>

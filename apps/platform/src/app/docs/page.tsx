@@ -265,12 +265,10 @@ export default function DocsPage() {
               Email Support
             </a>
             <a
-              href="https://discord.gg/xrnotify"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg border border-white/10 px-6 py-3 font-semibold text-zinc-300 transition-colors hover:border-stone-600 hover:text-white"
+              href="/contact"
+              className="rounded-lg border border-white/10 px-6 py-3 font-semibold text-zinc-300 no-underline transition-colors hover:border-stone-600 hover:text-white"
             >
-              Join Discord
+              Join the Community
             </a>
           </div>
         </div>

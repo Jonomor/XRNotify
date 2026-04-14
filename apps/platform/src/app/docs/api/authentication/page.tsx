@@ -274,7 +274,7 @@ data = response.json()`}</pre>
                 <pre className="text-sm text-zinc-300 font-mono whitespace-pre">{`{
   "error": {
     "code": "RATE_LIMITED",
-    "message": "Rate limit exceeded. Retry after 2024-01-15T10:24:00Z."
+    "message": "Rate limit exceeded. Retry after 2026-04-15T10:24:00Z."
   }
 }
 // Response also includes: Retry-After: 15`}</pre>

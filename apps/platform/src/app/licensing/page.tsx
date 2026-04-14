@@ -164,7 +164,7 @@ export default function LicensingPage() {
                 For infrastructure companies on other chains
               </p>
               <p className="mt-4 text-sm text-zinc-400 leading-relaxed flex-1">
-                License the nine-layer institutional architecture
+                License the institutional monitoring architecture
                 as a reference implementation for any blockchain.
                 NemoClaw governance, persistent memory via
                 H.U.N.I.E., AI anomaly classification, Langfuse
@@ -197,15 +197,15 @@ export default function LicensingPage() {
             <div>NemoClaw execution governance</div>
             <div>Continuous audit trail export</div>
             <div>AI anomaly classification</div>
-            <div>Langfuse observability dashboard</div>
+            <div>Full delivery observability</div>
             <div>HMAC-SHA256 signed delivery</div>
             <div>Dedicated integration engineer</div>
             <div>23 XRPL event types</div>
             <div>Custom SLA guarantees</div>
-            <div>H.U.N.I.E. persistent memory</div>
-            <div>SSRF protection + URL policy</div>
+            <div>Persistent intelligence memory</div>
+            <div>Enterprise security controls</div>
             <div>Dead-letter queue + replay</div>
-            <div>Per-API-key rate limiting</div>
+            <div>Usage governance and rate controls</div>
           </div>
         </div>
       </section>

@@ -77,13 +77,15 @@ export default function RetryPolicyPage() {
               <tbody className="divide-y divide-zinc-800/50">
                 {[
                   ['1', 'Immediate', '0s', 'Initial delivery'],
-                  ['2', '1 minute', '~1m', 'First retry'],
-                  ['3', '5 minutes', '~6m', ''],
-                  ['4', '30 minutes', '~36m', ''],
-                  ['5', '2 hours', '~2.6h', ''],
-                  ['6', '6 hours', '~8.6h', ''],
-                  ['7', '12 hours', '~20.6h', ''],
-                  ['8', '24 hours', '~44.6h', 'Final attempt'],
+                  ['2', '1 second', '~1s', 'First retry'],
+                  ['3', '5 seconds', '~6s', ''],
+                  ['4', '30 seconds', '~36s', ''],
+                  ['5', '2 minutes', '~2.5m', ''],
+                  ['6', '10 minutes', '~12.5m', ''],
+                  ['7', '30 minutes', '~42.5m', ''],
+                  ['8', '2 hours', '~2.7h', ''],
+                  ['9', '6 hours', '~8.7h', ''],
+                  ['10', '12 hours', '~20.7h', 'Final attempt'],
                 ].map(([attempt, delay, elapsed, notes]) => (
                   <tr key={attempt}>
                     <td className="py-2.5 pr-6 text-zinc-300">{attempt}</td>
@@ -96,7 +98,7 @@ export default function RetryPolicyPage() {
             </table>
           </div>
           <p className="text-zinc-400 text-sm leading-relaxed">
-            After 8 failed attempts, the delivery moves to{' '}
+            After 10 failed attempts, the delivery moves to{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">dead</code> status. No further automatic retries occur. You
             can still trigger a manual retry at any time.
           </p>
@@ -160,7 +162,7 @@ delay(attempt) = base_delay[attempt] × (1 + random(-0.1, 0.1))
           <p className="text-zinc-300 text-sm mb-4 leading-relaxed">
             Each webhook tracks a{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">consecutive_failures</code> counter. This counter increments each
-            time a delivery reaches the final failed state (after all 8 attempts), and
+            time a delivery reaches the final failed state (after all 10 attempts), and
             resets to zero on any successful delivery.
           </p>
           <p className="text-zinc-300 text-sm mb-4 leading-relaxed">

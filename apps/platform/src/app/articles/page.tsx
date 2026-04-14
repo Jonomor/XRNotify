@@ -34,6 +34,9 @@ export default function ArticlesPage() {
             <Link href="/docs" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
               Docs
             </Link>
+            <Link href="/licensing" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+              Licensing
+            </Link>
             <Link href="/ecosystem" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
               Ecosystem
             </Link>

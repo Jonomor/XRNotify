@@ -93,6 +93,12 @@ export default function EcosystemPage() {
               Articles
             </Link>
             <Link
+              href="/licensing"
+              className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
+            >
+              Licensing
+            </Link>
+            <Link
               href="/docs"
               className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
             >

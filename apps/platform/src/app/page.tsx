@@ -9,6 +9,7 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { HeroAnimation } from '@/components/HeroAnimation';
 import { FaqAccordion } from '@/components/FaqAccordion';
+import { Navbar } from '@/components/Navbar';
 import { CONTENT_CLUSTER, FAQ_ITEMS } from '@/lib/schema';
 
 // -----------------------------------------------------------------------------
@@ -56,39 +57,7 @@ export default function LandingPage() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-50 border-b border-white/5">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-          <Link href="/" className="group flex items-center gap-3 no-underline">
-            <div className="relative flex h-10 w-10 items-center justify-center">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 opacity-30 blur-sm transition-all group-hover:opacity-60" />
-              <Image src="/logo.svg" alt="XRNotify" width={40} height={40} className="relative" />
-            </div>
-            <span className="text-xl font-semibold tracking-tight text-white">XRNotify</span>
-          </Link>
-
-          <div className="hidden items-center gap-10 md:flex">
-            <Link href="#features" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Features</Link>
-            <Link href="#events" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Events</Link>
-            <Link href="/pricing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Pricing</Link>
-            <Link href="/licensing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Licensing</Link>
-            <Link href="/about" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">About</Link>
-            <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Docs</Link>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white sm:block">
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="group relative overflow-hidden rounded-full bg-blue-600 border border-blue-500 px-5 py-2.5 text-sm font-bold text-white no-underline shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
-            >
-              <span className="relative z-10">Get Started</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 transition-opacity group-hover:opacity-100" />
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 pb-24 pt-20 lg:px-8 lg:pb-32 lg:pt-28">

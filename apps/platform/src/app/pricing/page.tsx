@@ -250,8 +250,8 @@ export default function PricingPage() {
             <span>←</span>
             <span>Back to Home</span>
           </Link>
-          <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
-            Dashboard →
+          <Link href="/" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
+            Home →
           </Link>
         </div>
       </nav>

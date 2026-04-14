@@ -89,9 +89,10 @@ export default function ReplayApiPage() {
               <thead>
                 <tr className="border-b border-zinc-800">
                   <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Feature</th>
-                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Free</th>
-                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Starter</th>
-                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Pro</th>
+                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Developer</th>
+                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Builder</th>
+                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Professional</th>
+                  <th className="text-left py-2 pr-6 text-zinc-400 font-medium">Compliance</th>
                   <th className="text-left py-2 text-zinc-400 font-medium">Enterprise</th>
                 </tr>
               </thead>
@@ -99,29 +100,32 @@ export default function ReplayApiPage() {
                 {[
                   {
                     feature: 'Replay by event_ids',
-                    free: '✓',
-                    starter: '✓',
-                    pro: '✓',
+                    developer: '✓',
+                    builder: '✓',
+                    professional: '✓',
+                    compliance: '✓',
                     ent: '✓',
                   },
                   {
                     feature: 'Replay with filters (date range, type)',
-                    free: '✗',
-                    starter: '✗',
-                    pro: '✓',
+                    developer: '✗',
+                    builder: '✗',
+                    professional: '✓',
+                    compliance: '✓',
                     ent: '✓',
                   },
                   {
                     feature: 'Concurrent replay jobs',
-                    free: '1',
-                    starter: '2',
-                    pro: '5',
+                    developer: '1',
+                    builder: '2',
+                    professional: '5',
+                    compliance: '10',
                     ent: 'Custom',
                   },
-                ].map(({ feature, free, starter, pro, ent }) => (
+                ].map(({ feature, developer, builder, professional, compliance, ent }) => (
                   <tr key={feature}>
                     <td className="py-2.5 pr-6 text-zinc-300">{feature}</td>
-                    {[free, starter, pro, ent].map((val, i) => (
+                    {[developer, builder, professional, compliance, ent].map((val, i) => (
                       <td key={i} className={`py-2.5 pr-6 font-mono text-sm ${val === '✓' ? 'text-emerald-400' : val === '✗' ? 'text-zinc-600' : 'text-zinc-300'}`}>{val}</td>
                     ))}
                   </tr>
@@ -131,7 +135,7 @@ export default function ReplayApiPage() {
           </div>
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
             <p className="text-emerald-300 text-sm">
-              All plans can replay specific events by providing <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">event_ids</code>. Filter-based replay (by date range, event type, or account) requires <span className="font-semibold">Pro or Enterprise</span>.
+              All plans can replay specific events by providing <code className="font-mono text-emerald-200 bg-emerald-500/10 px-1 rounded">event_ids</code>. Filter-based replay (by date range, event type, or account) requires <span className="font-semibold">Professional, Compliance, or Enterprise</span>.
             </p>
           </div>
         </section>
@@ -161,7 +165,7 @@ export default function ReplayApiPage() {
                 {[
                   { field: 'webhook_id', type: 'string', req: true, desc: 'The webhook to deliver replay events to' },
                   { field: 'event_ids', type: 'string[]', req: false, desc: 'Specific event IDs to replay. Use this OR filters.' },
-                  { field: 'filters', type: 'object', req: false, desc: 'Filter-based selection (Pro+ only). Use this OR event_ids.' },
+                  { field: 'filters', type: 'object', req: false, desc: 'Filter-based selection (Professional and above). Use this OR event_ids.' },
                   { field: 'filters.event_types', type: 'string[]', req: false, desc: 'Only replay events of these types' },
                   { field: 'filters.since', type: 'ISO timestamp', req: false, desc: 'Replay events created after this time' },
                   { field: 'filters.until', type: 'ISO timestamp', req: false, desc: 'Replay events created before this time' },
@@ -199,7 +203,7 @@ export default function ReplayApiPage() {
               </div>
             </div>
             <div>
-              <p className="text-zinc-500 text-xs mb-2">Request - replay with filters (Pro+)</p>
+              <p className="text-zinc-500 text-xs mb-2">Request - replay with filters (Professional+)</p>
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto h-full">
                 <pre className="text-xs text-zinc-300 font-mono whitespace-pre">{`curl -X POST https://api.xrnotify.io/v1/replay \\
   -H "X-XRNotify-Key: xrn_live_..." \\

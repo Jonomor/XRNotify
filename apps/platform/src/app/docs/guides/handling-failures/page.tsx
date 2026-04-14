@@ -64,11 +64,15 @@ export default function HandlingFailuresPage() {
               <tbody className="divide-y divide-zinc-800/50">
                 {[
                   ['1 (initial)', 'Immediate', '0s'],
-                  ['2', '1 minute', '~1m'],
-                  ['3', '5 minutes', '~6m'],
-                  ['4', '30 minutes', '~36m'],
-                  ['5', '2 hours', '~2.6h'],
-                  ['6', '6 hours', '~8.6h'],
+                  ['2', '1 second', '~1s'],
+                  ['3', '5 seconds', '~6s'],
+                  ['4', '30 seconds', '~36s'],
+                  ['5', '2 minutes', '~2.5m'],
+                  ['6', '10 minutes', '~12.5m'],
+                  ['7', '30 minutes', '~42.5m'],
+                  ['8', '2 hours', '~2.7h'],
+                  ['9', '6 hours', '~8.7h'],
+                  ['10', '12 hours', '~20.7h'],
                 ].map(([attempt, delay, elapsed]) => (
                   <tr key={attempt}>
                     <td className="py-2 pr-6 text-zinc-300">{attempt}</td>
@@ -80,7 +84,7 @@ export default function HandlingFailuresPage() {
             </table>
           </div>
           <p className="text-zinc-400 text-sm leading-relaxed">
-            After 6 attempts the delivery status becomes{' '}
+            After 10 attempts the delivery status becomes{' '}
             <code className="text-emerald-400 bg-zinc-800 px-1 rounded">failed</code>. No further automatic retries occur, but
             you can trigger a manual retry at any time. See the full schedule in the{' '}
             <Link href="/docs/reference/retry-policy" className="text-emerald-400 hover:text-emerald-300">
@@ -203,7 +207,7 @@ export default function HandlingFailuresPage() {
           </div>
           <p className="text-zinc-400 text-sm leading-relaxed">
             Any in-memory store, Redis, or database table works for the idempotency cache.
-            The 24-hour TTL is sufficient because XRNotify&apos;s retry window is under 9 hours.
+            The 24-hour TTL is sufficient because XRNotify&apos;s retry window is approximately 21 hours.
           </p>
         </section>
 

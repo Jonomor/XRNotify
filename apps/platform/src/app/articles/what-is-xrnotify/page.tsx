@@ -97,71 +97,15 @@ export default function WhatIsXRNotifyPage() {
       </p>
 
       <h2>How XRNotify Works</h2>
-
       <p>
-        Under the hood, XRNotify follows a four-stage pipeline from ledger
-        observation to webhook delivery. Understanding this pipeline is useful
-        for reasoning about latency, ordering guarantees, and failure modes.
-      </p>
-
-      <h3>Stage 1: Listener</h3>
-
-      <p>
-        XRNotify maintains persistent WebSocket connections to multiple rippled
-        nodes, including both public cluster nodes and dedicated infrastructure
-        nodes. These connections subscribe to the <code>transactions</code>{' '}
-        stream, which emits every validated transaction as it is included in a
-        closed ledger. Running multiple listeners in parallel provides
-        redundancy: if one node falls behind or disconnects, others continue to
-        emit events. A deduplication layer keyed on transaction hash ensures that
-        each transaction is processed exactly once, even when multiple listeners
-        report it.
-      </p>
-
-      <h3>Stage 2: Normalize</h3>
-
-      <p>
-        Raw XRPL transactions are complex objects. A single <code>Payment</code>{' '}
-        transaction can include delivered amounts in drops or issued currencies,
-        partial payments via the <code>tfPartialPayment</code> flag, path-found
-        cross-currency settlements, and metadata describing balance changes
-        across multiple trust lines. XRNotify&apos;s normalization layer parses
-        the transaction, extracts the fields relevant to each event type, and
-        produces a flat, predictable JSON payload. For example, a payment event
-        always includes <code>source</code>, <code>destination</code>,{' '}
-        <code>delivered_amount</code> (resolved from metadata, not the{' '}
-        <code>Amount</code> field, to correctly handle partial payments),{' '}
-        <code>currency</code>, <code>issuer</code> (if applicable), and{' '}
-        <code>ledger_index</code>. This normalization means your webhook handler
-        does not need to reimplement XRPL transaction parsing.
-      </p>
-
-      <h3>Stage 3: Queue</h3>
-
-      <p>
-        Normalized events enter a durable message queue partitioned by
-        destination endpoint. Queuing decouples the ingestion rate from the
-        delivery rate, which is critical during ledger close bursts when dozens
-        of relevant transactions may arrive within a single second. Each
-        message in the queue includes the serialized payload, the target
-        endpoint URL, the webhook secret for HMAC computation, and retry
-        metadata. Messages are persisted to disk before acknowledgment, so
-        events survive process restarts and deployments without loss.
-      </p>
-
-      <h3>Stage 4: Deliver</h3>
-
-      <p>
-        Delivery workers consume from the queue and issue HTTPS POST requests to
-        your configured endpoints. Each request includes an{' '}
-        <code>X-XRNotify-Signature</code> header containing an HMAC-SHA256
-        digest computed over the raw request body using your webhook secret. The{' '}
-        <code>Content-Type</code> is always <code>application/json</code>. The
-        worker expects a <code>2xx</code> response within 10 seconds. If your
-        endpoint returns a non-2xx status, times out, or is unreachable, the
-        event enters the retry cycle described in the next section. XRNotify
-        delivers events in the order they were validated on-ledger within a
-        single account, but does not guarantee global ordering across accounts.
+        XRNotify connects directly to the XRP Ledger and captures
+        every transaction as it confirms. Each transaction is
+        normalized into a clean JSON schema, signed with your
+        webhook secret, and delivered to your endpoint within
+        seconds. If delivery fails, the system retries automatically
+        with exponential backoff for up to 12 hours. Events that
+        cannot be delivered are preserved in a dead-letter queue
+        for inspection and replay.
       </p>
 
       <h2>Supported Event Types</h2>

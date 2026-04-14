@@ -47,6 +47,7 @@ export default function AboutPage() {
           <div className="hidden items-center gap-10 md:flex">
             <Link href="/#features" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Features</Link>
             <Link href="/#pricing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Pricing</Link>
+            <Link href="/licensing" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">Licensing</Link>
             <Link href="/about" className="text-sm font-medium text-white no-underline">About</Link>
             <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Docs</Link>
           </div>
@@ -262,26 +263,10 @@ export default function AboutPage() {
             ))}
           </div>
           <div className="mt-12 rounded-2xl border border-white/5 bg-zinc-900/50 p-6">
-            <h3 className="mb-4 font-semibold text-white">Built with</h3>
-            <div className="flex flex-wrap gap-3">
-              {[
-                'Next.js 14',
-                'TypeScript',
-                'PostgreSQL',
-                'Redis Streams',
-                'xrpl.js',
-                'HMAC-SHA256',
-                'Prometheus',
-                'Grafana',
-              ].map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-full border border-white/5 bg-zinc-800 px-3 py-1 text-sm text-zinc-300"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+            <h3 className="mb-4 font-semibold text-white">Built for Reliability</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              XRNotify's infrastructure is designed for sub-second delivery, 99.9% uptime, and zero data loss. Every component is selected for production-grade performance at institutional scale.
+            </p>
           </div>
         </div>
       </section>

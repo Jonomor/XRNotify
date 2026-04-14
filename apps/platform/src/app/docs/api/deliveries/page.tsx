@@ -90,7 +90,7 @@ export default function DeliveriesApiPage() {
                   {
                     status: 'retrying',
                     color: 'bg-amber-500/20 text-amber-400',
-                    desc: 'A previous attempt failed. XRNotify will retry with exponential backoff (1m, 5m, 30m, 2h, 8h).',
+                    desc: 'A previous attempt failed. XRNotify will retry with exponential backoff (up to 10 retries over 12 hours).',
                   },
                   {
                     status: 'failed',
