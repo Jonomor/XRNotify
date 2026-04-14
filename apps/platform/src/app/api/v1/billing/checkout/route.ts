@@ -5,7 +5,7 @@
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe, STRIPE_PRICES, TRIAL_PERIOD_DAYS } from '@/lib/stripe';
+import { stripe, STRIPE_PRICES } from '@/lib/stripe';
 import { getCurrentSession } from '@/lib/auth/session';
 import { queryOne } from '@/lib/db';
 import { createModuleLogger } from '@/lib/logger';
@@ -75,7 +75,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         },
       ],
       subscription_data: {
-        trial_period_days: TRIAL_PERIOD_DAYS,
         metadata: {
           tenant_id: tenant.id,
         },
