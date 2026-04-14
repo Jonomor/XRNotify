@@ -401,7 +401,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/signup"
+                  href={plan.ctaHref}
                   className={`block w-full rounded-full py-3 text-center text-sm font-semibold no-underline transition-all ${
                     plan.featured
                       ? 'bg-blue-600 border border-blue-500 text-white font-bold shadow-md hover:bg-blue-700 hover:shadow-lg'
@@ -544,35 +544,48 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 px-6 py-12 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-            <div className="flex items-center gap-3">
-              <Image src="/logo.svg" alt="XRNotify" width={36} height={36} />
-              <span className="text-lg font-semibold text-white">XRNotify</span>
+      <footer className="border-t border-white/5 px-6 py-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <Image src="/logo.svg" alt="XRNotify" width={32} height={32} />
+              <span className="font-semibold text-white">XRNotify</span>
             </div>
-
-            <div className="flex flex-wrap justify-center gap-8 text-sm">
-              {[
-                { href: '/docs', label: 'Docs' },
-                { href: '/pricing', label: 'Pricing' },
-                { href: '/licensing', label: 'Licensing' },
-                { href: '/about', label: 'About' },
-                { href: '/articles', label: 'Articles' },
-                { href: '/ecosystem', label: 'Ecosystem' },
-                { href: '/privacy', label: 'Privacy' },
-                { href: '/terms', label: 'Terms' },
-              ].map((link) => (
-                <Link key={link.href} href={link.href} className="text-zinc-500 no-underline transition-colors hover:text-white">
-                  {link.label}
-                </Link>
-              ))}
-              <a href="mailto:hello@xrnotify.io" className="text-zinc-500 no-underline transition-colors hover:text-white">Contact</a>
-            </div>
-
-            <p className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} XRNotify</p>
+            <span className="text-sm text-zinc-600">&copy; {new Date().getFullYear()} XRNotify</span>
           </div>
-
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+            <div>
+              <p className="font-semibold text-zinc-400 mb-3">Product</p>
+              <div className="flex flex-col gap-2">
+                <Link href="/docs" className="text-zinc-500 no-underline hover:text-white">Docs</Link>
+                <Link href="/pricing" className="text-zinc-500 no-underline hover:text-white">Pricing</Link>
+                <Link href="/licensing" className="text-zinc-500 no-underline hover:text-white">Licensing</Link>
+                <Link href="/articles" className="text-zinc-500 no-underline hover:text-white">Articles</Link>
+              </div>
+            </div>
+            <div>
+              <p className="font-semibold text-zinc-400 mb-3">Company</p>
+              <div className="flex flex-col gap-2">
+                <Link href="/about" className="text-zinc-500 no-underline hover:text-white">About</Link>
+                <Link href="/ecosystem" className="text-zinc-500 no-underline hover:text-white">Ecosystem</Link>
+                <a href="https://www.jonomor.com/ecosystem" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Jonomor Ecosystem</a>
+                <a href="mailto:hello@xrnotify.io" className="text-zinc-500 no-underline hover:text-white">Contact</a>
+              </div>
+            </div>
+            <div>
+              <p className="font-semibold text-zinc-400 mb-3">Legal</p>
+              <div className="flex flex-col gap-2">
+                <Link href="/privacy" className="text-zinc-500 no-underline hover:text-white">Privacy</Link>
+                <Link href="/terms" className="text-zinc-500 no-underline hover:text-white">Terms</Link>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-white/5 text-xs text-zinc-600">
+            Built by{' '}
+            <a href="https://www.jonomor.com/ali-morgan" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Ali Morgan</a>
+            {' · Part of the '}
+            <a href="https://www.jonomor.com/ecosystem" className="text-zinc-500 no-underline hover:text-white" target="_blank" rel="noopener noreferrer">Jonomor Ecosystem</a>
+          </div>
         </div>
       </footer>
     </div>
@@ -670,6 +683,7 @@ const pricingPlans = [
       '3-day delivery logs',
     ],
     cta: 'Get Started',
+    ctaHref: '/signup',
     featured: false,
   },
   {
@@ -685,6 +699,7 @@ const pricingPlans = [
       '30-day delivery logs',
     ],
     cta: 'Get Started',
+    ctaHref: 'https://buy.stripe.com/28E6oHgJp6DF9NlbP4eQM00',
     featured: false,
   },
   {
@@ -700,6 +715,7 @@ const pricingPlans = [
       '90-day delivery logs',
     ],
     cta: 'Get Started',
+    ctaHref: 'https://buy.stripe.com/cNi14nal16DFe3BaL0eQM01',
     featured: false,
   },
   {
@@ -715,7 +731,8 @@ const pricingPlans = [
       'Anomaly detection alerts',
       'Privacy-preserving monitoring',
     ],
-    cta: 'Contact Sales',
+    cta: 'Get Started',
+    ctaHref: 'https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02',
     featured: true,
   },
 ];
