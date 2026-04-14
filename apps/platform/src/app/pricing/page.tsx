@@ -339,7 +339,7 @@ export default function PricingPage() {
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-8 py-4 text-base font-bold text-white no-underline shadow-lg transition-all hover:bg-emerald-600"
+              className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-8 py-4 text-base font-bold !text-white no-underline shadow-lg transition-all hover:bg-emerald-600 hover:!text-white hover:no-underline"
             >
               Start for free
             </Link>
