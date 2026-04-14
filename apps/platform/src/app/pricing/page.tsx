@@ -310,6 +310,11 @@ export default function PricingPage() {
             ))}
           </div>
         </div>
+        <p className="mt-8 text-center text-sm text-zinc-500">
+          Pricing reflects current platform capabilities. Plans and features
+          are updated as new security, intelligence, and compliance upgrades
+          are deployed.
+        </p>
       </section>
 
       {/* FAQ */}
