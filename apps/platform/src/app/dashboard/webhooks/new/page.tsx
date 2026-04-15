@@ -28,7 +28,6 @@ const EVENT_TYPES = [
   { value: 'trustline.created', label: 'Trust Line Created' },
   { value: 'trustline.modified', label: 'Trust Line Modified' },
   { value: 'trustline.deleted', label: 'Trust Line Deleted' },
-  { value: 'account.created', label: 'Account Created' },
   { value: 'account.deleted', label: 'Account Deleted' },
   { value: 'account.settings_changed', label: 'Account Settings Changed' },
   { value: 'escrow.created', label: 'Escrow Created' },
