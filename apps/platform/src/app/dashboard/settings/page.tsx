@@ -6,7 +6,6 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { CheckoutButton } from '@/components/CheckoutButton';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -329,23 +328,29 @@ export default function SettingsPage() {
           <div className="flex flex-wrap gap-3">
             {plan === 'free' && (
               <>
-                <CheckoutButton plan="builder" label="Upgrade to Builder" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
-                <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors" />
-                <a href="https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
+                <a href="https://buy.stripe.com/28E6oHgJp6DF9NlbP4eQM00" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white no-underline hover:bg-emerald-600 transition-colors">
+                  Upgrade to Builder
+                </a>
+                <a href="https://buy.stripe.com/cNi14nal16DFe3BaL0eQM01" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-6 py-2.5 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
+                  Upgrade to Professional
+                </a>
+                <a href="https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-6 py-2.5 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
                   Upgrade to Compliance
                 </a>
               </>
             )}
             {plan === 'builder' && (
               <>
-                <CheckoutButton plan="professional" label="Upgrade to Professional" className="px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 transition-all" />
-                <a href="https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
+                <a href="https://buy.stripe.com/cNi14nal16DFe3BaL0eQM01" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white no-underline hover:bg-emerald-600 transition-colors">
+                  Upgrade to Professional
+                </a>
+                <a href="https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-zinc-800 border border-zinc-700 px-6 py-2.5 text-sm font-semibold text-white no-underline hover:bg-zinc-700 transition-colors">
                   Upgrade to Compliance
                 </a>
               </>
             )}
             {plan === 'professional' && (
-              <a href="https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02" className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-2 text-sm font-semibold text-white no-underline hover:from-emerald-400 hover:to-teal-400 transition-colors">
+              <a href="https://buy.stripe.com/aFa28r8cT5zB1gPf1geQM02" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white no-underline hover:bg-emerald-600 transition-colors">
                 Upgrade to Compliance
               </a>
             )}
