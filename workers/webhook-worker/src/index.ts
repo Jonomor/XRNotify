@@ -145,8 +145,11 @@ interface StreamMessage {
 
 const PLAN_LIMITS: Record<string, number> = {
   free: 500,
+  builder: 50000,
   starter: 50000,
+  professional: 500000,
   pro: 500000,
+  compliance: 2000000,
   enterprise: Infinity,
 };
 
