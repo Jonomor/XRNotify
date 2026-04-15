@@ -242,7 +242,7 @@ async function getMatchingWebhooks(
   accounts: string[]
 ): Promise<Webhook[]> {
   const result = await pool.query<Webhook>(
-    `SELECT id, tenant_id, url, secret_encrypted as secret, event_types, account_filters, is_active
+    `SELECT id, tenant_id, url, secret, event_types, account_filters, is_active
      FROM webhooks
      WHERE is_active = true
        AND (cardinality(event_types) = 0 OR $1::event_type = ANY(event_types))
@@ -368,7 +368,7 @@ async function recordDeliveryAttempt(
   await pool.query(
     `INSERT INTO delivery_attempts (
       delivery_id, attempt_number, status_code, response_body,
-      duration_ms, error_message, created_at
+      duration_ms, error_message, attempted_at
     ) VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
     [
       deliveryId,
@@ -715,7 +715,7 @@ async function processRetryQueue(): Promise<void> {
       
       // Get webhook
       const webhookResult = await pool.query<Webhook>(
-        `SELECT id, tenant_id, url, secret_encrypted as secret, event_types, account_filters, is_active
+        `SELECT id, tenant_id, url, secret, event_types, account_filters, is_active
          FROM webhooks WHERE id = $1`,
         [retry.webhookId]
       );
