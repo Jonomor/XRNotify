@@ -98,24 +98,31 @@ const softwareAppSchema = {
   offers: [
     {
       '@type': 'Offer',
-      name: 'Free',
+      name: 'Developer',
       price: '0',
       priceCurrency: 'USD',
-      description: '1,000 events/month, 2 webhooks',
+      description: '500 events/month, 1 webhook',
     },
     {
       '@type': 'Offer',
-      name: 'Starter',
-      price: '29.00',
+      name: 'Builder',
+      price: '79.00',
       priceCurrency: 'USD',
-      description: '50,000 events/month, 10 webhooks, WebSocket access',
+      description: '50,000 events/month, 5 webhooks, WebSocket streaming',
     },
     {
       '@type': 'Offer',
-      name: 'Pro',
-      price: '99.00',
+      name: 'Professional',
+      price: '249.00',
       priceCurrency: 'USD',
-      description: '500,000 events/month, 50 webhooks, priority delivery',
+      description: '500,000 events/month, 25 webhooks, priority delivery',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Compliance',
+      price: '599.00',
+      priceCurrency: 'USD',
+      description: '2,000,000 events/month, 100 webhooks, NemoClaw governance',
     },
   ],
   creator: { '@id': CANONICAL_IDS.aliMorgan },
@@ -131,6 +138,24 @@ const softwareAppSchema = {
     'Developer dashboard with delivery logs',
     'Per-webhook filtering by event type and account',
   ],
+  mentions: {
+    '@type': 'Intangible',
+    '@id': 'https://jonomor.com/#trademark-aeo',
+    name: 'Answer Engine Optimization',
+    alternateName: 'AEO',
+    additionalType: 'https://schema.org/Brand',
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'USPTO Serial Number',
+      value: '99766713',
+    },
+    sourceOrganization: {
+      '@type': 'GovernmentOrganization',
+      name: 'United States Patent and Trademark Office',
+      alternateName: 'USPTO',
+      url: 'https://www.uspto.gov',
+    },
+  },
 };
 
 const faqPageSchema = getFAQPageSchema(FAQ_ITEMS);
