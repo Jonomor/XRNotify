@@ -1,18 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Terms of Service - XRNotify',
   description: 'Terms of service for XRNotify webhook infrastructure.',
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const session = await getCurrentSession();
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white antialiased">
       <nav className="border-b border-white/5 px-6 py-5 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <Link href="/" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
-            ← Back to XRNotify
+          <Link href={session ? "/dashboard" : "/"} className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+            ← {session ? "Back to Dashboard" : "Back to XRNotify"}
           </Link>
         </div>
       </nav>

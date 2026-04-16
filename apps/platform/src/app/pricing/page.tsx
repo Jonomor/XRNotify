@@ -5,6 +5,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CheckoutButton } from '@/components/CheckoutButton';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -240,15 +241,16 @@ const faqs = [
 // Page Component
 // -----------------------------------------------------------------------------
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const session = await getCurrentSession();
   return (
     <main className="min-h-screen bg-[#0a0a0f] text-white antialiased">
       {/* Nav */}
       <nav className="border-b border-white/5 px-6 py-5">
         <div className="mx-auto max-w-6xl flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white no-underline transition-colors">
+          <Link href={session ? "/dashboard" : "/"} className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white no-underline transition-colors">
             <span>←</span>
-            <span>Back to Home</span>
+            <span>{session ? "Back to Dashboard" : "Back to Home"}</span>
           </Link>
           <Link href="/" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
             Home →

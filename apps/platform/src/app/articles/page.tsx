@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { CONTENT_CLUSTER } from '@/lib/schema';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Articles & Guides: XRNotify',
@@ -18,7 +19,8 @@ const CONTENT_TYPE_LABELS: Record<string, string> = {
   comparison: 'Comparison',
 };
 
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+  const session = await getCurrentSession();
   const pillar = CONTENT_CLUSTER.find((a) => a.isPillar);
   const supporting = CONTENT_CLUSTER.filter((a) => !a.isPillar);
 
@@ -101,10 +103,10 @@ export default function ArticlesPage() {
         {/* Back to homepage */}
         <div className="mt-16 text-center">
           <Link
-            href="/"
+            href={session ? "/dashboard" : "/"}
             className="text-sm text-zinc-500 no-underline transition-colors hover:text-white"
           >
-            &larr; Back to XRNotify
+            &larr; {session ? "Back to Dashboard" : "Back to XRNotify"}
           </Link>
         </div>
       </main>

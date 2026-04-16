@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Jonomor Ecosystem: XRNotify',
@@ -80,7 +81,8 @@ const entities: EcosystemEntity[] = [
   },
 ];
 
-export default function EcosystemPage() {
+export default async function EcosystemPage() {
+  const session = await getCurrentSession();
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
       {/* Navigation */}
@@ -172,10 +174,10 @@ export default function EcosystemPage() {
 
         <div className="mt-16 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
           <Link
-            href="/"
+            href={session ? "/dashboard" : "/"}
             className="text-sm text-zinc-500 no-underline transition-colors hover:text-white"
           >
-            &larr; Back to XRNotify
+            &larr; {session ? "Back to Dashboard" : "Back to XRNotify"}
           </Link>
           <a
             href="https://www.jonomor.com/ecosystem"

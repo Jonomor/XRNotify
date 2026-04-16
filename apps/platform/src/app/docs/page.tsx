@@ -6,6 +6,7 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'Documentation',
@@ -148,18 +149,16 @@ const isValid = verifySignature(
 // Page Component
 // -----------------------------------------------------------------------------
 
-export default function DocsPage() {
+export default async function DocsPage() {
+  const session = await getCurrentSession();
   return (
     <main className="min-h-screen bg-[#0a0a0f]">
       {/* Nav */}
       <nav className="border-b border-white/5 px-6 py-5 lg:px-8">
         <div className="mx-auto max-w-6xl flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
-              ← Back to Dashboard
-            </Link>
-            <Link href="/" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
-              Home
+            <Link href={session ? "/dashboard" : "/"} className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
+              ← {session ? "Back to Dashboard" : "Back to Home"}
             </Link>
           </div>
         </div>
