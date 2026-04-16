@@ -1,12 +1,10 @@
 // =============================================================================
 // AI Anomaly Classifier
 // =============================================================================
-// Sampled transaction classification using Vercel AI SDK + Anthropic.
+// Sampled transaction classification routed through Bifrost (LiteLLM).
 // Wrapped in E2B sandbox for isolation. Fire-and-forget.
 // =============================================================================
 
-import { generateText } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
 import { traceGeneration } from './langfuse';
 import { classifyInSandbox } from './sandbox';
 import { gatewayCompletion } from './bifrost';
@@ -60,7 +58,7 @@ Be conservative. Most transactions are normal. Only flag genuine anomalies.`;
 export async function classifyTransaction(
   ctx: TransactionContext
 ): Promise<ClassificationResult | null> {
-  if (!process.env['ANTHROPIC_API_KEY']) {
+  if (!process.env['LITELLM_MASTER_KEY'] && !process.env['ANTHROPIC_API_KEY']) {
     return null;
   }
 
@@ -76,7 +74,7 @@ export async function classifyTransaction(
 
     // Try Bifrost gateway first (caching + governance)
     const gatewayResult = await gatewayCompletion({
-      model: 'claude-sonnet-4-20250514',
+      model: 'gemini-2.0-flash',
       prompt,
       maxTokens: 300,
       temperature: 0,
@@ -96,7 +94,7 @@ export async function classifyTransaction(
       const sandboxResult = await classifyInSandbox({
         gatewayUrl: process.env['BIFROST_GATEWAY_URL'] || 'https://bifrost-gateway-production-e973.up.railway.app',
         masterKey: process.env['LITELLM_MASTER_KEY'] || '',
-        model: 'claude-sonnet-4-20250514',
+        model: 'gemini-2.0-flash',
         prompt,
         maxTokens: 300,
         temperature: 0,
@@ -108,26 +106,9 @@ export async function classifyTransaction(
         resultText = JSON.stringify(sandboxResult.data);
         resultUsage = {};
       } else {
-        // Sandbox unavailable - fall back to direct Vercel AI SDK call
-        logger.warn({ eventId: ctx.eventId, sandboxError: sandboxResult.error }, 'Sandbox failed, falling back to direct call');
-        try {
-          const directResult = await generateText({
-            model: anthropic('claude-sonnet-4-20250514'),
-            prompt,
-            maxOutputTokens: 300,
-            temperature: 0,
-            abortSignal: AbortSignal.timeout(15000),
-          });
-          resultText = directResult.text;
-          resultUsage = {
-            promptTokens: directResult.usage?.inputTokens,
-            completionTokens: directResult.usage?.outputTokens,
-            totalTokens: directResult.usage?.totalTokens,
-          };
-        } catch (directErr) {
-          logger.error({ err: directErr, eventId: ctx.eventId }, 'Direct classification also failed');
-          return null;
-        }
+        // Both gateway and sandbox failed
+        logger.warn({ eventId: ctx.eventId, sandboxError: sandboxResult.error }, 'Both gateway and sandbox failed');
+        return null;
       }
     }
 
@@ -146,7 +127,7 @@ export async function classifyTransaction(
     traceGeneration({
       traceId,
       name: 'anomaly_classification',
-      model: 'claude-sonnet-4-20250514',
+      model: 'gemini-2.0-flash',
       input: prompt,
       output: resultText,
       usage: resultUsage,
@@ -196,9 +177,9 @@ export function shouldClassify(eventType: string): boolean {
 
   if (alwaysClassify.includes(eventType)) {
     classificationCounter++;
-    return classificationCounter % 10 === 0;
+    return classificationCounter % 100 === 0;
   }
 
   classificationCounter++;
-  return classificationCounter % 50 === 0;
+  return classificationCounter % 500 === 0;
 }
