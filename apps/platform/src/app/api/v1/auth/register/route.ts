@@ -9,6 +9,7 @@ import { registerSchema } from '@xrnotify/shared';
 import { queryOne } from '@/lib/db';
 import { hashPassword } from '@/lib/auth/session';
 import { createModuleLogger, logSecurityEvent } from '@/lib/logger';
+import { signupLimiter, checkAuthRateLimit } from '@/lib/rate-limit/authLimiter';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +20,18 @@ const logger = createModuleLogger('auth-register');
 // -----------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // Rate limit check
+  const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? 'unknown';
+  try {
+    const rateLimit = await checkAuthRateLimit(signupLimiter, clientIp, 3600);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: { code: 'RATE_LIMITED', message: 'Too many signup attempts. Try again later.' } },
+        { status: 429, headers: rateLimit.headers }
+      );
+    }
+  } catch { /* fail open */ }
+
   // Parse body
   let body: unknown;
   try {

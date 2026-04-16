@@ -10,6 +10,7 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import { queryOne, execute } from '@/lib/db';
 import { createModuleLogger, logSecurityEvent } from '@/lib/logger';
+import { forgotPasswordLimiter, checkAuthRateLimit } from '@/lib/rate-limit/authLimiter';
 import { hashPassword } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
@@ -37,6 +38,18 @@ const completeResetSchema = z.object({
 // -----------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // Rate limit check
+  const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? 'unknown';
+  try {
+    const rateLimit = await checkAuthRateLimit(forgotPasswordLimiter, clientIp, 3600);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: { code: 'RATE_LIMITED', message: 'Too many password reset requests. Try again later.' } },
+        { status: 429, headers: rateLimit.headers }
+      );
+    }
+  } catch { /* fail open */ }
+
   try {
     let body: unknown;
     try {

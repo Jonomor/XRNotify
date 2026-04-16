@@ -16,6 +16,7 @@ import {
   clearSessionCookie,
 } from '@/lib/auth/session';
 import { createModuleLogger, logSecurityEvent } from '@/lib/logger';
+import { loginLimiter, checkAuthRateLimit } from '@/lib/rate-limit/authLimiter';
 import { 
   recordHttpRequest, 
   incHttpRequestsInFlight, 
@@ -139,6 +140,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const requestId = generateRequestId();
   const startTime = performance.now();
   incHttpRequestsInFlight();
+
+  // Rate limit check
+  const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? 'unknown';
+  try {
+    const rateLimit = await checkAuthRateLimit(loginLimiter, clientIp, 900);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: { code: 'RATE_LIMITED', message: 'Too many login attempts. Try again later.' } },
+        { status: 429, headers: rateLimit.headers }
+      );
+    }
+  } catch { /* fail open */ }
 
   try {
     // Parse body
