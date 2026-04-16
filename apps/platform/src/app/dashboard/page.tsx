@@ -7,7 +7,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCurrentSession } from '@/lib/auth/session';
-import { getDeliveryStats, listDeliveries } from '@/lib/deliveries/service';
+import { getDeliveryStats, listDeliveries, getDeliveryTimeSeries } from '@/lib/deliveries/service';
 import { listWebhooks } from '@/lib/webhooks/service';
 import { listApiKeys } from '@/lib/auth/apiKey';
 import { getUsageTracker } from '@/lib/rate-limit/tokenBucket';
@@ -171,6 +171,8 @@ export default async function DashboardPage() {
     apiKeys,
     currentUsage,
     tenant,
+    deliveryTimeSeries,
+    eventsLast5MinRow,
   ] = await Promise.all([
     getDeliveryStats(tenantId),
     listDeliveries({ tenantId, limit: 10, offset: 0 }),
@@ -181,12 +183,47 @@ export default async function DashboardPage() {
       'SELECT events_per_month, webhook_limit FROM tenants WHERE id = $1',
       [tenantId]
     ),
+    getDeliveryTimeSeries(tenantId, 'day', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), new Date()),
+    queryOne<{ count: string }>(
+      "SELECT COUNT(*) as count FROM events WHERE timestamp > NOW() - INTERVAL '5 minutes'",
+      []
+    ),
   ]);
 
   const activeWebhooks = webhooks.webhooks.filter(w => w.is_active);
   const unhealthyWebhooks = webhooks.webhooks.filter(w => (w.consecutive_failures ?? 0) > 0);
   const eventsLimit = tenant?.events_per_month ?? 1000;
   const usagePercent = Math.round((currentUsage / eventsLimit) * 100);
+  const eventsRemaining = Math.max(0, eventsLimit - currentUsage);
+  const eventsLast5Min = parseInt(eventsLast5MinRow?.count ?? '0', 10);
+
+  const usageSubtitle =
+    usagePercent >= 100
+      ? 'Limit reached — upgrade to continue'
+      : usagePercent >= 80
+      ? `⚠ ${eventsRemaining.toLocaleString()} events remaining — consider upgrading`
+      : `${eventsRemaining.toLocaleString()} events remaining`;
+
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const seriesByDay = new Map<string, { total: number; delivered: number; failed: number }>();
+  for (const point of deliveryTimeSeries) {
+    const d = new Date(point.timestamp);
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    seriesByDay.set(key, { total: point.total, delivered: point.delivered, failed: point.failed });
+  }
+  const now = new Date();
+  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const chartDays: Array<{ label: string; total: number; delivered: number; failed: number }> = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(todayMidnight.getTime() - i * 24 * 60 * 60 * 1000);
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    const series = seriesByDay.get(key) ?? { total: 0, delivered: 0, failed: 0 };
+    chartDays.push({ label: dayNames[d.getDay()] ?? '', ...series });
+  }
+  const maxDayTotal = Math.max(1, ...chartDays.map(d => d.total));
+  const weekTotal = chartDays.reduce((sum, d) => sum + d.total, 0);
+  const weekDelivered = chartDays.reduce((sum, d) => sum + d.delivered, 0);
+  const weekSuccessRate = weekTotal > 0 ? (weekDelivered / weekTotal) * 100 : 0;
 
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
@@ -195,9 +232,19 @@ export default async function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white">
-                Dashboard
-              </h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-white">
+                  Dashboard
+                </h1>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-xs text-zinc-400">
+                    {eventsLast5Min > 0
+                      ? `${eventsLast5Min.toLocaleString()} events in last 5 min`
+                      : 'Live on XRPL Mainnet'}
+                  </span>
+                </div>
+              </div>
               <p className="mt-1 text-sm text-zinc-500">
                 Welcome back, {session.name ?? session.email}
               </p>
@@ -233,7 +280,7 @@ export default async function DashboardPage() {
           <MetricCard
             title="Events This Month"
             value={currentUsage.toLocaleString()}
-            subtitle={`${usagePercent}% of ${eventsLimit.toLocaleString()} limit`}
+            subtitle={usageSubtitle}
             trend={usagePercent > 90 ? 'down' : 'neutral'}
           />
           <MetricCard
@@ -242,6 +289,51 @@ export default async function DashboardPage() {
             subtitle={`${apiKeys.filter(k => k.is_active).length} active`}
             href="/dashboard/api-keys"
           />
+        </div>
+
+        {/* Delivery Trend */}
+        <div className="bg-zinc-900 rounded-lg p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-medium text-white">
+              Delivery Trend (7 days)
+            </h2>
+            <span className="text-sm text-zinc-400">
+              {weekSuccessRate.toFixed(1)}% success rate
+            </span>
+          </div>
+          <div className="flex items-end justify-between gap-2 h-32">
+            {chartDays.map((day, idx) => {
+              const barHeightPercent = (day.total / maxDayTotal) * 100;
+              const deliveredPortion = day.total > 0 ? (day.delivered / day.total) * 100 : 0;
+              const failedPortion = day.total > 0 ? (day.failed / day.total) * 100 : 0;
+              return (
+                <div
+                  key={idx}
+                  className="flex-1 flex flex-col-reverse rounded overflow-hidden bg-zinc-800"
+                  style={{
+                    height: `${barHeightPercent}%`,
+                    minHeight: '4px',
+                  }}
+                >
+                  <div
+                    className="bg-green-500 w-full"
+                    style={{ height: `${deliveredPortion}%` }}
+                  />
+                  <div
+                    className="bg-red-500 w-full"
+                    style={{ height: `${failedPortion}%` }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex items-center justify-between gap-2 mt-2">
+            {chartDays.map((day, idx) => (
+              <span key={idx} className="flex-1 text-center text-xs text-zinc-500">
+                {day.label}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Two Column Layout */}
