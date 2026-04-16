@@ -6,6 +6,8 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { SiteNavbar } from '@/components/SiteNavbar';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -30,7 +32,8 @@ const aboutJsonLd = {
 // Page Component
 // -----------------------------------------------------------------------------
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const session = await getCurrentSession();
   return (
     <main className="min-h-screen bg-[#0a0a0f] text-white">
       <script
@@ -38,32 +41,16 @@ export default function AboutPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
       />
 
-      {/* Navigation */}
-      <nav className="relative z-50 border-b border-white/5">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-          <Link href="/" className="group flex items-center gap-3 no-underline">
-            <span className="text-xl font-semibold tracking-tight text-white">XRNotify</span>
-          </Link>
-          <div className="hidden items-center gap-10 md:flex">
-            <Link href="/#features" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Features</Link>
-            <Link href="/#pricing" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Pricing</Link>
-            <Link href="/licensing" className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">Licensing</Link>
-            <Link href="/about" className="text-sm font-medium text-white no-underline">About</Link>
-            <Link href="/docs" className="text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white">Docs</Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden text-sm font-medium text-zinc-400 no-underline transition-colors hover:text-white sm:block">
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="group relative overflow-hidden rounded-full bg-blue-600 border border-blue-500 px-5 py-2.5 text-sm font-bold text-white no-underline shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
-            >
-              Get Started
+      <SiteNavbar />
+      {session && (
+        <div className="border-b border-white/5 px-6 py-3 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-white no-underline transition-colors">
+              ← Back to Dashboard
             </Link>
           </div>
         </div>
-      </nav>
+      )}
 
       {/* Header */}
       <section className="border-b border-white/5 py-20">

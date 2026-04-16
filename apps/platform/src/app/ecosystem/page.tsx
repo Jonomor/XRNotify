@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { SiteNavbar } from '@/components/SiteNavbar';
 import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
-  title: 'Jonomor Ecosystem: XRNotify',
+  title: 'Jonomor Ecosystem',
   description:
     'XRNotify is part of the Jonomor ecosystem, a suite of interconnected software products built by Ali Morgan, spanning AI Visibility, contract analysis, property operations, financial research, education, and real-time XRPL infrastructure.',
   alternates: {
@@ -85,37 +86,16 @@ export default async function EcosystemPage() {
   const session = await getCurrentSession();
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Navigation */}
-      <nav className="border-b border-white/5">
-        <div className="mx-auto flex h-16 max-w-4xl items-center justify-between px-6">
-          <Link
-            href="/"
-            className="text-lg font-semibold text-white no-underline"
-          >
-            XRNotify
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link
-              href="/articles"
-              className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
-            >
-              Articles
-            </Link>
-            <Link
-              href="/licensing"
-              className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
-            >
-              Licensing
-            </Link>
-            <Link
-              href="/docs"
-              className="text-sm text-zinc-400 no-underline transition-colors hover:text-white"
-            >
-              Docs
+      <SiteNavbar />
+      {session && (
+        <div className="border-b border-white/5 px-6 py-3">
+          <div className="mx-auto max-w-7xl">
+            <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-white no-underline transition-colors">
+              ← Back to Dashboard
             </Link>
           </div>
         </div>
-      </nav>
+      )}
 
       <main className="mx-auto max-w-4xl px-6 py-16">
         <h1 className="text-4xl font-bold tracking-tight text-white">

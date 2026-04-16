@@ -9,7 +9,7 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { HeroAnimation } from '@/components/HeroAnimation';
 import { FaqAccordion } from '@/components/FaqAccordion';
-import { Navbar } from '@/components/Navbar';
+import { SiteNavbar } from '@/components/SiteNavbar';
 import { CONTENT_CLUSTER, FAQ_ITEMS } from '@/lib/schema';
 
 // -----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ export default function LandingPage() {
       </div>
 
       {/* Navigation */}
-      <Navbar />
+      <SiteNavbar />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 pb-24 pt-20 lg:px-8 lg:pb-32 lg:pt-28">

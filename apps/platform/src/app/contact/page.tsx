@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { SiteNavbar } from '@/components/SiteNavbar';
 import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
-  title: 'Contact - XRNotify',
+  title: 'Contact',
   description: 'Get in touch with the XRNotify team.',
 };
 
@@ -11,13 +12,16 @@ export default async function ContactPage() {
   const session = await getCurrentSession();
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white antialiased">
-      <nav className="border-b border-white/5 px-6 py-5 lg:px-8">
-        <div className="mx-auto max-w-4xl">
-          <Link href={session ? "/dashboard" : "/"} className="text-sm text-zinc-400 no-underline transition-colors hover:text-white">
-            ← {session ? "Back to Dashboard" : "Back to XRNotify"}
-          </Link>
+      <SiteNavbar />
+      {session && (
+        <div className="border-b border-white/5 px-6 py-3 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-white no-underline transition-colors">
+              ← Back to Dashboard
+            </Link>
+          </div>
         </div>
-      </nav>
+      )}
 
       <main className="mx-auto max-w-4xl px-6 py-20 lg:px-8 text-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-400 mb-8">

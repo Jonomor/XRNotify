@@ -1,30 +1,28 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { SiteNavbar } from '@/components/SiteNavbar';
+import { getCurrentSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
-  title: 'Enterprise Licensing | XRNotify',
+  title: 'Enterprise Licensing',
   description: 'License XRNotify governed XRPL monitoring infrastructure for white-label deployment, OEM integration, or framework reference implementation.',
   alternates: { canonical: 'https://www.xrnotify.io/licensing' },
 };
 
-export default function LicensingPage() {
+export default async function LicensingPage() {
+  const session = await getCurrentSession();
   return (
     <main className="min-h-screen bg-[#0a0a0f] text-white antialiased">
-      <nav className="border-b border-white/5 px-6 py-5">
-        <div className="mx-auto max-w-6xl flex items-center justify-between">
-          <Link href="/" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
-            Home
-          </Link>
-          <div className="flex gap-6">
-            <Link href="/pricing" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
-              Pricing
-            </Link>
-            <Link href="/docs" className="text-sm text-zinc-400 hover:text-white no-underline transition-colors">
-              Docs
+      <SiteNavbar />
+      {session && (
+        <div className="border-b border-white/5 px-6 py-3">
+          <div className="mx-auto max-w-7xl">
+            <Link href="/dashboard" className="text-xs text-zinc-500 hover:text-white no-underline transition-colors">
+              ← Back to Dashboard
             </Link>
           </div>
         </div>
-      </nav>
+      )}
 
       {/* Hero */}
       <section className="py-24 px-6">

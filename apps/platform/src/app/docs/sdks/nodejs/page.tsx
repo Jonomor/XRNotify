@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Node.js SDK - XRNotify Docs',
+  title: 'Node.js SDK',
   description: 'XRNotify Node.js SDK reference. Installation, webhook management, signature verification, and TypeScript types.',
 };
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Quick Start Guide - XRNotify Docs',
+  title: 'Quick Start Guide',
   description: 'Get up and running with XRNotify in minutes. Learn how to create webhooks, verify signatures, and handle XRPL events.',
 };
 
@@ -43,7 +43,7 @@ export default function QuickstartPage() {
             Every request to the XRNotify API must be authenticated with an API key. Navigate to your dashboard to create one.
           </p>
           <ol className="list-decimal list-inside space-y-2 text-zinc-300 mb-4 ml-2">
-            <li>Open your <Link href="/" className="text-emerald-400 hover:text-emerald-300">Dashboard</Link></li>
+            <li>Open your <Link href="/dashboard" className="text-emerald-400 hover:text-emerald-300">Dashboard</Link></li>
             <li>Go to <span className="text-white font-medium">Settings → API Keys</span></li>
             <li>Click <span className="text-white font-medium">Create new key</span></li>
             <li>Copy and store the key securely. It won't be shown again</li>

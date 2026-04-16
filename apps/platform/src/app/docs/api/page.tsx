@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'API Reference - XRNotify Docs',
+  title: 'API Reference',
   description: 'Complete REST API reference for XRNotify. Webhooks, deliveries, events, replay, and authentication.',
 };
 

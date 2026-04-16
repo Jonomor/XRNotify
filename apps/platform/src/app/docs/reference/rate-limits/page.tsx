@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Rate Limits: XRNotify Docs',
+  title: 'Rate Limits',
   description:
     'Per-plan API rate limits, response headers, token bucket algorithm explanation, and best practices for handling 429 responses.',
 };
