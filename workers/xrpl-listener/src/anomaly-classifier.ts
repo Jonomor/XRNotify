@@ -8,7 +8,7 @@
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { traceGeneration } from './langfuse';
-import { executeInSandbox } from './sandbox';
+import { classifyInSandbox } from './sandbox';
 import { gatewayCompletion } from './bifrost';
 import { randomUUID } from 'node:crypto';
 import pino from 'pino';
@@ -92,33 +92,43 @@ export async function classifyTransaction(
       resultUsage = gatewayResult.usage;
       wasCached = gatewayResult.cached;
     } else {
-      // Gateway unavailable - fall back to E2B sandboxed direct call
-      const sandboxResult = await executeInSandbox(
-        'anomaly_classification',
-        async () => {
-          const result = await generateText({
+      // Gateway unavailable - try E2B sandboxed classification
+      const sandboxResult = await classifyInSandbox({
+        gatewayUrl: process.env['BIFROST_GATEWAY_URL'] || 'https://bifrost-gateway-production-e973.up.railway.app',
+        masterKey: process.env['LITELLM_MASTER_KEY'] || '',
+        model: 'claude-sonnet-4-20250514',
+        prompt,
+        maxTokens: 300,
+        temperature: 0,
+      });
+
+      if (sandboxResult.success && sandboxResult.data) {
+        // Sandbox returned validated classification directly
+        sandboxId = sandboxResult.sandboxId;
+        resultText = JSON.stringify(sandboxResult.data);
+        resultUsage = {};
+      } else {
+        // Sandbox unavailable - fall back to direct Vercel AI SDK call
+        logger.warn({ eventId: ctx.eventId, sandboxError: sandboxResult.error }, 'Sandbox failed, falling back to direct call');
+        try {
+          const directResult = await generateText({
             model: anthropic('claude-sonnet-4-20250514'),
             prompt,
             maxOutputTokens: 300,
             temperature: 0,
             abortSignal: AbortSignal.timeout(15000),
           });
-          return result;
-        },
-      );
-
-      if (!sandboxResult.success || !sandboxResult.data) {
-        logger.warn({ eventId: ctx.eventId, error: sandboxResult.error }, 'Classification failed');
-        return null;
+          resultText = directResult.text;
+          resultUsage = {
+            promptTokens: directResult.usage?.inputTokens,
+            completionTokens: directResult.usage?.outputTokens,
+            totalTokens: directResult.usage?.totalTokens,
+          };
+        } catch (directErr) {
+          logger.error({ err: directErr, eventId: ctx.eventId }, 'Direct classification also failed');
+          return null;
+        }
       }
-
-      sandboxId = sandboxResult.sandboxId;
-      resultText = sandboxResult.data.text;
-      resultUsage = {
-        promptTokens: sandboxResult.data.usage?.inputTokens,
-        completionTokens: sandboxResult.data.usage?.outputTokens,
-        totalTokens: sandboxResult.data.usage?.totalTokens,
-      };
     }
 
     const endTime = new Date();

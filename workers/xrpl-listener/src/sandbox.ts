@@ -1,8 +1,9 @@
 // =============================================================================
 // E2B Sandboxed Execution
 // =============================================================================
-// Disposable cloud sandboxes for AI classification isolation.
-// If E2B is unavailable, falls back to local execution.
+// Executes AI classification in an isolated Python sandbox via E2B.
+// The LLM call, response parsing, and validation all happen inside
+// the sandbox. Only clean, validated JSON exits.
 // =============================================================================
 
 import pino from 'pino';
@@ -31,39 +32,42 @@ export interface SandboxResult<T> {
   error: string | null;
 }
 
+export interface ClassificationResult {
+  isAnomalous: boolean;
+  confidence: number;
+  category: string;
+  reasoning: string;
+}
+
+interface ClassifyParams {
+  gatewayUrl: string;
+  masterKey: string;
+  model: string;
+  prompt: string;
+  maxTokens: number;
+  temperature: number;
+}
+
 /**
- * Execute a function inside an E2B sandbox.
- * If E2B is disabled or unavailable, executes locally as fallback.
- * Never throws - returns a SandboxResult.
+ * Execute AI classification inside an E2B Python sandbox.
+ * The LLM call, JSON parsing, and validation all happen
+ * inside the sandbox. Only validated results exit.
+ * Returns null-data result if E2B is disabled or fails.
  */
-export async function executeInSandbox<T>(
-  operation: string,
-  fn: () => Promise<T>,
-): Promise<SandboxResult<T>> {
+export async function classifyInSandbox(
+  params: ClassifyParams
+): Promise<SandboxResult<ClassificationResult>> {
   const config = getConfig();
   const startTime = Date.now();
 
   if (!config.enabled || !config.apiKey) {
-    try {
-      const result = await fn();
-      return {
-        success: true,
-        data: result,
-        sandboxId: null,
-        executionTimeMs: Date.now() - startTime,
-        error: null,
-      };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
-      logger.error({ err, operation }, '[E2B] Local fallback execution failed');
-      return {
-        success: false,
-        data: null,
-        sandboxId: null,
-        executionTimeMs: Date.now() - startTime,
-        error: message,
-      };
-    }
+    return {
+      success: false,
+      data: null,
+      sandboxId: null,
+      executionTimeMs: 0,
+      error: 'E2B disabled',
+    };
   }
 
   try {
@@ -75,20 +79,127 @@ export async function executeInSandbox<T>(
     });
 
     const sandboxId = sandbox.sandboxId;
-    logger.debug({ sandboxId, operation }, '[E2B] Sandbox created');
+    logger.debug({ sandboxId }, '[E2B] Sandbox created');
 
     try {
-      const result = await fn();
+      // Escape the prompt for safe Python string embedding
+      const escapedPrompt = params.prompt
+        .replace(/\\/g, '\\\\')
+        .replace(/"""/g, '\\"\\"\\"')
+        .replace(/\n/g, '\\n');
+
+      const pythonScript = `
+import json
+import urllib.request
+
+gateway_url = "${params.gatewayUrl}"
+master_key = "${params.masterKey}"
+model = "${params.model}"
+max_tokens = ${params.maxTokens}
+temperature = ${params.temperature}
+
+prompt = """${escapedPrompt}"""
+
+body = json.dumps({
+    "model": model,
+    "messages": [{"role": "user", "content": prompt}],
+    "max_tokens": max_tokens,
+    "temperature": temperature,
+}).encode("utf-8")
+
+headers = {
+    "Authorization": f"Bearer {master_key}",
+    "Content-Type": "application/json",
+}
+
+req = urllib.request.Request(
+    f"{gateway_url}/chat/completions",
+    data=body,
+    headers=headers,
+    method="POST",
+)
+
+try:
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+except Exception as e:
+    print(json.dumps({"error": str(e)}))
+    raise SystemExit(1)
+
+content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+
+# Strip markdown fences if present
+content = content.strip()
+if content.startswith("\`\`\`json"):
+    content = content[7:]
+if content.startswith("\`\`\`"):
+    content = content[3:]
+if content.endswith("\`\`\`"):
+    content = content[:-3]
+content = content.strip()
+
+try:
+    result = json.loads(content)
+except json.JSONDecodeError as e:
+    print(json.dumps({"error": f"JSON parse failed: {e}", "raw": content[:500]}))
+    raise SystemExit(1)
+
+# Validate required fields
+is_anomalous = bool(result.get("isAnomalous", False))
+confidence = float(result.get("confidence", 0))
+category = str(result.get("category", "unknown"))
+reasoning = str(result.get("reasoning", ""))
+
+confidence = max(0.0, min(1.0, confidence))
+
+validated = {
+    "isAnomalous": is_anomalous,
+    "confidence": confidence,
+    "category": category,
+    "reasoning": reasoning,
+}
+
+print(json.dumps(validated))
+`;
+
+      const execution = await sandbox.runCode(pythonScript);
+
+      const stdout = (execution.logs?.stdout ?? []).join('').trim();
+      const stderr = (execution.logs?.stderr ?? []).join('').trim();
+
+      if (execution.error || !stdout) {
+        logger.warn({ sandboxId, stderr, error: execution.error }, '[E2B] Sandbox execution failed');
+        return {
+          success: false,
+          data: null,
+          sandboxId,
+          executionTimeMs: Date.now() - startTime,
+          error: execution.error?.name || stderr || 'No output from sandbox',
+        };
+      }
+
+      const classification = JSON.parse(stdout) as ClassificationResult;
+
+      if (classification && 'error' in classification) {
+        logger.warn({ sandboxId, error: classification }, '[E2B] Sandbox returned error');
+        return {
+          success: false,
+          data: null,
+          sandboxId,
+          executionTimeMs: Date.now() - startTime,
+          error: String((classification as Record<string, unknown>)['error']),
+        };
+      }
 
       logger.info({
         sandboxId,
-        operation,
         executionTimeMs: Date.now() - startTime,
-      }, '[E2B] Sandbox execution completed');
+        isAnomalous: classification.isAnomalous,
+      }, '[E2B] Sandbox classification completed');
 
       return {
         success: true,
-        data: result,
+        data: classification,
         sandboxId,
         executionTimeMs: Date.now() - startTime,
         error: null,
@@ -103,26 +214,13 @@ export async function executeInSandbox<T>(
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
-    logger.error({ err, operation }, '[E2B] Sandbox creation failed, falling back to local');
-
-    try {
-      const result = await fn();
-      return {
-        success: true,
-        data: result,
-        sandboxId: null,
-        executionTimeMs: Date.now() - startTime,
-        error: null,
-      };
-    } catch (fallbackErr) {
-      const fallbackMessage = fallbackErr instanceof Error ? fallbackErr.message : 'Unknown error';
-      return {
-        success: false,
-        data: null,
-        sandboxId: null,
-        executionTimeMs: Date.now() - startTime,
-        error: fallbackMessage,
-      };
-    }
+    logger.error({ err }, '[E2B] Sandbox creation failed');
+    return {
+      success: false,
+      data: null,
+      sandboxId: null,
+      executionTimeMs: Date.now() - startTime,
+      error: message,
+    };
   }
 }
