@@ -1,7 +1,7 @@
 // =============================================================================
-// Bifrost LLM Gateway (Portkey)
+// Bifrost LLM Gateway (Self-hosted LiteLLM)
 // =============================================================================
-// Response caching, automatic fallbacks, rate limiting, cost tracking.
+// OpenAI-compatible gateway with caching, fallbacks, and cost tracking.
 // If gateway is unavailable, caller falls back to direct API call.
 // =============================================================================
 
@@ -11,57 +11,50 @@ const logger = pino({ name: 'bifrost-gateway' });
 
 export interface BifrostConfig {
   enabled: boolean;
-  apiKey: string;
-  virtualKey: string;
+  gatewayUrl: string;
+  masterKey: string;
   cacheEnabled: boolean;
-  retryCount: number;
   timeout: number;
 }
 
 function getConfig(): BifrostConfig {
   return {
     enabled: process.env['BIFROST_ENABLED'] === 'true',
-    apiKey: process.env['PORTKEY_API_KEY'] || '',
-    virtualKey: process.env['PORTKEY_VIRTUAL_KEY'] || '',
+    gatewayUrl: process.env['BIFROST_GATEWAY_URL'] || 'https://bifrost-gateway-production-e973.up.railway.app',
+    masterKey: process.env['LITELLM_MASTER_KEY'] || '',
     cacheEnabled: process.env['BIFROST_CACHE_ENABLED'] !== 'false',
-    retryCount: 2,
     timeout: 20000,
   };
 }
 
-interface PortkeyGateway {
+interface BifrostGateway {
   config: BifrostConfig;
-  baseUrl: string;
   headers: Record<string, string>;
 }
 
-let portkeyInstance: PortkeyGateway | null = null;
+let gatewayInstance: BifrostGateway | null = null;
 
-function createPortkey(): PortkeyGateway {
+function createGateway(): BifrostGateway {
   const config = getConfig();
   return {
     config,
-    baseUrl: 'https://api.portkey.ai/v1',
     headers: {
-      'x-portkey-api-key': config.apiKey,
-      'x-portkey-virtual-key': config.virtualKey,
-      'x-portkey-cache': config.cacheEnabled ? 'simple' : 'none',
-      'x-portkey-retry-count': config.retryCount.toString(),
+      'Authorization': `Bearer ${config.masterKey}`,
       'Content-Type': 'application/json',
     },
   };
 }
 
-export function getBifrost(): PortkeyGateway | null {
+export function getBifrost(): BifrostGateway | null {
   const config = getConfig();
-  if (!config.enabled || !config.apiKey) {
+  if (!config.enabled || !config.masterKey) {
     return null;
   }
-  if (!portkeyInstance) {
-    portkeyInstance = createPortkey();
-    logger.info('[Bifrost] Gateway initialized');
+  if (!gatewayInstance) {
+    gatewayInstance = createGateway();
+    logger.info({ url: config.gatewayUrl }, '[Bifrost] LiteLLM gateway initialized');
   }
-  return portkeyInstance;
+  return gatewayInstance;
 }
 
 export interface GatewayCompletionParams {
@@ -83,7 +76,7 @@ export interface GatewayCompletionResult {
 }
 
 /**
- * Route an LLM completion through the Bifrost gateway.
+ * Route an LLM completion through the Bifrost LiteLLM gateway.
  * Returns null if gateway is not configured - caller should
  * fall back to direct API call.
  */
@@ -97,7 +90,7 @@ export async function gatewayCompletion(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), gateway.config.timeout);
 
-    const response = await fetch(`${gateway.baseUrl}/chat/completions`, {
+    const response = await fetch(`${gateway.config.gatewayUrl}/chat/completions`, {
       method: 'POST',
       headers: gateway.headers,
       body: JSON.stringify({
@@ -121,7 +114,9 @@ export async function gatewayCompletion(
       usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
     };
 
-    const cached = response.headers.get('x-portkey-cache-status') === 'HIT';
+    const cached =
+      response.headers.get('x-litellm-cache-hit') === 'True' ||
+      response.headers.get('x-cache') === 'HIT';
 
     if (cached) {
       logger.info('[Bifrost] Cache HIT - zero cost for this classification');
