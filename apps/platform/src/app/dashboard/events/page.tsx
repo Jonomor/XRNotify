@@ -125,10 +125,20 @@ export default async function EventsPage({ searchParams }: PageProps) {
 
   // Count for pagination
   const countValues = conditions.length > 0 ? values.slice(0, conditions.length) : [];
-  const countResult = await queryAll<{ count: string }>(`
-    SELECT COUNT(*)::text as count FROM events ${where}
-  `, countValues);
-  const total = parseInt(countResult[0]?.count ?? '0', 10);
+  let total: number;
+  if (conditions.length === 0) {
+    const estimate = await queryAll<{ count: string }>(`
+      SELECT reltuples::bigint::text as count
+      FROM pg_class
+      WHERE relname = 'events'
+    `, []);
+    total = parseInt(estimate[0]?.count ?? '0', 10);
+  } else {
+    const countResult = await queryAll<{ count: string }>(`
+      SELECT COUNT(*)::text as count FROM events ${where}
+    `, countValues);
+    total = parseInt(countResult[0]?.count ?? '0', 10);
+  }
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
