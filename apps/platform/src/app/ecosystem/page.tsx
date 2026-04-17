@@ -68,10 +68,10 @@ const entities: EcosystemEntity[] = [
     isCurrent: false,
   },
   {
-    name: 'AI-Presence',
+    name: 'AI Presence',
     description:
       'AI Visibility scoring and optimization platform for websites.',
-    url: 'https://www.ai-presence.com',
+    url: 'https://www.ai-presence.app',
     isCurrent: false,
   },
   {
