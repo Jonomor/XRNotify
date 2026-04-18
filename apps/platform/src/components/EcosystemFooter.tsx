@@ -44,9 +44,6 @@ export function EcosystemFooter() {
         {/* Attribution */}
         <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-6 sm:flex-row">
           <p className="text-xs text-zinc-500">
-            &copy; {new Date().getFullYear()} XRNotify
-          </p>
-          <p className="text-xs text-zinc-500">
             Built by{' '}
             <a
               href={CANONICAL_URLS.aliMorgan}
@@ -68,6 +65,14 @@ export function EcosystemFooter() {
             </a>
           </p>
         </div>
+
+        {/* Trademark Notice */}
+        <p className="mt-6 border-t border-white/5 pt-6 text-center text-[11px] uppercase leading-relaxed tracking-wide text-zinc-600">
+          Answer Engine Optimization&trade;, AEO/GEO by Jonomor&trade;, and AI
+          Visibility Framework&trade; are trademarks of Jonomor LLC. &copy;{' '}
+          {new Date().getFullYear()} XRNotify &middot; Jonomor LLC. All rights
+          reserved.
+        </p>
       </div>
     </footer>
   );
