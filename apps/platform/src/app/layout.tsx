@@ -75,6 +75,9 @@ const xrnotifyOrgSchema = {
   parentOrganization: { '@id': CANONICAL_IDS.jonomor },
   founder: { '@id': CANONICAL_IDS.aliMorgan },
   hasPart: [{ '@id': CANONICAL_IDS.app }],
+  subjectOf: {
+    '@id': 'https://www.jonomor.com/#trademark-aeo',
+  },
 };
 
 const websiteSchema = {
@@ -138,24 +141,6 @@ const softwareAppSchema = {
     'Developer dashboard with delivery logs',
     'Per-webhook filtering by event type and account',
   ],
-  mentions: {
-    '@type': 'Intangible',
-    '@id': 'https://jonomor.com/#trademark-aeo',
-    name: 'Answer Engine Optimization',
-    alternateName: 'AEO',
-    additionalType: 'https://schema.org/Brand',
-    identifier: {
-      '@type': 'PropertyValue',
-      propertyID: 'USPTO Serial Number',
-      value: '99766713',
-    },
-    sourceOrganization: {
-      '@type': 'GovernmentOrganization',
-      name: 'United States Patent and Trademark Office',
-      alternateName: 'USPTO',
-      url: 'https://www.uspto.gov',
-    },
-  },
 };
 
 const faqPageSchema = getFAQPageSchema(FAQ_ITEMS);
