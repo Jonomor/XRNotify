@@ -74,7 +74,7 @@ export async function classifyTransaction(
 
     // Try Bifrost gateway first (caching + governance)
     const gatewayResult = await gatewayCompletion({
-      model: 'gemini-2.0-flash',
+      model: 'nvidia/nemotron-3-nano-30b-a3b',
       prompt,
       maxTokens: 300,
       temperature: 0,
@@ -94,7 +94,7 @@ export async function classifyTransaction(
       const sandboxResult = await classifyInSandbox({
         gatewayUrl: process.env['BIFROST_GATEWAY_URL'] || 'https://bifrost-gateway-production-e973.up.railway.app',
         masterKey: process.env['LITELLM_MASTER_KEY'] || '',
-        model: 'gemini-2.0-flash',
+        model: 'nvidia/nemotron-3-nano-30b-a3b',
         prompt,
         maxTokens: 300,
         temperature: 0,
@@ -127,7 +127,7 @@ export async function classifyTransaction(
     traceGeneration({
       traceId,
       name: 'anomaly_classification',
-      model: 'gemini-2.0-flash',
+      model: 'nvidia/nemotron-3-nano-30b-a3b',
       input: prompt,
       output: resultText,
       usage: resultUsage,
