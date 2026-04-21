@@ -12,6 +12,17 @@ const nextConfig = {
   // Transpile the shared package
   transpilePackages: ['@xrnotify/shared'],
 
+  generateBuildId: async () => {
+    // Use Railway-provided commit SHA if present, else a stable fallback.
+    // This keeps the build ID deterministic per git commit across containers.
+    return (
+      process.env.RAILWAY_GIT_COMMIT_SHA ||
+      process.env.VERCEL_GIT_COMMIT_SHA ||
+      process.env.GIT_COMMIT_SHA ||
+      'xrnotify-build'
+    );
+  },
+
   // Enable experimental features
   experimental: {
     // Enable server actions
