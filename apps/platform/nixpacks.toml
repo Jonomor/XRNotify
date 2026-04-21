@@ -1,0 +1,7 @@
+# Install NemoClaw CLI during build. Graceful fallback to policy-only mode
+# if the package isn't available on npm registry.
+[phases.install]
+cmds = [
+  "npm install -g @nvidia/nemoclaw 2>/dev/null || echo '[NemoClaw] CLI unavailable on npm — wrapper will run in policy-only mode'",
+  "pnpm install --frozen-lockfile",
+]
