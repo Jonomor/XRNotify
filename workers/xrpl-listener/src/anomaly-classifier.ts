@@ -53,6 +53,54 @@ Classification criteria:
 
 Be conservative. Most transactions are normal. Only flag genuine anomalies.`;
 
+// Nemotron-3-nano consumes tokens on internal reasoning before emitting
+// structured JSON, so the response is sometimes truncated mid-object.
+// Strict JSON.parse rejects it; this helper retries by slicing to the last
+// complete closing brace and validates a minimum shape.
+function tolerantParseClassification(
+  raw: string,
+): { classification: ClassificationResult; recovered: boolean } | null {
+  const attemptParse = (source: string, recovered: boolean) => {
+    try {
+      const parsed = JSON.parse(source);
+      if (
+        typeof parsed.isAnomalous === 'boolean' &&
+        typeof parsed.confidence === 'number'
+      ) {
+        return {
+          classification: {
+            isAnomalous: parsed.isAnomalous,
+            confidence: parsed.confidence,
+            category:
+              typeof parsed.category === 'string'
+                ? (parsed.category as ClassificationResult['category'])
+                : 'unknown',
+            reasoning:
+              typeof parsed.reasoning === 'string'
+                ? parsed.reasoning
+                : recovered ? 'truncated' : '',
+          },
+          recovered,
+        };
+      }
+    } catch {
+      // fall through
+    }
+    return null;
+  };
+
+  const strict = attemptParse(raw, false);
+  if (strict) return strict;
+
+  const lastBrace = raw.lastIndexOf('}');
+  if (lastBrace > 0) {
+    const recovered = attemptParse(raw.slice(0, lastBrace + 1), true);
+    if (recovered) return recovered;
+  }
+
+  return null;
+}
+
 export async function classifyTransaction(
   ctx: TransactionContext
 ): Promise<ClassificationResult | null> {
@@ -71,7 +119,7 @@ export async function classifyTransaction(
     const gatewayResult = await gatewayCompletion({
       model: 'nvidia/nemotron-3-nano-30b-a3b',
       prompt,
-      maxTokens: 300,
+      maxTokens: 1024,
       temperature: 0,
     });
 
@@ -89,7 +137,7 @@ export async function classifyTransaction(
         masterKey: process.env['LITELLM_MASTER_KEY'] || '',
         model: 'nvidia/nemotron-3-nano-30b-a3b',
         prompt,
-        maxTokens: 300,
+        maxTokens: 1024,
         temperature: 0,
       });
 
@@ -104,14 +152,13 @@ export async function classifyTransaction(
       }
     }
 
-    let classification: ClassificationResult;
-    try {
-      const cleaned = resultText.replace(/```json\n?/g, '').replace(/```/g, '').trim();
-      classification = JSON.parse(cleaned) as ClassificationResult;
-    } catch {
+    const cleaned = resultText.replace(/```json\n?/g, '').replace(/```/g, '').trim();
+    const parseResult = tolerantParseClassification(cleaned);
+    if (!parseResult) {
       logger.warn({ text: resultText }, 'Failed to parse classification response');
       return null;
     }
+    const classification = parseResult.classification;
 
     logger.info({
       eventId: ctx.eventId,
@@ -121,6 +168,7 @@ export async function classifyTransaction(
       gateway: gatewayResult !== null,
       cached: wasCached,
       sandboxed: sandboxId !== null,
+      ...(parseResult.recovered && { recovered: true }),
     }, 'Transaction classified');
 
     return classification;
