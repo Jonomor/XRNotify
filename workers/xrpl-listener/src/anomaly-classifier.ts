@@ -5,10 +5,8 @@
 // Wrapped in E2B sandbox for isolation. Fire-and-forget.
 // =============================================================================
 
-import { traceGeneration } from './langfuse';
 import { classifyInSandbox } from './sandbox';
 import { gatewayCompletion } from './bifrost';
-import { randomUUID } from 'node:crypto';
 import pino from 'pino';
 
 const logger = pino({ name: 'anomaly-classifier' });
@@ -62,9 +60,6 @@ export async function classifyTransaction(
     return null;
   }
 
-  const traceId = randomUUID();
-  const startTime = new Date();
-
   try {
     const prompt = CLASSIFICATION_PROMPT
       .replace('{eventType}', ctx.eventType)
@@ -81,13 +76,11 @@ export async function classifyTransaction(
     });
 
     let resultText: string;
-    let resultUsage: { promptTokens?: number; completionTokens?: number; totalTokens?: number };
     let wasCached = false;
     let sandboxId: string | null = null;
 
     if (gatewayResult) {
       resultText = gatewayResult.text;
-      resultUsage = gatewayResult.usage;
       wasCached = gatewayResult.cached;
     } else {
       // Gateway unavailable - try E2B sandboxed classification
@@ -104,15 +97,12 @@ export async function classifyTransaction(
         // Sandbox returned validated classification directly
         sandboxId = sandboxResult.sandboxId;
         resultText = JSON.stringify(sandboxResult.data);
-        resultUsage = {};
       } else {
         // Both gateway and sandbox failed
         logger.warn({ eventId: ctx.eventId, sandboxError: sandboxResult.error }, 'Both gateway and sandbox failed');
         return null;
       }
     }
-
-    const endTime = new Date();
 
     let classification: ClassificationResult;
     try {
@@ -122,29 +112,6 @@ export async function classifyTransaction(
       logger.warn({ text: resultText }, 'Failed to parse classification response');
       return null;
     }
-
-    // Trace the generation in Langfuse
-    traceGeneration({
-      traceId,
-      name: 'anomaly_classification',
-      model: 'nvidia/nemotron-3-nano-30b-a3b',
-      input: prompt,
-      output: resultText,
-      usage: resultUsage,
-      metadata: {
-        eventId: ctx.eventId,
-        eventType: ctx.eventType,
-        isAnomalous: classification.isAnomalous,
-        category: classification.category,
-        confidence: classification.confidence,
-        gateway: gatewayResult !== null,
-        cached: wasCached,
-        sandboxId,
-        sandboxed: sandboxId !== null,
-      },
-      startTime,
-      endTime,
-    });
 
     logger.info({
       eventId: ctx.eventId,

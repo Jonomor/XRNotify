@@ -13,7 +13,6 @@ import { createHmac } from 'node:crypto';
 import { signPayload } from '@xrnotify/shared';
 import { writeAlertEvent } from './hunie-memory';
 import { getNemoClaw } from './nemoclaw';
-import { traceOperation } from './langfuse';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -572,22 +571,6 @@ async function processMessage(message: StreamMessage): Promise<void> {
             latencyMs: result.responseTimeMs,
           },
         }).catch(err => logger.error({ err }, '[NemoClaw] logExecution failed'));
-
-        // Langfuse: trace delivery (fire-and-forget)
-        traceOperation({
-          name: 'webhook_delivered',
-          input: {
-            webhookId: webhook.id,
-            eventType: event_type,
-            url: webhook.url,
-          },
-          output: {
-            statusCode: result.statusCode,
-            latencyMs: result.responseTimeMs,
-            success: true,
-          },
-          tags: ['webhook-worker', 'delivery', 'success'],
-        });
       } else {
         webhookLog.warn({ 
           statusCode: result.statusCode, 
@@ -659,22 +642,6 @@ async function processMessage(message: StreamMessage): Promise<void> {
               error: result.error,
             },
           }).catch(err => logger.error({ err }, '[NemoClaw] logExecution failed'));
-
-          // Langfuse: trace failed delivery (fire-and-forget)
-          traceOperation({
-            name: 'webhook_delivery_failed',
-            input: {
-              webhookId: webhook.id,
-              eventType: event_type,
-              url: webhook.url,
-            },
-            output: {
-              statusCode: result.statusCode,
-              error: result.error,
-              success: false,
-            },
-            tags: ['webhook-worker', 'delivery', 'failed'],
-          });
         }
 
         endTimer({ status: 'failure' });

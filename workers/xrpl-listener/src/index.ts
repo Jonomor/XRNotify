@@ -13,7 +13,6 @@ import { Registry, Counter, Gauge, Histogram, collectDefaultMetrics } from 'prom
 import type { EventType, XRPLEvent } from '@xrnotify/shared';
 import { writeNetworkState, writeAnomalyPattern } from './hunie-memory';
 import { getNemoClaw } from './nemoclaw';
-import { traceOperation } from './langfuse';
 import { classifyTransaction, shouldClassify } from './anomaly-classifier';
 import 'dotenv/config';
 
@@ -617,24 +616,6 @@ async function subscribeToLedgers(): Promise<void> {
       
       for (const event of events) {
         await publishEvent(event);
-      }
-
-      // Langfuse: trace event processing (fire-and-forget)
-      for (const event of events) {
-        traceOperation({
-          name: 'xrpl_event_processed',
-          input: {
-            eventId: event.event_id,
-            eventType: event.event_type,
-            ledgerIndex: event.ledger_index,
-          },
-          output: { published: true },
-          metadata: {
-            txHash: event.tx_hash,
-            accounts: event.accounts,
-          },
-          tags: ['xrpl-listener', event.event_type],
-        });
       }
 
       // NemoClaw: log successful event processing (fire-and-forget)

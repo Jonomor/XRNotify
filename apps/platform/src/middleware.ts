@@ -6,7 +6,7 @@ const SESSION_COOKIE = process.env['SESSION_COOKIE_NAME'] ?? 'xrnotify_session';
 const CSP_REPORT_ONLY =
   "default-src 'self'; " +
   "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com 'unsafe-inline'; " +
-  "connect-src 'self' https://*.stripe.com https://www.google-analytics.com https://cloud.langfuse.com https://region1.google-analytics.com; " +
+  "connect-src 'self' https://*.stripe.com https://www.google-analytics.com https://region1.google-analytics.com; " +
   "img-src 'self' data: https:; " +
   "style-src 'self' 'unsafe-inline'; " +
   "frame-src https://js.stripe.com; " +

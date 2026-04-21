@@ -165,8 +165,8 @@ export default async function LicensingPage() {
                 License the institutional monitoring architecture
                 as a reference implementation for any blockchain.
                 NemoClaw governance, persistent memory via
-                H.U.N.I.E., AI anomaly classification, Langfuse
-                observability, and compliance audit trail export.
+                H.U.N.I.E., AI anomaly classification, Bifrost
+                gateway observability, and compliance audit trail export.
                 Adapt the architecture to Solana, Ethereum L2s,
                 or any chain your business requires.
               </p>
