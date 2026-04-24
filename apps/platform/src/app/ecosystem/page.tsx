@@ -24,21 +24,21 @@ const entities: EcosystemEntity[] = [
     name: 'Jonomor',
     description:
       'AI Visibility consulting and systems architecture studio.',
-    url: 'https://www.jonomor.com',
+    url: 'https://www.jonomor.com/ecosystem',
     isCurrent: false,
   },
   {
     name: 'Guard-Clause',
     description:
       'AI-powered contract risk analysis with negotiation packs and addendum builders.',
-    url: 'https://www.guard-clause.com',
+    url: 'https://www.guard-clause.com/ecosystem',
     isCurrent: false,
   },
   {
     name: 'MyPropOps',
     description:
       'Compliance-centered property operations software for landlords and property managers.',
-    url: 'https://www.mypropops.com',
+    url: 'https://www.mypropops.com/ecosystem',
     isCurrent: false,
   },
   {
@@ -51,27 +51,27 @@ const entities: EcosystemEntity[] = [
   {
     name: 'The Neutral Bridge',
     description: 'Financial infrastructure research and analysis.',
-    url: 'https://www.theneutralbridge.com',
+    url: 'https://www.theneutralbridge.com/ecosystem',
     isCurrent: false,
   },
   {
     name: 'Evenfield',
     description: 'AI-powered homeschool education platform.',
-    url: 'https://www.evenfield.io',
+    url: 'https://www.evenfield.io/ecosystem',
     isCurrent: false,
   },
   {
     name: 'H.U.N.I.E.',
     description:
       'Persistent confidence-aware memory engine for AI agents.',
-    url: 'https://www.hunie.ai',
+    url: 'https://www.hunie.ai/ecosystem',
     isCurrent: false,
   },
   {
     name: 'AI Presence',
     description:
       'AI Visibility scoring and optimization platform for websites.',
-    url: 'https://www.ai-presence.app',
+    url: 'https://www.ai-presence.app/ecosystem',
     isCurrent: false,
   },
   {
@@ -151,6 +151,19 @@ export default async function EcosystemPage() {
             </a>
           ))}
         </div>
+
+        <p className="mt-8 text-center text-xs text-zinc-500">
+          Founded and architected by{' '}
+          <a
+            href="https://www.jonomor.com/ali-morgan"
+            className="text-zinc-400 no-underline transition-colors hover:text-emerald-400"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ali Morgan
+          </a>
+          .
+        </p>
 
         <div className="mt-16 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
           <Link
