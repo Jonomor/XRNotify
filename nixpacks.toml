@@ -1,5 +1,15 @@
 [phases.install]
-cmds = ["npm i -g corepack@latest && corepack enable && corepack prepare --activate", "pnpm install --no-frozen-lockfile"]
+cmds = [
+  "npm i -g corepack@latest && corepack enable && corepack prepare --activate",
+  "pnpm install --no-frozen-lockfile",
+]
 
 [phases.build]
 dependsOn = ["install"]
+cmds = [
+  "pnpm --filter @xrnotify/shared build",
+  "pnpm --filter @xrnotify/platform build",
+]
+
+[start]
+cmd = "node apps/platform/.next/standalone/apps/platform/server.js"
