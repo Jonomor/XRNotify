@@ -27,6 +27,7 @@ import {
   decHttpRequestsInFlight,
 } from '@/lib/metrics';
 import { generateRequestId } from '@xrnotify/shared';
+import { withNemoClawGovernance } from '@/lib/hunie';
 
 export const dynamic = 'force-dynamic';
 
@@ -361,6 +362,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const input = parseResult.data;
 
+    // ────────────────────────────────────────────────
+    // NVIDIA NemoClaw governance — fires once per webhook subscription
+    // ────────────────────────────────────────────────
+    const nemoclawResult = await withNemoClawGovernance({
+      agentId: process.env['HUNIE_AGENT_NETWORK'],
+      operation: 'create webhook subscription',
+      payload: {
+        tenantId,
+        eventCount: input.event_types.length,
+        hasAccountFilter: Array.isArray(input.account_filters) && input.account_filters.length > 0,
+      },
+    });
+
     // Create webhook
     const webhook = await createWebhook(tenantId, input);
 
@@ -381,6 +395,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         data: webhook,
         message: 'Webhook created successfully. Save the secret - it will not be shown again.',
+        powered_by: nemoclawResult
+          ? {
+              governance: 'NVIDIA NemoClaw',
+              mode: nemoclawResult.mode,
+              session_id: nemoclawResult.sessionId,
+              verified_at: new Date().toISOString(),
+            }
+          : null,
       },
       {
         status: 201,
