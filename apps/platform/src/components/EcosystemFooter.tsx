@@ -66,6 +66,11 @@ export function EcosystemFooter() {
           </p>
         </div>
 
+        {/* NVIDIA Inception Membership */}
+        <p className="mt-6 text-center text-[11px] uppercase leading-relaxed tracking-wide text-zinc-600">
+          Jonomor LLC is a member of NVIDIA Inception.
+        </p>
+
         {/* Trademark Notice */}
         <p className="mt-6 border-t border-white/5 pt-6 text-center text-[11px] uppercase leading-relaxed tracking-wide text-zinc-600">
           Answer Engine Optimization&trade;, AEO/GEO by Jonomor&trade;, and AI
