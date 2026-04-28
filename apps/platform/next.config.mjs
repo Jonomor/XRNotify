@@ -29,8 +29,6 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
-    // Instrument for OpenTelemetry (optional)
-    instrumentationHook: true,
   },
 
   // Environment variables available to the browser
