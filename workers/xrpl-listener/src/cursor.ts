@@ -25,8 +25,8 @@ export interface CursorConfig {
 export interface CursorState {
   /** Last fully processed ledger index */
   ledgerIndex: number;
-  /** Last processed transaction hash (within ledger) */
-  lastTxHash: string | null;
+  /** Hash of the last fully processed ledger */
+  ledgerHash: string | null;
   /** Timestamp of last update */
   updatedAt: string;
   /** Number of events processed since last persist */
@@ -37,7 +37,7 @@ export interface CursorRecord {
   listener_id: string;
   network: string;
   ledger_index: number;
-  last_tx_hash: string | null;
+  ledger_hash: string | null;
   updated_at: Date;
 }
 
@@ -52,7 +52,7 @@ export class LedgerCursor {
 
   private state: CursorState = {
     ledgerIndex: 0,
-    lastTxHash: null,
+    ledgerHash: null,
     updatedAt: new Date().toISOString(),
     eventsSinceLastPersist: 0,
   };
@@ -64,7 +64,7 @@ export class LedgerCursor {
   constructor(db: Pool, config: CursorConfig, logger: Logger) {
     this.db = db;
     this.config = config;
-    this.logger = logger.child({ 
+    this.logger = logger.child({
       component: 'cursor',
       listenerId: config.listenerId,
       network: config.network,
@@ -81,9 +81,9 @@ export class LedgerCursor {
 
     if (cursor) {
       this.state.ledgerIndex = cursor.ledgerIndex;
-      this.state.lastTxHash = cursor.lastTxHash;
+      this.state.ledgerHash = cursor.ledgerHash;
       this.lastPersistedLedger = cursor.ledgerIndex;
-      
+
       this.logger.info(
         { ledgerIndex: cursor.ledgerIndex },
         'Loaded cursor from database'
@@ -100,7 +100,7 @@ export class LedgerCursor {
 
   async shutdown(): Promise<void> {
     this.stopPersistTimer();
-    
+
     // Final persist
     if (this.state.ledgerIndex > this.lastPersistedLedger) {
       await this.persist();
@@ -114,11 +114,11 @@ export class LedgerCursor {
   // ---------------------------------------------------------------------------
 
   /**
-   * Update cursor after processing a transaction
+   * Update cursor after processing a transaction within a ledger
    */
-  update(ledgerIndex: number, txHash?: string): void {
+  update(ledgerIndex: number, ledgerHash?: string): void {
     this.state.ledgerIndex = ledgerIndex;
-    this.state.lastTxHash = txHash ?? null;
+    this.state.ledgerHash = ledgerHash ?? null;
     this.state.updatedAt = new Date().toISOString();
     this.state.eventsSinceLastPersist++;
 
@@ -129,10 +129,10 @@ export class LedgerCursor {
   /**
    * Mark a ledger as fully processed
    */
-  completeLedger(ledgerIndex: number): void {
+  completeLedger(ledgerIndex: number, ledgerHash: string): void {
     if (ledgerIndex > this.state.ledgerIndex) {
       this.state.ledgerIndex = ledgerIndex;
-      this.state.lastTxHash = null; // Ledger complete
+      this.state.ledgerHash = ledgerHash;
       this.state.updatedAt = new Date().toISOString();
     }
 
@@ -157,13 +157,15 @@ export class LedgerCursor {
   // Persistence
   // ---------------------------------------------------------------------------
 
-  private async load(): Promise<{ ledgerIndex: number; lastTxHash: string | null } | null> {
+  private async load(): Promise<{ ledgerIndex: number; ledgerHash: string | null } | null> {
     try {
+      // Singleton-aware: schema enforces id = 'main' as the single-row PK,
+      // so we read the singleton row directly rather than filtering by
+      // listener_id (which can change between deploys via LISTENER_ID env var).
       const result = await this.db.query<CursorRecord>(
-        `SELECT ledger_index, last_tx_hash 
-         FROM ledger_cursor 
-         WHERE listener_id = $1 AND network = $2`,
-        [this.config.listenerId, this.config.network]
+        `SELECT ledger_index, ledger_hash
+         FROM ledger_cursor
+         WHERE id = 'main'`
       );
 
       if (result.rows.length === 0) {
@@ -173,7 +175,7 @@ export class LedgerCursor {
       const row = result.rows[0]!;
       return {
         ledgerIndex: row.ledger_index,
-        lastTxHash: row.last_tx_hash,
+        ledgerHash: row.ledger_hash,
       };
     } catch (error) {
       this.logger.error({ error }, 'Failed to load cursor');
@@ -188,18 +190,20 @@ export class LedgerCursor {
 
     try {
       await this.db.query(
-        `INSERT INTO ledger_cursor (listener_id, network, ledger_index, last_tx_hash, updated_at)
+        `INSERT INTO ledger_cursor (listener_id, network, ledger_index, ledger_hash, updated_at)
          VALUES ($1, $2, $3, $4, NOW())
-         ON CONFLICT (listener_id, network) 
-         DO UPDATE SET 
+         ON CONFLICT (id)
+         DO UPDATE SET
+           listener_id = EXCLUDED.listener_id,
+           network = EXCLUDED.network,
            ledger_index = EXCLUDED.ledger_index,
-           last_tx_hash = EXCLUDED.last_tx_hash,
+           ledger_hash = EXCLUDED.ledger_hash,
            updated_at = NOW()`,
         [
           this.config.listenerId,
           this.config.network,
           this.state.ledgerIndex,
-          this.state.lastTxHash,
+          this.state.ledgerHash,
         ]
       );
 
@@ -221,7 +225,7 @@ export class LedgerCursor {
     const ledgersSinceLastPersist = this.state.ledgerIndex - this.lastPersistedLedger;
     const secondsSinceLastPersist = (Date.now() - this.lastPersistTime) / 1000;
 
-    const shouldPersist = 
+    const shouldPersist =
       ledgersSinceLastPersist >= this.config.persistIntervalLedgers ||
       secondsSinceLastPersist >= this.config.persistIntervalSeconds;
 
@@ -260,7 +264,7 @@ export class LedgerCursor {
    */
   async resetTo(ledgerIndex: number): Promise<void> {
     this.state.ledgerIndex = ledgerIndex;
-    this.state.lastTxHash = null;
+    this.state.ledgerHash = null;
     this.state.updatedAt = new Date().toISOString();
     this.state.eventsSinceLastPersist = 0;
 
@@ -273,14 +277,15 @@ export class LedgerCursor {
    * Delete cursor (for clean restart)
    */
   async delete(): Promise<void> {
+    // Singleton-aware: deletes the lone id='main' row regardless of
+    // current listener_id/network config. Consistent with load() and persist().
     await this.db.query(
-      `DELETE FROM ledger_cursor 
-       WHERE listener_id = $1 AND network = $2`,
-      [this.config.listenerId, this.config.network]
+      `DELETE FROM ledger_cursor
+       WHERE id = 'main'`
     );
 
     this.state.ledgerIndex = 0;
-    this.state.lastTxHash = null;
+    this.state.ledgerHash = null;
     this.lastPersistedLedger = 0;
 
     this.logger.info('Deleted cursor');
