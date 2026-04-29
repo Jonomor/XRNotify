@@ -14,6 +14,7 @@ import type { EventType, XRPLEvent } from '@xrnotify/shared';
 import { writeNetworkState, writeAnomalyPattern } from './hunie-memory';
 import { getNemoClaw } from './nemoclaw';
 import { classifyTransaction, shouldClassify } from './anomaly-classifier';
+import { LedgerCursor, createLedgerCursor } from './cursor';
 import 'dotenv/config';
 
 // -----------------------------------------------------------------------------
@@ -24,23 +25,23 @@ const config = {
   // XRPL nodes (comma-separated for failover)
   xrplNodes: (process.env.XRPL_NODES ?? 'wss://xrplcluster.com,wss://s1.ripple.com,wss://s2.ripple.com').split(','),
   xrplNetwork: process.env.XRPL_NETWORK ?? 'mainnet',
-  
+
   // Redis
   redisUrl: process.env.REDIS_URL ?? 'redis://localhost:6379',
   streamKey: process.env.STREAM_KEY ?? 'xrnotify:events',
   streamMaxLen: parseInt(process.env.STREAM_MAX_LEN ?? '100000', 10),
-  
+
   // PostgreSQL
   databaseUrl: process.env.DATABASE_URL ?? 'postgresql://xrnotify:xrnotify@localhost:5432/xrnotify',
-  
+
   // Listener settings
   listenerId: process.env.LISTENER_ID ?? `listener-${randomUUID().slice(0, 8)}`,
   reconnectDelayMs: parseInt(process.env.RECONNECT_DELAY_MS ?? '5000', 10),
   healthCheckIntervalMs: parseInt(process.env.HEALTH_CHECK_INTERVAL_MS ?? '30000', 10),
-  
+
   // Metrics
   metricsPort: parseInt(process.env.METRICS_PORT ?? '9092', 10),
-  
+
   // Environment
   nodeEnv: process.env.NODE_ENV ?? 'development',
 };
@@ -121,6 +122,7 @@ const pool = new pg.Pool({
 });
 
 let xrplClient: Client | null = null;
+let cursor: LedgerCursor | null = null;
 let ledgerCounter = 0;
 let currentNodeIndex = 0;
 
@@ -132,31 +134,6 @@ const RIPPLE_EPOCH_OFFSET = 946684800; // Seconds from Unix epoch to Ripple epoc
 
 function rippleTimeToISO(rippleTime: number): string {
   return new Date((rippleTime + RIPPLE_EPOCH_OFFSET) * 1000).toISOString();
-}
-
-// -----------------------------------------------------------------------------
-// Ledger Cursor Management
-// -----------------------------------------------------------------------------
-
-async function getLastProcessedLedger(): Promise<number | null> {
-  const result = await pool.query<{ ledger_index: string }>(
-    `SELECT ledger_index FROM ledger_cursor 
-     WHERE network = $1 AND listener_id = $2
-     ORDER BY updated_at DESC LIMIT 1`,
-    [config.xrplNetwork, config.listenerId]
-  );
-  
-  return result.rows[0] ? parseInt(result.rows[0].ledger_index, 10) : null;
-}
-
-async function updateLedgerCursor(ledgerIndex: number, ledgerHash: string): Promise<void> {
-  await pool.query(
-    `INSERT INTO ledger_cursor (network, listener_id, ledger_index, ledger_hash, updated_at)
-     VALUES ($1, $2, $3, $4, NOW())
-     ON CONFLICT (network, listener_id) 
-     DO UPDATE SET ledger_index = $3, ledger_hash = $4, updated_at = NOW()`,
-    [config.xrplNetwork, config.listenerId, ledgerIndex, ledgerHash]
-  );
 }
 
 // -----------------------------------------------------------------------------
@@ -199,16 +176,16 @@ interface Transaction {
 
 function extractAccounts(tx: Transaction): string[] {
   const accounts = new Set<string>();
-  
+
   accounts.add(tx.Account);
-  
+
   if (tx.Destination) accounts.add(tx.Destination);
-  
+
   // Extract from Amount
   if (typeof tx.Amount === 'object' && tx.Amount.issuer) {
     accounts.add(tx.Amount.issuer);
   }
-  
+
   // Extract from TakerGets/TakerPays
   if (typeof tx.TakerGets === 'object' && tx.TakerGets.issuer) {
     accounts.add(tx.TakerGets.issuer);
@@ -216,12 +193,12 @@ function extractAccounts(tx: Transaction): string[] {
   if (typeof tx.TakerPays === 'object' && tx.TakerPays.issuer) {
     accounts.add(tx.TakerPays.issuer);
   }
-  
+
   // Extract from LimitAmount
   if (tx.LimitAmount?.issuer) {
     accounts.add(tx.LimitAmount.issuer);
   }
-  
+
   return Array.from(accounts);
 }
 
@@ -231,14 +208,14 @@ function normalizeAmount(amount: string | { currency: string; issuer: string; va
   issuer?: string;
 } | null {
   if (!amount) return null;
-  
+
   if (typeof amount === 'string') {
     return {
       currency: 'XRP',
       value: (parseInt(amount, 10) / 1_000_000).toString(),
     };
   }
-  
+
   return {
     currency: amount.currency,
     value: amount.value,
@@ -253,29 +230,29 @@ function parseTransaction(
 ): XRPLEvent[] {
   const events: XRPLEvent[] = [];
   const meta = tx.meta ?? tx.metaData;
-  
+
   // Skip failed transactions
   if (meta?.TransactionResult !== 'tesSUCCESS') {
     return events;
   }
-  
+
   const timestamp = rippleTimeToISO(closeTime);
   const accounts = extractAccounts(tx);
-  
+
   const baseEvent = {
     ledger_index: ledgerIndex,
     tx_hash: tx.hash,
     timestamp,
     accounts,
   };
-  
+
   switch (tx.TransactionType) {
     case 'Payment': {
       const amount = normalizeAmount(meta?.delivered_amount ?? tx.Amount);
       if (!amount) break;
-      
+
       const eventType: EventType = amount.currency === 'XRP' ? 'payment.xrp' : 'payment.issued';
-      
+
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:${eventType}`,
         event_type: eventType,
@@ -290,7 +267,7 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'NFTokenMint': {
       // Find the minted NFT ID from metadata
       let nftId = tx.NFTokenID;
@@ -305,7 +282,7 @@ function parseTransaction(
           }
         }
       }
-      
+
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:nft.minted`,
         event_type: 'nft.minted',
@@ -317,7 +294,7 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'NFTokenBurn': {
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:nft.burned`,
@@ -330,7 +307,7 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'NFTokenCreateOffer': {
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:nft.offer_created`,
@@ -345,7 +322,7 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'NFTokenAcceptOffer': {
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:nft.offer_accepted`,
@@ -359,7 +336,7 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'NFTokenCancelOffer': {
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:nft.offer_cancelled`,
@@ -372,11 +349,11 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'OfferCreate': {
       const takerGets = normalizeAmount(tx.TakerGets);
       const takerPays = normalizeAmount(tx.TakerPays);
-      
+
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:dex.offer_created`,
         event_type: 'dex.offer_created',
@@ -387,7 +364,7 @@ function parseTransaction(
           taker_pays: takerPays,
         },
       });
-      
+
       // Check for fills in metadata
       if (meta?.AffectedNodes) {
         let fillIndex = 0;
@@ -409,7 +386,7 @@ function parseTransaction(
       }
       break;
     }
-    
+
     case 'OfferCancel': {
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:dex.offer_cancelled`,
@@ -422,11 +399,11 @@ function parseTransaction(
       });
       break;
     }
-    
+
     case 'TrustSet': {
       const limit = tx.LimitAmount;
       if (!limit) break;
-      
+
       // Determine if created, modified, or deleted based on metadata
       let eventType: EventType = 'trustline.modified';
       if (meta?.AffectedNodes) {
@@ -441,7 +418,7 @@ function parseTransaction(
           }
         }
       }
-      
+
       events.push({
         event_id: `xrpl:${ledgerIndex}:${tx.hash}:${eventType}`,
         event_type: eventType,
@@ -455,10 +432,10 @@ function parseTransaction(
       });
       break;
     }
-    
+
     // Add more transaction types as needed
   }
-  
+
   return events;
 }
 
@@ -479,7 +456,7 @@ async function publishEvent(event: XRPLEvent): Promise<void> {
     'accounts', JSON.stringify(event.accounts),
     'payload', JSON.stringify(event.payload)
   );
-  
+
   eventsPublished.inc({ event_type: event.event_type });
   logger.debug({ eventId: event.event_id, eventType: event.event_type }, 'Event published');
 }
@@ -493,40 +470,40 @@ async function connectToXRPL(): Promise<Client> {
   if (!nodeUrl) {
     throw new Error('No XRPL nodes configured');
   }
-  
+
   logger.info({ nodeUrl, nodeIndex: currentNodeIndex }, 'Connecting to XRPL node');
-  
+
   const client = new Client(nodeUrl, {
     timeout: 20000,
   });
-  
+
   client.on('error', (error) => {
     logger.error({ error }, 'XRPL client error');
     connectionStatus.set(0);
   });
-  
+
   client.on('disconnected', (code) => {
     logger.warn({ code }, 'XRPL client disconnected');
     connectionStatus.set(0);
     scheduleReconnect();
   });
-  
+
   client.on('connected', () => {
     logger.info('XRPL client connected');
     connectionStatus.set(1);
   });
-  
+
   await client.connect();
-  
+
   return client;
 }
 
 function scheduleReconnect(): void {
   // Try next node
   currentNodeIndex = (currentNodeIndex + 1) % config.xrplNodes.length;
-  
+
   logger.info({ delayMs: config.reconnectDelayMs, nextNode: config.xrplNodes[currentNodeIndex] }, 'Scheduling reconnect');
-  
+
   setTimeout(async () => {
     try {
       if (xrplClient) {
@@ -536,7 +513,7 @@ function scheduleReconnect(): void {
           // Ignore disconnect errors
         }
       }
-      
+
       xrplClient = await connectToXRPL();
       await subscribeToLedgers();
     } catch (error) {
@@ -554,48 +531,48 @@ async function subscribeToLedgers(): Promise<void> {
   if (!xrplClient || !xrplClient.isConnected()) {
     throw new Error('XRPL client not connected');
   }
-  
+
   // Subscribe to ledger and transaction streams
   await xrplClient.request({
     command: 'subscribe',
     streams: ['ledger', 'transactions'],
   });
-  
+
   logger.info('Subscribed to ledger and transaction streams');
-  
+
   // Handle ledger events
   xrplClient.on('ledgerClosed', async (ledger: LedgerStream) => {
     const startTime = Date.now();
-    
+
     try {
-      logger.info({ 
-        ledgerIndex: ledger.ledger_index, 
+      logger.info({
+        ledgerIndex: ledger.ledger_index,
         txCount: ledger.txn_count,
       }, 'Ledger closed');
-      
+
       currentLedgerIndex.set(ledger.ledger_index);
       ledgersProcessed.inc();
-      
-      // Update cursor
-      await updateLedgerCursor(ledger.ledger_index, ledger.ledger_hash);
-      
+
+      // Update cursor (batched persistence handled by cursor module)
+      cursor?.completeLedger(ledger.ledger_index, ledger.ledger_hash);
+
       const duration = (Date.now() - startTime) / 1000;
       processingLatency.observe(duration);
-      
+
     } catch (error) {
       logger.error({ error, ledgerIndex: ledger.ledger_index }, 'Error processing ledger');
     }
   });
-  
+
   // Handle transaction events
   xrplClient.on('transaction', async (tx: TransactionStream) => {
     try {
       if (!tx.validated) return;
-      
+
       const transaction = tx.transaction as unknown as Transaction;
       transaction.meta = tx.meta as unknown as TransactionMeta;
       transaction.hash = tx.transaction.hash ?? '';
-      
+
       transactionsProcessed.inc({ type: transaction.TransactionType });
 
       // NemoClaw governance: govern the monitoring agent (fire-and-forget)
@@ -613,7 +590,7 @@ async function subscribeToLedgers(): Promise<void> {
         tx.ledger_index ?? 0,
         tx.transaction.date ?? Math.floor(Date.now() / 1000) - RIPPLE_EPOCH_OFFSET
       );
-      
+
       for (const event of events) {
         await publishEvent(event);
       }
@@ -687,7 +664,7 @@ async function subscribeToLedgers(): Promise<void> {
 
 async function startMetricsServer(): Promise<void> {
   const { createServer } = await import('node:http');
-  
+
   const server = createServer(async (req, res) => {
     if (req.url === '/metrics') {
       res.setHeader('Content-Type', register.contentType);
@@ -696,7 +673,7 @@ async function startMetricsServer(): Promise<void> {
       const isHealthy = xrplClient?.isConnected() ?? false;
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = isHealthy ? 200 : 503;
-      res.end(JSON.stringify({ 
+      res.end(JSON.stringify({
         status: isHealthy ? 'healthy' : 'unhealthy',
         connected: isHealthy,
         currentNode: config.xrplNodes[currentNodeIndex],
@@ -711,7 +688,7 @@ async function startMetricsServer(): Promise<void> {
       res.end('Not found');
     }
   });
-  
+
   server.listen(config.metricsPort, () => {
     logger.info({ port: config.metricsPort }, 'Metrics server started');
   });
@@ -726,9 +703,9 @@ let isShuttingDown = false;
 async function shutdown(signal: string): Promise<void> {
   if (isShuttingDown) return;
   isShuttingDown = true;
-  
+
   logger.info({ signal }, 'Shutting down gracefully');
-  
+
   if (xrplClient) {
     try {
       await xrplClient.disconnect();
@@ -736,10 +713,19 @@ async function shutdown(signal: string): Promise<void> {
       // Ignore disconnect errors
     }
   }
-  
+
+  // Persist final cursor state before closing pool
+  if (cursor) {
+    try {
+      await cursor.shutdown();
+    } catch (error) {
+      logger.error({ error }, 'Cursor shutdown failed');
+    }
+  }
+
   await redis.quit();
   await pool.end();
-  
+
   logger.info('Shutdown complete');
   process.exit(0);
 }
@@ -757,7 +743,7 @@ async function main(): Promise<void> {
     network: config.xrplNetwork,
     nodes: config.xrplNodes,
   }, 'Starting XRPL listener');
-  
+
   // Test database connection
   try {
     await pool.query('SELECT 1');
@@ -766,7 +752,7 @@ async function main(): Promise<void> {
     logger.fatal({ error }, 'Failed to connect to database');
     process.exit(1);
   }
-  
+
   // Test Redis connection
   try {
     await redis.ping();
@@ -775,21 +761,26 @@ async function main(): Promise<void> {
     logger.fatal({ error }, 'Failed to connect to Redis');
     process.exit(1);
   }
-  
-  // Check for last processed ledger
-  const lastLedger = await getLastProcessedLedger();
+
+  // Initialize ledger cursor (batched persistence module)
+  cursor = createLedgerCursor(
+    pool,
+    { listenerId: config.listenerId, network: config.xrplNetwork },
+    logger
+  );
+  const lastLedger = await cursor.initialize();
   if (lastLedger) {
     logger.info({ lastLedger }, 'Resuming from last processed ledger');
   }
-  
+
   // Start metrics server
   await startMetricsServer();
-  
+
   // Connect to XRPL
   try {
     xrplClient = await connectToXRPL();
     await subscribeToLedgers();
-    
+
     logger.info('XRPL listener ready');
   } catch (error) {
     logger.error({ error }, 'Failed to connect to XRPL');
