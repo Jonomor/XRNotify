@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "rm -rf .next/cache || true",
+    "prebuild": "rm -rf .next/cache/* || true",
     "build": "next build && cp -r .next/static .next/standalone/apps/platform/.next/ && (cp -r public .next/standalone/apps/platform/ 2>/dev/null || true)",
     "start": "next start",
     "lint": "next lint",
